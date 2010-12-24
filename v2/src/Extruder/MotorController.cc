@@ -33,6 +33,11 @@ void MotorController::reset() {
 	set_with_rpm = false;
 	backoff_state = BO_INACTIVE;
 	loadBackoffParameters();
+	forward_operation_timeout.start(0);
+	reverse_operation_timeout.start(0);
+	current_operation_timeout.start(0);
+	forward_trigger_timeout.start(0);
+	firstrun = 1;
 }
 
 #define DEFAULT_HALT_MS 5L
@@ -42,13 +47,15 @@ void MotorController::reset() {
 
 void MotorController::loadBackoffParameters()
 {
-	backoff_enabled = false; // TODO: fixme
+	backoff_enabled = true; // TODO: fixme
 	halt_ms = eeprom::getEeprom16(eeprom::BACKOFF_STOP_TIME,DEFAULT_HALT_MS);
 	reverse_ms = eeprom::getEeprom16(eeprom::BACKOFF_REVERSE_TIME,DEFAULT_REVERSE_MS);
 	forward_ms = eeprom::getEeprom16(eeprom::BACKOFF_FORWARD_TIME,DEFAULT_FORWARD_MS);
 	trigger_ms = eeprom::getEeprom16(eeprom::BACKOFF_TRIGGER_TIME,DEFAULT_TRIGGER_MS);
+	elapsed_micros_dif = reverse_ms - forward_ms;
 }
 
+/*
 void MotorController::update() {
 	ExtruderBoard& board = ExtruderBoard::getBoard();
 	if (backoff_enabled && backoff_state != BO_INACTIVE) {
@@ -75,7 +82,66 @@ void MotorController::update() {
 				break;
 			}
 		}
-	} else if (!set_with_rpm) {
+	} */
+
+void MotorController::update() {
+	ExtruderBoard& board = ExtruderBoard::getBoard();
+	if (backoff_enabled && backoff_state != BO_INACTIVE) {
+//		if (current_operation_timeout.hasElapsed()) {
+			switch (backoff_state) {
+			case BO_HALT_1:
+//				backoff_state = BO_REVERSE;
+				if (reverse_operation_timeout.hasElapsed()){
+					if (forward_operation_timeout.hasElapsed()) {
+						reverse_operation_timeout.start(reverse_ms*1000L);
+						board.setMotorSpeed(-ret_speed);
+					}
+					else {
+						elapsed_micros = forward_operation_timeout.remaining();
+						forward_operation_timeout.start(0);
+						reverse_operation_timeout.start(elapsed_micros - elapsed_micros_dif);
+						board.setMotorSpeed(-ret_speed);
+					}
+					backoff_state = BO_REVERSE;
+					firstrun = 0;
+				}
+//				else
+				break;
+			case BO_REVERSE:
+//				backoff_state = BO_INACTIVE;
+				if (reverse_operation_timeout.hasElapsed() ) {
+//					current_operation_timeout.start(halt_ms*1000L);
+					board.setMotorSpeed(0);
+					backoff_state = BO_INACTIVE;
+				}
+				break;
+			case BO_HALT_2:
+//				backoff_state = BO_FORWARD;
+				if (forward_operation_timeout.hasElapsed() && !firstrun){
+					if (reverse_operation_timeout.hasElapsed()) {
+						forward_operation_timeout.start(forward_ms*1000L);
+						board.setMotorSpeed(ret_speed);
+					}
+					else {
+						elapsed_micros = reverse_operation_timeout.remaining();
+						reverse_operation_timeout.start(0);
+						forward_operation_timeout.start(elapsed_micros - elapsed_micros_dif);
+						board.setMotorSpeed(ret_speed);
+					}
+					backoff_state = BO_FORWARD;
+				}
+//					else
+				break;
+			case BO_FORWARD:
+//				backoff_state = BO_INACTIVE;
+				if(forward_operation_timeout.hasElapsed()){
+					board.setMotorSpeed(speed);
+					backoff_state = BO_INACTIVE;
+				}
+				break;
+			}
+	}
+	else if (!set_with_rpm) {
 		int new_speed = (!paused&&on)?(direction?speed:-speed):0;
 		board.setMotorSpeed(new_speed);
 	} else {
@@ -88,6 +154,7 @@ void MotorController::update() {
 	}
 
 }
+
 
 void MotorController::setSpeed(int speed_in) {
 	speed = speed_in;
@@ -108,7 +175,7 @@ void MotorController::pause() {
 void MotorController::setDir(bool dir_in) {
 	direction = dir_in;
 }
-
+/*
 void MotorController::setOn(bool on_in) {
 	ExtruderBoard& board = ExtruderBoard::getBoard();
 	if (!on_in && on && direction && backoff_enabled && forward_trigger_timeout.hasElapsed()) {
@@ -122,6 +189,27 @@ void MotorController::setOn(bool on_in) {
 			forward_trigger_timeout.start(trigger_ms*1000L);
 		}
 		backoff_state = BO_INACTIVE;
+	}
+	on = on_in;
+}*/
+
+void MotorController::setOn(bool on_in) {
+	ExtruderBoard& board = ExtruderBoard::getBoard();
+//	if (!on_in && on && direction && backoff_enabled && forward_trigger_timeout.hasElapsed()) {
+	if (!on_in && on && direction && backoff_enabled ) {
+		backoff_state = BO_HALT_1;
+		board.setMotorSpeed(0);
+//		if (!reverse_operation_timeout.hasElapsed() || !reverse_operation_timeout.isActive()){
+//			reverse_operation_timeout.start(0);
+//		}
+//		current_operation_timeout.start(halt_ms*1000L);
+	} else if (on_in) {
+		if (!on && direction) {
+//			forward_trigger_timeout.start(trigger_ms*1000L);
+			backoff_state = BO_HALT_2;
+			board.setMotorSpeed(speed);
+		}
+//		backoff_state = BO_INACTIVE;
 	}
 	on = on_in;
 }

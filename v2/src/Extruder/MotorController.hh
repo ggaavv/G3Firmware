@@ -39,8 +39,10 @@ private:
 	bool set_with_rpm;
 	bool direction;
 	bool on;
+	bool firstrun;
 	int speed;
 	uint32_t rpm;
+	int ret_speed;
 	bool paused;
 	// Backoff instrumentation
 	bool backoff_enabled;
@@ -53,11 +55,15 @@ private:
 	} backoff_state;
 	Timeout current_operation_timeout;
 	Timeout forward_trigger_timeout;
+	Timeout reverse_operation_timeout;
+	Timeout forward_operation_timeout;
 	uint32_t halt_ms;
 	uint32_t reverse_ms;
 	uint32_t forward_ms;
 	uint32_t trigger_ms;
 	static MotorController motor_controller;
+	micros_t elapsed_micros;
+	int32_t elapsed_micros_dif;
 };
 
 #endif // MOTOR_CONTROLLER_HH_
