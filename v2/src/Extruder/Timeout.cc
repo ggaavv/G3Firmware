@@ -38,6 +38,10 @@ bool Timeout::hasElapsed() {
 	return elapsed;
 }
 
+micros_t Timeout::remaining() {
+	return ExtruderBoard::getBoard().getCurrentMicros() - start_stamp_micros;
+}
+
 void Timeout::abort() {
 	active = false;
 }

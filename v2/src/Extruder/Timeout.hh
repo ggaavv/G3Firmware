@@ -36,6 +36,7 @@ public:
 	Timeout();
 	void start(micros_t duration_micros);
 	bool hasElapsed();
+	micros_t remaining();
 	bool isActive() const { return active; }
 	void abort();
 };
