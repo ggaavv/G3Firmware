@@ -70,7 +70,7 @@ if (platform == 'rrmbv24'):
 
 if (platform == 'rrmbv12'):
 	default_baud = '38400'
-	mcu='atmega644p'
+	mcu='atmega1284p'
 	has_queue = 1
 	has_psu = 1
 elif (platform == 'mb24'):
@@ -108,21 +108,38 @@ flags=[
 	'-ffunction-sections',
 	'-fdata-sections']
 
-if (os.environ.has_key('VERSION')):
-   flags.append('-DVERSION=' + os.environ['VERSION'])
-
-if (os.environ.has_key('BUILD_NAME')):
-   flags.append('-DBUILD_NAME=' + os.environ['BUILD_NAME'])
-
 if (os.environ.has_key('AVR_TOOLS_PATH')):
 	avr_tools_path = os.environ['AVR_TOOLS_PATH']
 else:
 	avr_tools_path = dirname(os.popen('/usr/bin/which avr-gcc').readlines()[0])
 
-env=Environment(CC=avr_tools_path+"/avr-g++",
+
+#env = Environment()
+env=Environment(CC=avr_tools_path+"/avr-gcc",
 	CXX=avr_tools_path+"/avr-g++",
 	CPPPATH=include_paths,
 	CCFLAGS=flags)
+	
+env.Tool("mingw")
+
+env.Replace(CC=avr_tools_path+"/avr-g++",    
+	CXX=avr_tools_path+"/avr-g++")	
+
+#if (os.environ.has_key('VERSION')):
+#   flags.append('-DVERSION=' + os.environ['VERSION'])
+
+#if (os.environ.has_key('BUILD_NAME')):
+#   flags.append('-DBUILD_NAME=' + os.environ['BUILD_NAME'])
+
+#if (os.environ.has_key('AVR_TOOLS_PATH')):
+#	avr_tools_path = os.environ['AVR_TOOLS_PATH']
+#else:
+#	avr_tools_path = dirname(os.popen('/usr/bin/which avr-gcc').readlines()[0])
+
+#env=Environment(CC=avr_tools_path+"/avr-g++",
+#	CXX=avr_tools_path+"/avr-g++",
+#	CPPPATH=include_paths,
+#	CCFLAGS=flags)
 objs = env.Object(srcs)
 
 # run_alias = Alias('run', [program], program[0].path)

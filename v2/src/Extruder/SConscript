@@ -63,7 +63,7 @@ if (platform == 'ecv22'):
 	relays_default = 'true'
 elif (platform == 'ecv34'):
 	default_baud = '19200'
-	mcu='atmega168'
+	mcu='atmega328p'
 	has_queue = 0
 	has_psu = 0
 	relays_default = 'false'
@@ -115,9 +115,21 @@ else:
 	avr_tools_path = dirname(os.popen('/usr/bin/which avr-gcc').readlines()[0])
 
 env=Environment(CC=avr_tools_path+"/avr-gcc",
+	CXX=avr_tools_path+"/avr-g++")
+#	CPPPATH=include_paths,
+#	CCFLAGS=flags)
+#objs = env.Object(srcs)
+
+	
+env.Tool("mingw")
+
+env.Replace(CC=avr_tools_path+"/avr-gcc",    
+
 	CXX=avr_tools_path+"/avr-g++",
 	CPPPATH=include_paths,
 	CCFLAGS=flags)
+	
+
 objs = env.Object(srcs)
 
 # run_alias = Alias('run', [program], program[0].path)
