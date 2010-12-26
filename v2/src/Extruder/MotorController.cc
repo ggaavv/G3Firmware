@@ -40,10 +40,10 @@ void MotorController::reset() {
 	firstrun = 1;
 }
 
-#define DEFAULT_HALT_MS 5L
-#define DEFAULT_REVERSE_MS 500L
-#define DEFAULT_FORWARD_MS 300L
-#define DEFAULT_TRIGGER_MS 300L
+#define DEFAULT_HALT_MS 0L
+#define DEFAULT_REVERSE_MS 15L
+#define DEFAULT_FORWARD_MS 30L
+#define DEFAULT_TRIGGER_MS 0L
 
 void MotorController::loadBackoffParameters()
 {
