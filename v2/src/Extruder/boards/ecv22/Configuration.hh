@@ -78,8 +78,8 @@
 // Enable = "D10"
 #define ES_ENABLE_PIN		Pin(PortB,2)
 // Dir and step are in the quadrature
-#define ES_DIR_PIN			Pin(PortD,2) // Quadrature pin 8
-#define ES_STEP_PIN			Pin(PortD,3) // Quadrature pin 7
+#define ES_DIR_PIN			HB1_ENABLE_PIN // Pin(PortD,2) // Quadrature pin 8
+#define ES_STEP_PIN			HB2_ENABLE_PIN // Pin(PortD,3) // Quadrature pin 7
 
 #define DEBUG_LED			Pin(PortB,5)
 

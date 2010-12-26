@@ -80,7 +80,8 @@ extern "C"
     defined(__AVR_ATmega88P__) || \
     defined(__AVR_ATmega168__) || \
     defined(__AVR_ATmega168P__) || \
-    defined(__AVR_ATmega328P__)
+    defined(__AVR_ATmega328P__) || \
+    defined(__AVR_ATmega1248P__)
     #define configure_pin_mosi() DDRB |= (1 << DDB3)
     #define configure_pin_sck() DDRB |= (1 << DDB5)
     #define configure_pin_ss() DDRB |= (1 << DDB2)
@@ -90,7 +91,8 @@ extern "C"
     #define unselect_card() PORTB |= (1 << PORTB2)
 #elif defined(__AVR_ATmega16__) || \
       defined(__AVR_ATmega32__) || \
-      defined(__AVR_ATmega644P__)
+      defined(__AVR_ATmega644P__) || \
+	  defined(__AVR_ATmega1284P__)
     #define configure_pin_mosi() DDRB |= (1 << DDB5)
     #define configure_pin_sck() DDRB |= (1 << DDB7)
     #define configure_pin_ss() DDRB |= (1 << DDB4)
