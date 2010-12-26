@@ -1,0 +1,7 @@
+Motherboard
+cd C:\msysgit\git\G3Firmware\v2
+scons
+
+Extruder
+cd C:\msysgit\git\G3Firmware\v2
+scons -f SConstruct.extruder
