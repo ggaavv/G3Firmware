@@ -43,7 +43,8 @@ Pin external_step_pin = ES_STEP_PIN;
 // FIXME: Hardcoded steps per revolution. Eventually, this needs to be configurable
 // Set to 200 for standard Makerbot Stepper Motor Driver V2.3
 // Set to 5 * 200 for MakerGear 1:5 geared stepper
-uint16_t extruder_steps_per_rev = 200;
+// rpm = 2000 * 60 = 120000
+uint16_t extruder_steps_per_rev = 2000;
 
 volatile uint32_t ext_stepper_ticks_per_step = 0;
 volatile int32_t ext_stepper_counter = 0;

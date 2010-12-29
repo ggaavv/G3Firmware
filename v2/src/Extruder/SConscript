@@ -25,7 +25,7 @@ from os.path import dirname
 # Parameters
 platform = ARGUMENTS.get('platform','ecv22')
 stepper = ARGUMENTS.get('stepper','false')
-extstepper = ARGUMENTS.get('extstepper','false')
+extstepper = ARGUMENTS.get('extstepper','true')
 f_cpu='16000000L'
 
 if platform == 'ec36':
