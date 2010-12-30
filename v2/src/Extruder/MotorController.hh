@@ -42,7 +42,7 @@ private:
 	bool firstrun;
 	int speed;
 	uint32_t rpm;
-	int ret_speed;
+	uint32_t ret_speed;
 	bool paused;
 	// Backoff instrumentation
 	bool backoff_enabled;

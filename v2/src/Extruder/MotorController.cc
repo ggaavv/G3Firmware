@@ -30,7 +30,8 @@ void MotorController::reset() {
 	paused = false;
 	on = false;
 	speed = 0;
-	set_with_rpm = false;
+	set_with_rpm = true;
+	ret_speed = 5;
 	backoff_state = BO_INACTIVE;
 	loadBackoffParameters();
 	forward_operation_timeout.start(0);
@@ -135,7 +136,7 @@ void MotorController::update() {
 			case BO_FORWARD:
 //				backoff_state = BO_INACTIVE;
 				if(forward_operation_timeout.hasElapsed()){
-					board.setMotorSpeedRPM(speed, true);
+					board.setMotorSpeedRPM(rpm, true);
 					backoff_state = BO_INACTIVE;
 				}
 				break;
@@ -207,7 +208,7 @@ void MotorController::setOn(bool on_in) {
 		if (!on && direction) {
 //			forward_trigger_timeout.start(trigger_ms*1000L);
 			backoff_state = BO_HALT_2;
-			board.setMotorSpeedRPM(speed, true);
+			board.setMotorSpeedRPM(rpm, true);
 		}
 //		backoff_state = BO_INACTIVE;
 	}

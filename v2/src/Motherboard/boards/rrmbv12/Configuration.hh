@@ -98,9 +98,9 @@
 // The Y stepper enable pin (active low)
 #define Y_ENABLE_PIN    Pin(PortA,7)
 // The Y minimum endstop pin (active high)
-#define Y_MIN_PIN       Pin(PortA,6)
+#define Y_MIN_PIN       Pin(PortA,5)
 // The Y maximum endstop pin (active high)
-#define Y_MAX_PIN       Pin(PortA,5)
+#define Y_MAX_PIN       Pin(PortA,6)
 
 // The Z stepper step pin (active on rising edge)
 #define Z_STEP_PIN      Pin(PortA,4)
@@ -109,9 +109,9 @@
 // The Z stepper enable pin (active low)
 #define Z_ENABLE_PIN    Pin(PortA,2)
 // The Z minimum endstop pin (active high)
-#define Z_MIN_PIN       Pin(PortA,1)
+#define Z_MIN_PIN       Pin(PortA,0)
 // The Z maximum endstop pin (active high)
-#define Z_MAX_PIN       Pin(PortA,0)
+#define Z_MAX_PIN       Pin(PortA,1)
 
 // --- Debugging configuration ---
 // The pin which controls the debug LED (active high)
