@@ -31,7 +31,7 @@ void MotorController::reset() {
 	on = false;
 	speed = 0;
 	set_with_rpm = true;
-	ret_speed = 5;
+	ret_speed = 500000000;
 	backoff_state = BO_INACTIVE;
 	loadBackoffParameters();
 	forward_operation_timeout.start(0);
@@ -148,7 +148,8 @@ void MotorController::update() {
 	} else {
 #ifdef DEFAULT_EXTERNAL_STEPPER
 		board.setMotorSpeedRPM(rpm, direction);
-		board.setMotorOn(!paused && on);
+		//board.setMotorOn(!paused && on);
+		board.setMotorOn(!paused);
 #else
 		board.setMotorSpeedRPM((!paused&&on) ? rpm : 0, direction);
 #endif
