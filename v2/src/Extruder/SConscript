@@ -4,14 +4,14 @@
 # By default, this script will build the firmware for an atmega168-based extruder controller.
 # The firmware will be built, but not uploaded.
 #
-# To build for another platform, pass an explicit platform parameter.  For example,
+# To build for another platform, pass an explicit platform parameter. For example,
 # $ scons platform=ecv22
 # $ scons platform=ecv34
 #
 # To default to stepper rather than DC drive, add "stepper=true".
 # To default to PWM heater rather than relays, add "relays=false".
 #
-# To upload the firmware, specify the "upload" target.  By default, this will use
+# To upload the firmware, specify the "upload" target. By default, this will use
 # /dev/ttyUSB0 as the serial connection.
 # $ scons upload
 #
@@ -30,7 +30,7 @@ f_cpu='16000000L'
 
 if platform == 'ec36':
 	platform = 'ecv34'
-	
+
 default_baud = '19200'
 mcu='atmega168'
 has_queue = 0
@@ -111,25 +111,16 @@ if (relays == 'true'):
 
 if (os.environ.has_key('AVR_TOOLS_PATH')):
 	avr_tools_path = os.environ['AVR_TOOLS_PATH']
+elif (os.environ.has_key('AVR32_HOME')):
+	avr_tools_path = os.environ['AVR32_HOME'] + '\\bin'
 else:
 	avr_tools_path = dirname(os.popen('/usr/bin/which avr-gcc').readlines()[0])
 
-env=Environment(CC=avr_tools_path+"/avr-gcc",
-	CXX=avr_tools_path+"/avr-g++")
-#	CPPPATH=include_paths,
-#	CCFLAGS=flags)
-#objs = env.Object(srcs)
-
-	
-env.Tool("mingw")
-
-env.Replace(CC=avr_tools_path+"/avr-gcc",    
-
+env=Environment(tools=['g++', 'gcc'],
+	CC=avr_tools_path+"/avr-gcc",
 	CXX=avr_tools_path+"/avr-g++",
 	CPPPATH=include_paths,
 	CCFLAGS=flags)
-	
-
 objs = env.Object(srcs)
 
 # run_alias = Alias('run', [program], program[0].path)
@@ -140,7 +131,7 @@ elf_name = target_name + '.elf'
 
 env.Append(BUILDERS={'Elf':Builder(action=avr_tools_path+"/avr-gcc -mmcu="+mcu+" -Wl,-Map=${TARGET}.map -Os -Wl,--gc-sections -o $TARGET $SOURCES")})
 env.Append(BUILDERS={'Hex':Builder(action=avr_tools_path+"/avr-objcopy -O ihex -R .eeprom $SOURCES $TARGET")})
-env.Elf(elf_name, objs) 
+env.Elf(elf_name, objs)
 env.Hex(hex_name, elf_name)
 
 avrdude = avr_tools_path+"/avrdude"
