@@ -1,0 +1,7 @@
+cd /c/msysgit/git/G3Firmware
+git pull upstream master
+git commit -a
+git push
+
+
+git remote -v
