@@ -28,6 +28,8 @@
 
 ExtruderBoard ExtruderBoard::extruderBoard;
 
+static int servo[2];
+
 ExtruderBoard::ExtruderBoard() :
 		micros(0L),
 		extruder_thermocouple(THERMOCOUPLE_CS,THERMOCOUPLE_SCK,THERMOCOUPLE_SO),
@@ -36,6 +38,12 @@ ExtruderBoard::ExtruderBoard() :
 		platform_heater(platform_thermistor,platform_element,SAMPLE_INTERVAL_MICROS_THERMISTOR,eeprom::HBP_PID_P_TERM),
 		using_platform(true)
 {
+}
+
+// Get the reset flags from the processor, as a bitfield
+// return: The bitfield looks like this: 0 0 0 0 WDRF BORF EXTRF PORF
+uint8_t ExtruderBoard::getResetFlags() {
+	return resetFlags;
 }
 
 // Turn on/off PWM for channel A on OC1B
@@ -66,7 +74,16 @@ void pwmCOn(bool on) {
 }
 
 void ExtruderBoard::reset() {
+	resetFlags = MCUSR & 0x0f;
+
 	initExtruderMotor();
+
+	SERVO0.setValue(false);
+	SERVO0.setDirection(true);
+	SERVO1.setValue(false);
+	SERVO1.setDirection(true);
+	servo[0] = -1;
+	servo[1] = -1;
 
 	// Set the output mode for the mosfets.  All three should default
 	// off.
@@ -84,16 +101,33 @@ void ExtruderBoard::reset() {
 	OCR2A = INTERVAL_IN_MICROSECONDS / 2; // 2uS/tick at 1/32 prescaler
 	TIMSK2 = 0x02; // turn on OCR2A match interrupt
 
-	// Timer 1 is for PWM of mosfet channel B on OC1A/PB1, and
-	// mosfet channel A on OC1B/PB2.
+	// Timer 1 is used for servo operation.
+	// The prescaler is set at 1/8th, giving us a pulse cycle of 32ms.
+	// (At this rate, 2000 ticks -> 1ms.)
+	// We run the timer in normal mode, overflowing at 0xffff.
+	// Interrupts are generated for overflow, setting all servo channels on,
+	// and for ocr1a and ocr1b matches, turning their respective servo pins
+	// off.
+	// WGM = 0,
+	// CS = 0b010
+	TCCR1A = 0b00000000;
+	TCCR1B = 0b00000010;
+	OCR1A = 0;
+	OCR1B = 0;
+	TIMSK1 = _BV(OCIE1B) | _BV(OCIE1A) | _BV(TOIE1);
+
+	// Timer 0 is for PWM of mosfet channel C on OC0A/PB1, and
+	// the h-bridge enable on OC0B/PD6.
 	// The mode is 0101, which is 8-bit rollover PWM, yay convenience.
 	// A 1/64 prescaler (CS 011) gives us a PWM cycle of 1/16ms.
 	// Start with both mosfets off.
-	TCCR1A = 0b00000001;
-	TCCR1B = 0b00001011;
-	OCR1A = 0;
-	OCR1B = 0;
-	TIMSK1 = 0b00000000; // no interrupts needed
+	TCCR0A = 0b00000001;
+	TCCR0B = 0b00000011;
+	OCR0A = 0;
+	OCR0B = 0;
+	TIMSK0 = 0b00000000; // no interrupts needed
+
+
 	extruder_thermocouple.init();
 	platform_thermistor.init();
 	extruder_heater.reset();
@@ -133,14 +167,31 @@ void ExtruderBoard::setValve(bool on) {
 }
 
 void ExtruderBoard::indicateError(int errorCode) {
-	DEBUG_LED.setValue(errorCode != 0);
+	// The debug LED must never be set, because... IT IS CONNECTED TO THE SCK PIN.  *slow clap*
+	//DEBUG_LED.setValue(errorCode != 0);
 }
 
 void ExtruderBoard::setUsingPlatform(bool is_using) {
 	using_platform = is_using;
 }
 
-/// Timer one comparator match interrupt
+void ExtruderBoard::setServo(uint8_t index, int value) {
+	servo[index] = value;
+	uint16_t matchVal;
+	if (value == -1) {
+		matchVal = 0;
+	} else {
+		matchVal = 2000 + 8*value; // Give or take a bit.  It's a freaking hobby servo.
+	}
+	if (index == 0) {
+		OCR1A = matchVal;
+	}
+	else if (index == 1) {
+		OCR1B = matchVal;
+	}
+}
+
+/// Timer two comparator A match interrupt
 ISR(TIMER2_COMPA_vect) {
 	ExtruderBoard::getBoard().doInterrupt();
 }
@@ -164,5 +215,28 @@ void BuildPlatformHeatingElement::setHeatingElement(uint8_t value) {
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 		pwmBOn(false);
 		CHANNEL_B.setValue(value != 0);
+	}
+}
+
+/// Timer one comparator match A interrupt
+ISR(TIMER1_COMPA_vect) {
+	if (servo[0] != -1) {
+		SERVO0.setValue(false);
+	}
+}
+
+/// Timer one comparator match B interrupt
+ISR(TIMER1_COMPB_vect) {
+	if (servo[1] != -1) {
+		SERVO1.setValue(false);
+	}
+}
+
+ISR(TIMER1_OVF_vect) {
+	if (servo[0] != -1) {
+		SERVO0.setValue(true);
+	}
+	if (servo[1] != -1) {
+		SERVO1.setValue(true);
 	}
 }

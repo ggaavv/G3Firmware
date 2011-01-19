@@ -55,6 +55,9 @@
 // Platform thermistor analog pin
 #define PLATFORM_PIN    6
 
+#define HAS_SERVOS		1
+#define SERVO0			Pin(PortC,2)
+#define SERVO1			Pin(PortC,3)
 
 #define CHANNEL_A				Pin(PortB,2)
 #define CHANNEL_B				Pin(PortB,1)
@@ -64,7 +67,8 @@
 #define MOTOR_ENABLE_PIN	Pin(PortD,5)
 #define MOTOR_DIR_PIN		Pin(PortB,0)
 
-#define DEBUG_LED			Pin(PortB,5)
+// We are disabling the debug LED to avoid stomping on SCK.
+// #define DEBUG_LED			Pin(PortB,5)
 
 #define SAMPLE_INTERVAL_MICROS_THERMISTOR (50L * 1000L)
 #define SAMPLE_INTERVAL_MICROS_THERMOCOUPLE (500L * 1000L)

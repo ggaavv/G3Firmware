@@ -38,6 +38,7 @@ class Heater
     uint16_t eeprom_base;
 
     PID pid;
+    bool bypassing_PID;
 
     bool fail_state;
 
@@ -63,6 +64,10 @@ class Heater
 
     // Reset to board-on state
     void reset();
+
+    int getPIDErrorTerm();
+    int getPIDDeltaTerm();
+    int getPIDLastOutput();
 };
 
 #endif // HEATER_H

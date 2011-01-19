@@ -40,6 +40,10 @@ public:
 class ExtruderBoard {
 public:
 	void reset();
+	// Return the processor's reset status flags.  These are useful
+	// for diagnosing what might have triggered the last processor
+	// reset.
+	uint8_t getResetFlags();
 
 	Heater& getExtruderHeater() { return extruder_heater; }
 	Heater& getPlatformHeater() { return platform_heater; }
@@ -59,6 +63,8 @@ public:
 	void indicateError(int errorCode);
 	bool isUsingPlatform() { return using_platform; }
 	void setUsingPlatform(bool is_using);
+	// Index 0 = PORTC2, Index 1 = PORTC3.  Value = -1 to turn off, 0-255 to set position.
+	void setServo(uint8_t index, int value);
 private:
 	Thermocouple extruder_thermocouple;
 	Thermistor platform_thermistor;
@@ -71,6 +77,8 @@ private:
 	volatile micros_t micros;
 	ExtruderBoard();
 	static ExtruderBoard extruderBoard;
+
+	uint8_t resetFlags;
 };
 
 #endif // BOARDS_ECV34_EXTRUDER_BOARD_HH_
