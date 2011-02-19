@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Adam Mayer	 <adam@makerbot.com>
+ * Copyright 2011 by Matt Mets <matt.mets@makerbot.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BOARDS_ECV22_ANALOG_PIN_HH_
-#define BOARDS_ECV22_ANALOG_PIN_HH_
+#ifndef SOFTWARE_SERVO_HH_
+#define SOFTWARE_SERVO_HH_
 
-#include <stdint.h>
+#include "AvrPort.hh"
 
-void initAnalogPin(uint8_t pin);
+class SoftwareServo {
+public:
+	SoftwareServo(Pin pin);
+	void setPosition(uint8_t position);
+	void enable();
+	void disable();
 
-// True if initiated, false if busy
-bool startAnalogRead(uint8_t pin, volatile int16_t* destination, volatile bool* finished);
+	bool isEnabled() { return enabled; }
+	uint16_t getCounts() { return counts; }
 
-#endif /* BOARDS_ECV22_ANALOG_PIN_HH_ */
+	Pin pin;				// Pin this servo is connected to
+private:
+	bool enabled;			// If true, enable servo
+	uint16_t counts;		// uS length of servo on-time
+};
+
+#endif

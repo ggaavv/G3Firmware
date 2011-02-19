@@ -154,13 +154,37 @@ bool processQueryPacket(const InPacket& from_host, OutPacket& to_host) {
 		case SLAVE_CMD_SET_SERVO_1_POS:
 #if HAS_SERVOS
 		{
-			uint8_t v = from_host.read8(2);
-			if (v == 255) {
+			uint8_t value = from_host.read8(2);
+			if (value == 255) {
 				board.setServo(0,-1);
-			} else {
-				if (v > 180) v = 180;
-				board.setServo(0,v);
 			}
+			else {
+				if (value > 180) {
+					value = 180;
+				}
+				board.setServo(0,value);
+			}
+
+		}
+			to_host.append8(RC_OK);
+#else
+			to_host.append8(RC_CMD_UNSUPPORTED);
+#endif
+			return true;
+		case SLAVE_CMD_SET_SERVO_2_POS:
+#if HAS_SERVOS
+		{
+			uint8_t value = from_host.read8(2);
+			if (value == 255) {
+				board.setServo(1,-1);
+			}
+			else {
+				if (value > 180) {
+					value = 180;
+				}
+				board.setServo(1,value);
+			}
+
 		}
 			to_host.append8(RC_OK);
 #else
@@ -182,11 +206,18 @@ bool processQueryPacket(const InPacket& from_host, OutPacket& to_host) {
 		case SLAVE_CMD_GET_TOOL_STATUS:
 			to_host.append8(RC_OK);
 			to_host.append8( (board.getExtruderHeater().has_failed()?128:0)
-					        | (board.getResetFlags() << 2)
+							| (board.getPlatformHeater().has_failed()?64:0)
+					        | ((board.getResetFlags() & 0x0f) << 2)
 							| (board.getExtruderHeater().has_reached_target_temperature()?1:0));
+			return true;
+		case SLAVE_CMD_GET_PID_STATE:
+			to_host.append8(RC_OK);
 			to_host.append16(board.getExtruderHeater().getPIDErrorTerm());
 			to_host.append16(board.getExtruderHeater().getPIDDeltaTerm());
 			to_host.append16(board.getExtruderHeater().getPIDLastOutput());
+			to_host.append16(board.getPlatformHeater().getPIDErrorTerm());
+			to_host.append16(board.getPlatformHeater().getPIDDeltaTerm());
+			to_host.append16(board.getPlatformHeater().getPIDLastOutput());
 			return true;
 		}
 	}

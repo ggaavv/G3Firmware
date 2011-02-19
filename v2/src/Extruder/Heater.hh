@@ -41,9 +41,11 @@ class Heater
     bool bypassing_PID;
 
     bool fail_state;
+    uint8_t fail_count;
 
-    // This is the interval between PID calculations.  Longer updates are (counterintuitively)
-    // better since we're using discrete D.
+    // This is the interval between PID calculations.  It doesn't make sense for
+    // this to be fast (<1 sec) because of the long system delay between heater
+    // and sensor.
     const static micros_t UPDATE_INTERVAL_MICROS = 500L * 1000L;
 
     void fail();
