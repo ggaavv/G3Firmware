@@ -69,7 +69,7 @@
 // --- Axis configuration ---
 // Define the number of stepper axes supported by the board.  The axes are
 // denoted by X, Y, Z, A and B.
-#define STEPPER_COUNT 3
+#define STEPPER_COUNT 4
 
 // --- Stepper and endstop configuration ---
 // Pins should be defined for each axis present on the board.  They are denoted
@@ -112,6 +112,20 @@
 #define Z_MIN_PIN       Pin(PortA,0)
 // The Z maximum endstop pin (active high)
 #define Z_MAX_PIN       Pin(PortA,1)
+
+// The A stepper step pin (active on rising edge)
+#define A_STEP_PIN      Pin(PortC,0)
+// The A direction pin (forward on logic high)
+#define A_DIR_PIN       Pin(PortC,1)
+// The A stepper enable pin (active low)
+#define A_ENABLE_PIN    Pin(PortB,1)
+
+// The B stepper step pin (active on rising edge)
+//#define B_STEP_PIN      Pin(PortG,5)
+// The B direction pin (forward on logic high)
+//#define B_DIR_PIN       Pin(PortE,3)
+// The B stepper enable pin (active low)
+//#define B_ENABLE_PIN    Pin(PortH,3)
 
 // --- Debugging configuration ---
 // The pin which controls the debug LED (active high)

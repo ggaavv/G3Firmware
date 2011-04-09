@@ -28,10 +28,12 @@
 #endif
 
 #if MEGA644P_DOUBLE_SPEED_MODE
-#define UBRR_VALUE 51
+//#define UBRR_VALUE 16  // 115200 baud
+#define UBRR_VALUE 51  // 38400 baud
 #define UBRRA_VALUE _BV(U2X##uart_)
 #else
-#define UBRR_VALUE 25
+//#define UBRR_VALUE 8   // 115200
+#define UBRR_VALUE 25  // 38400 baud
 #define UBRRA_VALUE 0
 #endif
 
