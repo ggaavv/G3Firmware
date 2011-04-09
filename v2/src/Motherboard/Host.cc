@@ -25,9 +25,12 @@
 #include "Version.hh"
 #include <util/atomic.h>
 #include <avr/eeprom.h>
+#include <avr/pgmspace.h>
 #include "Main.hh"
 #include "Errors.hh"
-#include "SDCard.hh"
+#include "EepromMap.hh"
+
+namespace host {
 
 /// Identify a command packet, and process it.  If the packet is a command
 /// packet, return true, indicating that the packet has been queued and no
@@ -45,7 +48,15 @@ Timeout packet_in_timeout;
 #define HOST_TOOL_RESPONSE_TIMEOUT_MS 50
 #define HOST_TOOL_RESPONSE_TIMEOUT_MICROS (1000L*HOST_TOOL_RESPONSE_TIMEOUT_MS)
 
-bool do_host_reset = false;
+char machineName[MAX_MACHINE_NAME_LEN];
+
+char buildName[MAX_FILE_LEN];
+
+uint32_t buildSteps;
+
+HostState currentState;
+
+bool do_host_reset = true;
 
 void runHostSlice() {
 	InPacket& in = Motherboard::getBoard().getHostUART().in;
@@ -60,7 +71,10 @@ void runHostSlice() {
 		reset(false);
 		packet_in_timeout.abort();
 
-		// TODO: Reset the extruder board.
+		// Clear the machine and build names
+		machineName[0] = 0;
+		buildName[0] = 0;
+		currentState = HOST_STATE_READY;
 
 		return;
 	}
@@ -146,8 +160,8 @@ inline void handleVersion(const InPacket& from_host, OutPacket& to_host) {
 inline void handleGetBuildName(const InPacket& from_host, OutPacket& to_host) {
 	to_host.append8(RC_OK);
 	for (uint8_t idx = 0; idx < 31; idx++) {
-	  to_host.append8(build_name[idx]);
-	  if (build_name[idx] == '\0') { break; }
+	  to_host.append8(buildName[idx]);
+	  if (buildName[idx] == '\0') { break; }
 	}
 }
 
@@ -215,14 +229,14 @@ inline void handleEndCapture(const InPacket& from_host, OutPacket& to_host) {
 }
 
 inline void handlePlayback(const InPacket& from_host, OutPacket& to_host) {
-	const int MAX_FILE_LEN = MAX_PACKET_PAYLOAD-1;
 	to_host.append8(RC_OK);
-	char fnbuf[MAX_FILE_LEN];
 	for (int idx = 1; idx < from_host.getLength(); idx++) {
-		fnbuf[idx-1] = from_host.read8(idx);
+		buildName[idx-1] = from_host.read8(idx);
 	}
-	fnbuf[MAX_FILE_LEN-1] = '\0';
-	to_host.append8(sdcard::startPlayback(fnbuf));
+	buildName[MAX_FILE_LEN-1] = '\0';
+
+	uint8_t response = startBuildFromSD();
+	to_host.append8(response);
 }
 
 inline void handleNextFilename(const InPacket& from_host, OutPacket& to_host) {
@@ -381,6 +395,21 @@ inline void handleExtendedStop(const InPacket& from_host, OutPacket& to_host) {
 	to_host.append8(0);
 }
 
+//inline void handleBuildStartNotification(const InPacket& from_host, OutPacket& to_host) {
+//	uint8_t flags = from_host.read8(1);
+//
+//	buildSteps = from_host.read32(1);
+//
+//	for (int idx = 4; idx < from_host.getLength(); idx++) {
+//		buildName[idx-4] = from_host.read8(idx);
+//	}
+//	buildName[MAX_FILE_LEN-1] = '\0';
+//
+//	currentState = HOST_STATE_BUILDING;
+//
+//	to_host.append8(RC_OK);
+//}
+
 bool processQueryPacket(const InPacket& from_host, OutPacket& to_host) {
 	if (from_host.getLength() >= 1) {
 		uint8_t command = from_host.read8(0);
@@ -401,6 +430,12 @@ bool processQueryPacket(const InPacket& from_host, OutPacket& to_host) {
 			case HOST_CMD_CLEAR_BUFFER: // equivalent at current time
 			case HOST_CMD_ABORT: // equivalent at current time
 			case HOST_CMD_RESET:
+				// TODO: This is fishy.
+				if (currentState == HOST_STATE_BUILDING
+						|| currentState == HOST_STATE_BUILDING_FROM_SD) {
+					stopBuild();
+				}
+
 				do_host_reset = true; // indicate reset after response has been sent
 				to_host.append8(RC_OK);
 				return true;
@@ -446,8 +481,65 @@ bool processQueryPacket(const InPacket& from_host, OutPacket& to_host) {
 			case HOST_CMD_EXTENDED_STOP:
 				handleExtendedStop(from_host,to_host);
 				return true;
+//			case HOST_CMD_BUILD_START_NOTIFICATION:
+//				handleBuildStartNotification(from_host,to_host);
+//				return true;
+//			case HOST_CMD_BUILD_STOP_NOTIFICATION	:
+//				handleBuildStopNotification(from_host,to_host);
+//				return true;
 			}
 		}
 	}
 	return false;
+}
+
+char* getMachineName() {
+	// If the machine name hasn't been loaded, load it
+	if (machineName[0] == 0) {
+		for(uint8_t i = 0; i < MAX_MACHINE_NAME_LEN; i++) {
+			machineName[i] = eeprom::getEeprom8(eeprom::MACHINE_NAME+i, 0);
+		}
+	}
+
+	// If it's still zero, load in a default.
+	static PROGMEM prog_uchar defaultMachineName[] =  "Thing-O-Matic";
+
+	if (machineName[0] == 0) {
+		for(uint8_t i = 0; i < 14; i++) {
+			machineName[i] = pgm_read_byte_near(defaultMachineName+i);
+		}
+	}
+
+	return machineName;
+}
+
+char* getBuildName() {
+	return buildName;
+}
+
+HostState getHostState() {
+	return currentState;
+}
+
+// Start a build from SD, if possible.
+sdcard::SdErrorCode startBuildFromSD() {
+	sdcard::SdErrorCode e;
+
+	// Attempt to start build
+	e = sdcard::startPlayback(buildName);
+	if (e != sdcard::SD_SUCCESS) {
+		// TODO: report error
+		return e;
+	}
+
+	currentState = HOST_STATE_BUILDING_FROM_SD;
+
+	return e;
+}
+
+// Stop the current build, if any
+void stopBuild() {
+	do_host_reset = true; // indicate reset after response has been sent
+}
+
 }

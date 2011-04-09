@@ -23,14 +23,15 @@
 #include "Configuration.hh"
 #include "Steppers.hh"
 #include "Command.hh"
-#include "LiquidCrystal.hh"
+#include "Interface.hh"
+
 
 /// Instantiate static motherboard instance
 Motherboard Motherboard::motherboard;
-LiquidCrystal lcd(Pin(PortC,4), Pin(PortC,3), Pin(PortD,7), Pin(PortG,2), Pin(PortG,1), Pin(PortG,0));
 
 /// Create motherboard object
-Motherboard::Motherboard() {
+Motherboard::Motherboard()
+{
 	/// Set up the stepper pins on board creation
 #if STEPPER_COUNT > 0
 	stepper[0] = StepperInterface(X_DIR_PIN,X_STEP_PIN,X_ENABLE_PIN,X_MAX_PIN,X_MIN_PIN);
@@ -48,6 +49,7 @@ Motherboard::Motherboard() {
 	stepper[4] = StepperInterface(B_DIR_PIN,B_STEP_PIN,B_ENABLE_PIN,Pin(),Pin());
 #endif
 }
+
 
 /// Reset the motherboard to its initial state.
 /// This only resets the board, and does not send a reset
@@ -81,14 +83,17 @@ void Motherboard::reset() {
 	TIMSK2 = 0x01; // OVF flag on
 	// Configure the debug pin.
 	DEBUG_PIN.setDirection(true);
-//	lcd.begin(16,4);
-//	lcd.clear();
-//	lcd.home();
-//	lcd.write('H');
-//	lcd.write('e');
-//	lcd.write('l');
-//	lcd.write('l');
-//	lcd.write('o');
+
+
+	// Check if the interface board is attached
+	hasInterfaceBoard = interfaceboard::isConnected();
+
+	if (hasInterfaceBoard) {
+		// Make sure our interface board is initialized
+		interfaceboard::init();
+
+		interface_update_timeout.start(interfaceboard::getUpdateRate());
+	}
 }
 
 /// Get the number of microseconds that have passed since
@@ -107,7 +112,21 @@ void Motherboard::doInterrupt() {
 	// Do not move steppers if the board is in a paused state
 	if (command::isPaused()) return;
 	steppers::doInterrupt();
+
+	if (hasInterfaceBoard) {
+		interfaceboard::doInterrupt();
+	}
 }
+
+void Motherboard::runMotherboardSlice() {
+	if (hasInterfaceBoard) {
+		if (interface_update_timeout.hasElapsed()) {
+			interfaceboard::doUpdate();
+			interface_update_timeout.start(interfaceboard::getUpdateRate());
+		}
+	}
+}
+
 
 /// Timer one comparator match interrupt
 ISR(TIMER1_COMPA_vect) {

@@ -32,6 +32,7 @@
 #include "Types.hh"
 #include "PSU.hh"
 #include "Configuration.hh"
+#include "Timeout.hh"
 
 class Motherboard {
 private:
@@ -45,11 +46,19 @@ private:
 	Motherboard();
 
 	static Motherboard motherboard;
+
+	Timeout interface_update_timeout;
+
+	// True if we have an interface board attached
+	bool hasInterfaceBoard;
+
 public:
 	/// Reset the motherboard to its initial state.
 	/// This only resets the board, and does not send a reset
 	/// to any attached toolheads.
 	void reset();
+
+	void runMotherboardSlice();
 
 	/// Get the UART that communicates with the host.
 	UART& getHostUART() { return UART::getHostUART(); }
