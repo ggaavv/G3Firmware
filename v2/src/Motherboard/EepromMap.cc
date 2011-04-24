@@ -29,7 +29,9 @@ void init() {
 	if (version[1] == 0xff || version[1] < 2) {
 		// Initialize eeprom map
 		// Default: enstops inverted, Y axis inverted
-		uint8_t axis_invert = 1<<1; // Y axis = 1
+							//		  bazyx
+		uint8_t axis_invert = 	 0b00000011; // 1<<1; // Y axis = 1
+							//		  bazyx
 		uint8_t endstop_invert = 0b00010111; // all endstops inverted
 		eeprom_write_byte((uint8_t*)eeprom::AXIS_INVERSION,axis_invert);
 		eeprom_write_byte((uint8_t*)eeprom::ENDSTOP_INVERSION,endstop_invert);

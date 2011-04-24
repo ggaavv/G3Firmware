@@ -1,0 +1,1998 @@
+Archive member included because of file (symbol)
+
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
+                              build\Command.o (__mulsi3)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+                              build\Command.o (__udivmodhi4)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+                              build\lib_sd\fat.o (__divmodhi4)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
+                              build\lib_sd\fat.o (__udivmodsi4)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodsi4.o)
+                              build\Steppers.o (__divmodsi4)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o (exit)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+                              build\Command.o (__do_clear_bss)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_ctors.o)
+                              build\Command.o (__do_global_ctors)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+                              src\shared\PID.o (__subsf3)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+                              src\shared\PID.o (__mulsf3)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+                              src\shared\PID.o (__floatsisf)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+                              src\shared\PID.o (__fixsfsi)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_thenan_sf.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o) (__thenan_sf)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o) (__prologue_saves__)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o) (__epilogue_restores__)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_tablejump.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_ctors.o) (__tablejump__)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o) (__clzsi2)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o) (__pack_f)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o) (__unpack_f)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clz.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o) (__clz_tab)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(rand.o)
+                              build\boards\mb24\Menu.o (rand)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memcpy.o)
+                              build\lib_sd\fat.o (memcpy)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
+                              build\lib_sd\fat.o (memset)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strchr.o)
+                              build\lib_sd\fat.o (strchr)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strcmp.o)
+                              build\SDCard.o (strcmp)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncmp.o)
+                              build\lib_sd\fat.o (strncmp)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncpy.o)
+                              build\lib_sd\fat.o (strncpy)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrchr.o)
+                              build\lib_sd\fat.o (strrchr)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eerd_block_atmega1280.o)
+                              build\Command.o (__eerd_block_m1280)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_block_atmega1280.o)
+                              build\Command.o (__eewr_block_m1280)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_byte_atmega1280.o)
+                              build\EepromMap.o (__eewr_byte_m1280)
+
+Discarded input sections
+
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
+ .text          0x00000000        0x0 build\Command.o
+ .data          0x00000000        0x0 build\Command.o
+ .bss           0x00000000        0x0 build\Command.o
+ .bss._ZN7command24outstanding_tool_commandE
+                0x00000000        0x0 build\Command.o
+ .text          0x00000000        0x0 build\DebugPacketProcessor.o
+ .data          0x00000000        0x0 build\DebugPacketProcessor.o
+ .bss           0x00000000        0x0 build\DebugPacketProcessor.o
+ .text          0x00000000        0x0 build\EepromMap.o
+ .data          0x00000000        0x0 build\EepromMap.o
+ .bss           0x00000000        0x0 build\EepromMap.o
+ .text._ZN6eeprom11getEeprom16Ejj
+                0x00000000        0x0 build\EepromMap.o
+ .text          0x00000000        0x0 build\Host.o
+ .data          0x00000000        0x0 build\Host.o
+ .bss           0x00000000        0x0 build\Host.o
+ .bss._ZN4host10buildStepsE
+                0x00000000        0x0 build\Host.o
+ .text          0x00000000        0x0 build\Main.o
+ .data          0x00000000        0x0 build\Main.o
+ .bss           0x00000000        0x0 build\Main.o
+ .text          0x00000000        0x0 build\SDCard.o
+ .bss           0x00000000        0x0 build\SDCard.o
+ .text._ZN6sdcard14playbackRewindEh
+                0x00000000        0x0 build\SDCard.o
+ .text          0x00000000        0x0 build\Steppers.o
+ .data          0x00000000        0x0 build\Steppers.o
+ .bss           0x00000000        0x0 build\Steppers.o
+ .text          0x00000000        0x0 build\Timeout.o
+ .data          0x00000000        0x0 build\Timeout.o
+ .bss           0x00000000        0x0 build\Timeout.o
+ .text._ZN7TimeoutC2Ev
+                0x00000000        0x0 build\Timeout.o
+ .text          0x00000000        0x0 build\Tool.o
+ .data          0x00000000        0x0 build\Tool.o
+ .bss           0x00000000        0x0 build\Tool.o
+ .text          0x00000000        0x0 build\lib_sd\byteordering.o
+ .data          0x00000000        0x0 build\lib_sd\byteordering.o
+ .bss           0x00000000        0x0 build\lib_sd\byteordering.o
+ .text          0x00000000        0x0 build\lib_sd\fat.o
+ .data          0x00000000        0x0 build\lib_sd\fat.o
+ .bss           0x00000000        0x0 build\lib_sd\fat.o
+ .text.fat_get_fs_size
+                0x00000000        0x0 build\lib_sd\fat.o
+ .text.fat_get_fs_free
+                0x00000000        0x0 build\lib_sd\fat.o
+ .text._ZL27fat_get_fs_free_16_callbackPhmPv
+                0x00000000        0x0 build\lib_sd\fat.o
+ .text.fat_create_dir
+                0x00000000        0x0 build\lib_sd\fat.o
+ .text.fat_resize_file
+                0x00000000        0x0 build\lib_sd\fat.o
+ .text.fat_seek_file
+                0x00000000        0x0 build\lib_sd\fat.o
+ .text          0x00000000        0x0 build\lib_sd\partition.o
+ .data          0x00000000        0x0 build\lib_sd\partition.o
+ .bss           0x00000000        0x0 build\lib_sd\partition.o
+ .text          0x00000000        0x0 build\lib_sd\sd_raw.o
+ .data          0x00000000        0x0 build\lib_sd\sd_raw.o
+ .bss           0x00000000        0x0 build\lib_sd\sd_raw.o
+ .text.sd_raw_get_info
+                0x00000000        0x0 build\lib_sd\sd_raw.o
+ .text          0x00000000        0x0 build\boards\mb24\Interface.o
+ .data          0x00000000        0x0 build\boards\mb24\Interface.o
+ .bss           0x00000000        0x0 build\boards\mb24\Interface.o
+ .text          0x00000000        0x0 build\boards\mb24\InterfaceBoard.o
+ .data          0x00000000        0x0 build\boards\mb24\InterfaceBoard.o
+ .bss           0x00000000        0x0 build\boards\mb24\InterfaceBoard.o
+ .text._ZN14InterfaceBoardC2Ev
+                0x00000000        0x0 build\boards\mb24\InterfaceBoard.o
+ .text          0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .data          0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .bss           0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal10createCharEhPh
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal12noAutoscrollEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal10autoscrollEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal11rightToLeftEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal11leftToRightEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal18scrollDisplayRightEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal17scrollDisplayLeftEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal5blinkEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal7noBlinkEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal6cursorEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal8noCursorEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystal9noDisplayEv
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystalC2E3PinS0_S0_S0_S0_S0_
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystalC1E3PinS0_S0_S0_S0_S0_S0_
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystalC2E3PinS0_S0_S0_S0_S0_S0_
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystalC1E3PinS0_S0_S0_S0_S0_S0_S0_S0_S0_
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystalC2E3PinS0_S0_S0_S0_S0_S0_S0_S0_S0_
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystalC1E3PinS0_S0_S0_S0_S0_S0_S0_S0_S0_S0_
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text._ZN13LiquidCrystalC2E3PinS0_S0_S0_S0_S0_S0_S0_S0_S0_S0_
+                0x00000000        0x0 build\boards\mb24\LiquidCrystal.o
+ .text          0x00000000        0x0 build\boards\mb24\Menu.o
+ .bss           0x00000000        0x0 build\boards\mb24\Menu.o
+ .text._ZN4Menu12handleSelectEh
+                0x00000000        0x0 build\boards\mb24\Menu.o
+ .text._ZN15CancelBuildMenuC2Ev
+                0x00000000        0x0 build\boards\mb24\Menu.o
+ .text._ZN8MainMenuC2Ev
+                0x00000000        0x0 build\boards\mb24\Menu.o
+ .text._ZN6SDMenuC2Ev
+                0x00000000        0x0 build\boards\mb24\Menu.o
+ .rodata._ZTV4Menu
+                0x00000000        0x0 build\boards\mb24\Menu.o
+ .text          0x00000000        0x0 build\boards\mb24\Motherboard.o
+ .data          0x00000000        0x0 build\boards\mb24\Motherboard.o
+ .bss           0x00000000        0x0 build\boards\mb24\Motherboard.o
+ .text._ZN11MotherboardC2Ev
+                0x00000000        0x0 build\boards\mb24\Motherboard.o
+ .text          0x00000000        0x0 build\boards\mb24\PSU.o
+ .data          0x00000000        0x0 build\boards\mb24\PSU.o
+ .bss           0x00000000        0x0 build\boards\mb24\PSU.o
+ .text          0x00000000        0x0 build\boards\mb24\StepperInterface.o
+ .data          0x00000000        0x0 build\boards\mb24\StepperInterface.o
+ .bss           0x00000000        0x0 build\boards\mb24\StepperInterface.o
+ .text          0x00000000        0x0 build\boards\mb24\UART.o
+ .data          0x00000000        0x0 build\boards\mb24\UART.o
+ .bss           0x00000000        0x0 build\boards\mb24\UART.o
+ .text._ZN4UARTC2Eh
+                0x00000000        0x0 build\boards\mb24\UART.o
+ .text          0x00000000        0x0 src\shared\AvrPort.o
+ .data          0x00000000        0x0 src\shared\AvrPort.o
+ .bss           0x00000000        0x0 src\shared\AvrPort.o
+ .text          0x00000000        0x0 src\shared\PID.o
+ .data          0x00000000        0x0 src\shared\PID.o
+ .bss           0x00000000        0x0 src\shared\PID.o
+ .text._ZN3PID11reset_stateEv
+                0x00000000        0x0 src\shared\PID.o
+ .text._ZN3PID5resetEv
+                0x00000000        0x0 src\shared\PID.o
+ .text._ZN3PID9calculateEi
+                0x00000000        0x0 src\shared\PID.o
+ .text._ZN3PID9setTargetEi
+                0x00000000        0x0 src\shared\PID.o
+ .text._ZN3PID12getErrorTermEv
+                0x00000000        0x0 src\shared\PID.o
+ .text._ZN3PID12getDeltaTermEv
+                0x00000000        0x0 src\shared\PID.o
+ .text._ZN3PID13getLastOutputEv
+                0x00000000        0x0 src\shared\PID.o
+ .text          0x00000000        0x0 src\shared\Packet.o
+ .data          0x00000000        0x0 src\shared\Packet.o
+ .bss           0x00000000        0x0 src\shared\Packet.o
+ .text._ZN6Packet10appendByteEh
+                0x00000000        0x0 src\shared\Packet.o
+ .text._ZN8InPacketC2Ev
+                0x00000000        0x0 src\shared\Packet.o
+ .text._ZNK6Packet6read32Eh
+                0x00000000        0x0 src\shared\Packet.o
+ .text._ZN9OutPacketC2Ev
+                0x00000000        0x0 src\shared\Packet.o
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodsi4.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodsi4.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodsi4.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .text.libgcc   0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_ctors.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_ctors.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_ctors.o)
+ .text.libgcc   0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_ctors.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_thenan_sf.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_thenan_sf.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_thenan_sf.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
+ .text.libgcc   0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_prologue.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
+ .text.libgcc   0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_epilogue.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_tablejump.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_tablejump.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_tablejump.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clz.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clz.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clz.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(rand.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(rand.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memcpy.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memcpy.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memcpy.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strchr.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strchr.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strchr.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strcmp.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strcmp.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strcmp.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncmp.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncmp.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncmp.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncpy.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncpy.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncpy.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrchr.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrchr.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrchr.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eerd_block_atmega1280.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eerd_block_atmega1280.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eerd_block_atmega1280.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_block_atmega1280.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_block_atmega1280.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_block_atmega1280.o)
+ .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_byte_atmega1280.o)
+ .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_byte_atmega1280.o)
+ .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_byte_atmega1280.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00020000         xr
+data             0x00800060         0x0000ffa0         rw !x
+eeprom           0x00810000         0x00010000         rw !x
+fuse             0x00820000         0x00000400         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+Address of section .data set to 0x800200
+LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
+LOAD build\Command.o
+LOAD build\DebugPacketProcessor.o
+LOAD build\EepromMap.o
+LOAD build\Host.o
+LOAD build\Main.o
+LOAD build\SDCard.o
+LOAD build\Steppers.o
+LOAD build\Timeout.o
+LOAD build\Tool.o
+LOAD build\lib_sd\byteordering.o
+LOAD build\lib_sd\fat.o
+LOAD build\lib_sd\partition.o
+LOAD build\lib_sd\sd_raw.o
+LOAD build\boards\mb24\Interface.o
+LOAD build\boards\mb24\InterfaceBoard.o
+LOAD build\boards\mb24\LiquidCrystal.o
+LOAD build\boards\mb24\Menu.o
+LOAD build\boards\mb24\Motherboard.o
+LOAD build\boards\mb24\PSU.o
+LOAD build\boards\mb24\StepperInterface.o
+LOAD build\boards\mb24\UART.o
+LOAD src\shared\AvrPort.o
+LOAD src\shared\PID.o
+LOAD src\shared\Packet.o
+LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
+LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a
+LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000     0x7dae
+ *(.vectors)
+ .vectors       0x00000000       0xe4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
+                0x00000000                __vectors
+                0x00000000                __vector_default
+ *(.vectors)
+ *(.progmem.gcc*)
+ .progmem.gcc_sw_table
+                0x000000e4       0x2e build\Host.o
+ *(.progmem*)
+ .progmem.data  0x00000112        0xe build\Host.o
+ .progmem.data  0x00000120       0xfa build\boards\mb24\Menu.o
+                0x0000021a                . = ALIGN (0x2)
+                0x0000021a                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0000021a        0x0 linker stubs
+ *(.trampolines*)
+                0x0000021a                __trampolines_end = .
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0000021a                __ctors_start = .
+ *(.ctors)
+ .ctors         0x0000021a        0x2 build\Command.o
+ .ctors         0x0000021c        0x2 build\DebugPacketProcessor.o
+ .ctors         0x0000021e        0x2 build\Host.o
+ .ctors         0x00000220        0x2 build\Steppers.o
+ .ctors         0x00000222        0x2 build\Tool.o
+ .ctors         0x00000224        0x2 build\boards\mb24\Interface.o
+ .ctors         0x00000226        0x2 build\boards\mb24\Menu.o
+ .ctors         0x00000228        0x2 build\boards\mb24\Motherboard.o
+ .ctors         0x0000022a        0x2 build\boards\mb24\UART.o
+ .ctors         0x0000022c        0x2 src\shared\AvrPort.o
+                0x0000022e                __ctors_end = .
+                0x0000022e                __dtors_start = .
+ *(.dtors)
+                0x0000022e                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x0000022e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
+                0x0000022e                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x0000022e        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x0000023a       0x1a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
+                0x0000023a                __do_copy_data
+ .init4         0x00000254       0x10 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+                0x00000254                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ .init6         0x00000264       0x16 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_ctors.o)
+                0x00000264                __do_global_ctors
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x0000027a        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
+ *(.init9)
+ *(.text)
+ .text          0x00000282        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
+                0x00000282                __vector_22
+                0x00000282                __vector_28
+                0x00000282                __vector_1
+                0x00000282                __vector_32
+                0x00000282                __vector_34
+                0x00000282                __vector_24
+                0x00000282                __vector_12
+                0x00000282                __vector_55
+                0x00000282                __vector_46
+                0x00000282                __bad_interrupt
+                0x00000282                __vector_6
+                0x00000282                __vector_31
+                0x00000282                __vector_35
+                0x00000282                __vector_39
+                0x00000282                __vector_3
+                0x00000282                __vector_23
+                0x00000282                __vector_30
+                0x00000282                __vector_45
+                0x00000282                __vector_11
+                0x00000282                __vector_54
+                0x00000282                __vector_13
+                0x00000282                __vector_19
+                0x00000282                __vector_56
+                0x00000282                __vector_7
+                0x00000282                __vector_49
+                0x00000282                __vector_41
+                0x00000282                __vector_43
+                0x00000282                __vector_5
+                0x00000282                __vector_33
+                0x00000282                __vector_47
+                0x00000282                __vector_52
+                0x00000282                __vector_37
+                0x00000282                __vector_4
+                0x00000282                __vector_44
+                0x00000282                __vector_51
+                0x00000282                __vector_9
+                0x00000282                __vector_2
+                0x00000282                __vector_21
+                0x00000282                __vector_29
+                0x00000282                __vector_40
+                0x00000282                __vector_8
+                0x00000282                __vector_26
+                0x00000282                __vector_48
+                0x00000282                __vector_14
+                0x00000282                __vector_53
+                0x00000282                __vector_10
+                0x00000282                __vector_50
+                0x00000282                __vector_16
+                0x00000282                __vector_18
+                0x00000282                __vector_20
+                0x00000282                __vector_42
+                0x00000286                . = ALIGN (0x2)
+ *(.text.*)
+ .text._ZN7command20getRemainingCapacityEv
+                0x00000286       0x1c build\Command.o
+                0x00000286                command::getRemainingCapacity()
+ .text._ZN7command5pauseEb
+                0x000002a2        0x6 build\Command.o
+                0x000002a2                command::pause(bool)
+ .text._ZN7command8isPausedEv
+                0x000002a8        0x6 build\Command.o
+                0x000002a8                command::isPaused()
+ .text._ZN7command7isEmptyEv
+                0x000002ae       0x14 build\Command.o
+                0x000002ae                command::isEmpty()
+ .text._ZN7command5resetEv
+                0x000002c2       0x22 build\Command.o
+                0x000002c2                command::reset()
+ .text._ZN19CircularBufferTemplIhEixEj
+                0x000002e4       0x20 build\Command.o
+                0x000002e4                CircularBufferTempl<unsigned char>::operator[](unsigned int)
+ .text._ZN7command4pushEh
+                0x00000304       0x4c build\Command.o
+                0x00000304                command::push(unsigned char)
+ .text._ZN19CircularBufferTemplIhE3popEv
+                0x00000350       0x46 build\Command.o
+                0x00000350                CircularBufferTempl<unsigned char>::pop()
+ .text._ZN7command5pop32Ev
+                0x00000396       0x40 build\Command.o
+                0x00000396                command::pop32()
+ .text._ZN7command5pop16Ev
+                0x000003d6       0x24 build\Command.o
+                0x000003d6                command::pop16()
+ .text._ZN7command4pop8Ev
+                0x000003fa        0xa build\Command.o
+                0x000003fa                command::pop8()
+ .text._GLOBAL__I__ZN7command11buffer_dataE
+                0x00000404       0x4a build\Command.o
+ .text._ZN7command15runCommandSliceEv
+                0x0000044e      0x8ba build\Command.o
+                0x0000044e                command::runCommandSlice()
+ .text._GLOBAL__I_debugSlaveOut
+                0x00000d08        0xa build\DebugPacketProcessor.o
+ .text._Z18processDebugPacketRK8InPacketR9OutPacket
+                0x00000d12      0x22e build\DebugPacketProcessor.o
+                0x00000d12                processDebugPacket(InPacket const&, OutPacket&)
+ .text._ZN6eeprom10getEeprom8Ejh
+                0x00000f40       0x32 build\EepromMap.o
+                0x00000f40                eeprom::getEeprom8(unsigned int, unsigned char)
+ .text._ZN6eeprom4initEv
+                0x00000f72       0x76 build\EepromMap.o
+                0x00000f72                eeprom::init()
+ .text._ZN4host12getBuildNameEv
+                0x00000fe8        0x6 build\Host.o
+                0x00000fe8                host::getBuildName()
+ .text._ZN4host12getHostStateEv
+                0x00000fee        0xa build\Host.o
+                0x00000fee                host::getHostState()
+ .text._ZN4host9stopBuildEv
+                0x00000ff8        0x8 build\Host.o
+                0x00000ff8                host::stopBuild()
+ .text._GLOBAL__I__ZN4host17packet_in_timeoutE
+                0x00001000        0xa build\Host.o
+ .text._ZN4host16startBuildFromSDEv
+                0x0000100a       0x1e build\Host.o
+                0x0000100a                host::startBuildFromSD()
+ .text._ZN4host14getMachineNameEv
+                0x00001028       0x56 build\Host.o
+                0x00001028                host::getMachineName()
+ .text._ZN4host11doToolPauseER9OutPacket
+                0x0000107e      0x106 build\Host.o
+                0x0000107e                host::doToolPause(OutPacket&)
+ .text._ZN4host18processQueryPacketERK8InPacketR9OutPacket
+                0x00001184      0x524 build\Host.o
+                0x00001184                host::processQueryPacket(InPacket const&, OutPacket&)
+ .text._ZN4host20processCommandPacketERK8InPacketR9OutPacket
+                0x000016a8       0x96 build\Host.o
+                0x000016a8                host::processCommandPacket(InPacket const&, OutPacket&)
+ .text._ZN4host12runHostSliceEv
+                0x0000173e      0x132 build\Host.o
+                0x0000173e                host::runHostSlice()
+ .text._Z5resetb
+                0x00001870       0x84 build\Main.o
+                0x00001870                reset(bool)
+ .text.main     0x000018f4       0x26 build\Main.o
+                0x000018f4                main
+ .text._ZN6sdcard9isPlayingEv
+                0x0000191a        0x6 build\SDCard.o
+                0x0000191a                sdcard::isPlaying()
+ .text._ZN6sdcard11isCapturingEv
+                0x00001920        0x6 build\SDCard.o
+                0x00001920                sdcard::isCapturing()
+ .text._ZN6sdcard15playbackHasNextEv
+                0x00001926        0x6 build\SDCard.o
+                0x00001926                sdcard::playbackHasNext()
+ .text._ZN6sdcard14finishPlaybackEv
+                0x0000192c       0x22 build\SDCard.o
+                0x0000192c                sdcard::finishPlayback()
+ .text._ZN6sdcard13finishCaptureEv
+                0x0000194e       0x3e build\SDCard.o
+                0x0000194e                sdcard::finishCapture()
+ .text._ZN6sdcard5resetEv
+                0x0000198c       0x62 build\SDCard.o
+                0x0000198c                sdcard::reset()
+ .text._ZN6sdcard13fetchNextByteEv
+                0x000019ee       0x26 build\SDCard.o
+                0x000019ee                sdcard::fetchNextByte()
+ .text._ZN6sdcard12playbackNextEv
+                0x00001a14       0x10 build\SDCard.o
+                0x00001a14                sdcard::playbackNext()
+ .text._ZN6sdcard13capturePacketERK6Packet
+                0x00001a24       0x50 build\SDCard.o
+                0x00001a24                sdcard::capturePacket(Packet const&)
+ .text._ZN6sdcard10createFileEPc
+                0x00001a74       0x3e build\SDCard.o
+                0x00001a74                sdcard::createFile(char*)
+ .text._ZN6sdcard13findFileInDirEPKcP20fat_dir_entry_struct
+                0x00001ab2       0x46 build\SDCard.o
+                0x00001ab2                sdcard::findFileInDir(char const*, fat_dir_entry_struct*)
+ .text._ZN6sdcard10deleteFileEPc
+                0x00001af8       0x4e build\SDCard.o
+                0x00001af8                sdcard::deleteFile(char*)
+ .text._ZN6sdcard8openFileEPKcPP15fat_file_struct
+                0x00001b46       0x5e build\SDCard.o
+                0x00001b46                sdcard::openFile(char const*, fat_file_struct**)
+ .text._ZN6sdcard18directoryNextEntryEPch
+                0x00001ba4       0xa6 build\SDCard.o
+                0x00001ba4                sdcard::directoryNextEntry(char*, unsigned char)
+ .text._ZN6sdcard8openRootEv
+                0x00001c4a       0x66 build\SDCard.o
+                0x00001c4a                sdcard::openRoot()
+ .text._ZN6sdcard11openFilesysEv
+                0x00001cb0       0x20 build\SDCard.o
+                0x00001cb0                sdcard::openFilesys()
+ .text._ZN6sdcard13openPartitionEv
+                0x00001cd0       0x58 build\SDCard.o
+                0x00001cd0                sdcard::openPartition()
+ .text._ZN6sdcard8initCardEv
+                0x00001d28       0x70 build\SDCard.o
+                0x00001d28                sdcard::initCard()
+ .text._ZN6sdcard13startPlaybackEPc
+                0x00001d98       0x68 build\SDCard.o
+                0x00001d98                sdcard::startPlayback(char*)
+ .text._ZN6sdcard12startCaptureEPc
+                0x00001e00       0x7e build\SDCard.o
+                0x00001e00                sdcard::startCapture(char*)
+ .text._ZN6sdcard14directoryResetEv
+                0x00001e7e       0x28 build\SDCard.o
+                0x00001e7e                sdcard::directoryReset()
+ .text._ZN8steppers9isRunningEv
+                0x00001ea6       0x12 build\Steppers.o
+                0x00001ea6                steppers::isRunning()
+ .text._ZN8steppers4initER11Motherboard
+                0x00001eb8       0xfa build\Steppers.o
+                0x00001eb8                steppers::init(Motherboard&)
+ .text._ZN8steppers5abortEv
+                0x00001fb2        0xa build\Steppers.o
+                0x00001fb2                steppers::abort()
+ .text._ZN8steppers14definePositionERK5Point
+                0x00001fbc       0x7c build\Steppers.o
+                0x00001fbc                steppers::definePosition(Point const&)
+ .text._ZN8steppers11getPositionEv
+                0x00002038       0xae build\Steppers.o
+                0x00002038                steppers::getPosition()
+ .text._ZN8steppers8setHoldZEb
+                0x000020e6        0x6 build\Steppers.o
+                0x000020e6                steppers::setHoldZ(bool)
+ .text._GLOBAL__I__ZN8steppers10is_runningE
+                0x000020ec       0x14 build\Steppers.o
+ .text._ZN8steppers11doInterruptEv
+                0x00002100      0x2ce build\Steppers.o
+                0x00002100                steppers::doInterrupt()
+ .text._ZN8steppers10enableAxisEhb
+                0x000023ce       0x28 build\Steppers.o
+                0x000023ce                steppers::enableAxis(unsigned char, bool)
+ .text._ZN8steppers11startHomingEbhm
+                0x000023f6      0x148 build\Steppers.o
+                0x000023f6                steppers::startHoming(bool, unsigned char, unsigned long)
+ .text._ZN8steppers4Axis9setTargetElb
+                0x0000253e       0x8c build\Steppers.o
+                0x0000253e                steppers::Axis::setTarget(long, bool)
+ .text._ZN8steppers12setTargetNewERK5Pointlh
+                0x000025ca      0x194 build\Steppers.o
+                0x000025ca                steppers::setTargetNew(Point const&, long, unsigned char)
+ .text._ZN8steppers9setTargetERK5Pointl
+                0x0000275e      0x1a2 build\Steppers.o
+                0x0000275e                steppers::setTarget(Point const&, long)
+ .text._ZN7TimeoutC1Ev
+                0x00002900        0x8 build\Timeout.o
+                0x00002900                Timeout::Timeout()
+ .text._ZN7Timeout5abortEv
+                0x00002908        0x6 build\Timeout.o
+                0x00002908                Timeout::abort()
+ .text._ZN7Timeout10hasElapsedEv
+                0x0000290e       0x4a build\Timeout.o
+                0x0000290e                Timeout::hasElapsed()
+ .text._ZN7Timeout5startEm
+                0x00002958       0x42 build\Timeout.o
+                0x00002958                Timeout::start(unsigned long)
+ .text._ZN4tool11getInPacketEv
+                0x0000299a        0x6 build\Tool.o
+                0x0000299a                tool::getInPacket()
+ .text._ZN4tool12getOutPacketEv
+                0x000029a0        0x6 build\Tool.o
+                0x000029a0                tool::getOutPacket()
+ .text._ZN4tool7getLockEv
+                0x000029a6       0x1c build\Tool.o
+                0x000029a6                tool::getLock()
+ .text._ZN4tool11releaseLockEv
+                0x000029c2        0x6 build\Tool.o
+                0x000029c2                tool::releaseLock()
+ .text._ZN4tool17isTransactionDoneEv
+                0x000029c8        0xa build\Tool.o
+                0x000029c8                tool::isTransactionDone()
+ .text._GLOBAL__I__ZN4tool11getInPacketEv
+                0x000029d2        0xa build\Tool.o
+ .text._ZN4tool16startTransactionEv
+                0x000029dc       0x38 build\Tool.o
+                0x000029dc                tool::startTransaction()
+ .text._ZN4tool12runToolSliceEv
+                0x00002a14       0xc4 build\Tool.o
+                0x00002a14                tool::runToolSlice()
+ .text._ZN4tool5resetEv
+                0x00002ad8       0xe4 build\Tool.o
+                0x00002ad8                tool::reset()
+ .text.fat_close
+                0x00002bbc        0xc build\lib_sd\fat.o
+                0x00002bbc                fat_close
+ .text._ZL20fat_get_next_clusterPK13fat_fs_structj
+                0x00002bc8       0x80 build\lib_sd\fat.o
+ .text._ZL17fat_free_clustersP13fat_fs_structj
+                0x00002c48       0xec build\lib_sd\fat.o
+ .text._ZL19fat_append_clustersP13fat_fs_structjj
+                0x00002d34      0x1d0 build\lib_sd\fat.o
+ .text._ZL26fat_clear_cluster_callbackPhmPv
+                0x00002f04        0x6 build\lib_sd\fat.o
+ .text.fat_read_file
+                0x00002f0a      0x294 build\lib_sd\fat.o
+                0x00002f0a                fat_read_file
+ .text.fat_write_file
+                0x0000319e      0x2f4 build\lib_sd\fat.o
+                0x0000319e                fat_write_file
+ .text.fat_close_dir
+                0x00003492        0xc build\lib_sd\fat.o
+                0x00003492                fat_close_dir
+ .text.fat_reset_dir
+                0x0000349e       0x1a build\lib_sd\fat.o
+                0x0000349e                fat_reset_dir
+ .text.fat_delete_file
+                0x000034b8       0xfa build\lib_sd\fat.o
+                0x000034b8                fat_delete_file
+ .text._ZL17fat_clear_clusterPK13fat_fs_structj
+                0x000035b2       0xb4 build\lib_sd\fat.o
+ .text.fat_read_dir
+                0x00003666      0x1dc build\lib_sd\fat.o
+                0x00003666                fat_read_dir
+ .text._ZL27fat_dir_entry_read_callbackPhmPv
+                0x00003842      0x1ec build\lib_sd\fat.o
+ .text.fat_open
+                0x00003a2e      0x348 build\lib_sd\fat.o
+                0x00003a2e                fat_open
+ .text._ZL29fat_find_offset_for_dir_entryP13fat_fs_structPK14fat_dir_structPK20fat_dir_entry_struct
+                0x00003d76      0x210 build\lib_sd\fat.o
+ .text._ZL19fat_write_dir_entryPK13fat_fs_structP20fat_dir_entry_struct
+                0x00003f86      0x2d0 build\lib_sd\fat.o
+ .text.fat_create_file
+                0x00004256       0xc8 build\lib_sd\fat.o
+                0x00004256                fat_create_file
+ .text.fat_close_file
+                0x0000431e       0x26 build\lib_sd\fat.o
+                0x0000431e                fat_close_file
+ .text.fat_open_dir
+                0x00004344       0x7a build\lib_sd\fat.o
+                0x00004344                fat_open_dir
+ .text.fat_open_file
+                0x000043be       0x70 build\lib_sd\fat.o
+                0x000043be                fat_open_file
+ .text.fat_get_dir_entry_of_path
+                0x0000442e      0x122 build\lib_sd\fat.o
+                0x0000442e                fat_get_dir_entry_of_path
+ .text.partition_close
+                0x00004550       0x10 build\lib_sd\partition.o
+                0x00004550                partition_close
+ .text.partition_open
+                0x00004560      0x1b8 build\lib_sd\partition.o
+                0x00004560                partition_open
+ .text.sd_raw_available
+                0x00004718       0x12 build\lib_sd\sd_raw.o
+                0x00004718                sd_raw_available
+ .text.sd_raw_locked
+                0x0000472a        0xe build\lib_sd\sd_raw.o
+                0x0000472a                sd_raw_locked
+ .text._ZL19sd_raw_send_commandhm
+                0x00004738       0xc6 build\lib_sd\sd_raw.o
+ .text.sd_raw_write
+                0x000047fe      0x1be build\lib_sd\sd_raw.o
+                0x000047fe                sd_raw_write
+ .text.sd_raw_sync
+                0x000049bc       0x34 build\lib_sd\sd_raw.o
+                0x000049bc                sd_raw_sync
+ .text.sd_raw_read
+                0x000049f0      0x17c build\lib_sd\sd_raw.o
+                0x000049f0                sd_raw_read
+ .text.sd_raw_read_interval
+                0x00004b6c       0xe0 build\lib_sd\sd_raw.o
+                0x00004b6c                sd_raw_read_interval
+ .text.sd_raw_init
+                0x00004c4c      0x15c build\lib_sd\sd_raw.o
+                0x00004c4c                sd_raw_init
+ .text.sd_raw_write_interval
+                0x00004da8       0xb6 build\lib_sd\sd_raw.o
+                0x00004da8                sd_raw_write_interval
+ .text._ZN14interfaceboard11isConnectedEv
+                0x00004e5e       0x5a build\boards\mb24\Interface.o
+                0x00004e5e                interfaceboard::isConnected()
+ .text._GLOBAL__I__ZN14interfaceboard5boardE
+                0x00004eb8        0xa build\boards\mb24\Interface.o
+ .text._ZN14interfaceboard8doUpdateEv
+                0x00004ec2        0xa build\boards\mb24\Interface.o
+                0x00004ec2                interfaceboard::doUpdate()
+ .text._ZN14interfaceboard13getUpdateRateEv
+                0x00004ecc        0xa build\boards\mb24\Interface.o
+                0x00004ecc                interfaceboard::getUpdateRate()
+ .text._ZN14interfaceboard11doInterruptEv
+                0x00004ed6        0xa build\boards\mb24\Interface.o
+                0x00004ed6                interfaceboard::doInterrupt()
+ .text._ZN14interfaceboard9popScreenEv
+                0x00004ee0        0xa build\boards\mb24\Interface.o
+                0x00004ee0                interfaceboard::popScreen()
+ .text._ZN14interfaceboard10pushScreenEP6Screen
+                0x00004eea        0xc build\boards\mb24\Interface.o
+                0x00004eea                interfaceboard::pushScreen(Screen*)
+ .text._ZN14interfaceboard4initEv
+                0x00004ef6        0xa build\boards\mb24\Interface.o
+                0x00004ef6                interfaceboard::init()
+ .text._ZN11ButtonArray4initEv
+                0x00004f00       0x28 build\boards\mb24\InterfaceBoard.o
+                0x00004f00                ButtonArray::init()
+ .text._ZN11ButtonArray11scanButtonsEv
+                0x00004f28       0xac build\boards\mb24\InterfaceBoard.o
+                0x00004f28                ButtonArray::scanButtons()
+ .text._ZN11ButtonArray9getButtonERN25InterfaceBoardDefinitions10ButtonNameE
+                0x00004fd4       0x1a build\boards\mb24\InterfaceBoard.o
+                0x00004fd4                ButtonArray::getButton(InterfaceBoardDefinitions::ButtonName&)
+ .text._ZN14InterfaceBoard4initEv
+                0x00004fee        0x2 build\boards\mb24\InterfaceBoard.o
+                0x00004fee                InterfaceBoard::init()
+ .text._ZN14InterfaceBoard11doInterruptEv
+                0x00004ff0        0x8 build\boards\mb24\InterfaceBoard.o
+                0x00004ff0                InterfaceBoard::doInterrupt()
+ .text._ZN14InterfaceBoard13getUpdateRateEv
+                0x00004ff8       0x2e build\boards\mb24\InterfaceBoard.o
+                0x00004ff8                InterfaceBoard::getUpdateRate()
+ .text._ZN14InterfaceBoard10pushScreenEP6Screen
+                0x00005026       0x86 build\boards\mb24\InterfaceBoard.o
+                0x00005026                InterfaceBoard::pushScreen(Screen*)
+ .text._ZN14InterfaceBoard9popScreenEv
+                0x000050ac       0x4a build\boards\mb24\InterfaceBoard.o
+                0x000050ac                InterfaceBoard::popScreen()
+ .text._ZN14InterfaceBoard8doUpdateEv
+                0x000050f6       0xda build\boards\mb24\InterfaceBoard.o
+                0x000050f6                InterfaceBoard::doUpdate()
+ .text._ZN14InterfaceBoardC1Ev
+                0x000051d0      0x1ee build\boards\mb24\InterfaceBoard.o
+                0x000051d0                InterfaceBoard::InterfaceBoard()
+ .text._ZN3Pin8setValueEb
+                0x000053be       0x36 build\boards\mb24\LiquidCrystal.o
+                0x000053be                Pin::setValue(bool)
+ .text._ZN13LiquidCrystal8writeIntEjh
+                0x000053f4       0x96 build\boards\mb24\LiquidCrystal.o
+                0x000053f4                LiquidCrystal::writeInt(unsigned int, unsigned char)
+ .text._ZN13LiquidCrystal11writeStringEPc
+                0x0000548a       0x30 build\boards\mb24\LiquidCrystal.o
+                0x0000548a                LiquidCrystal::writeString(char*)
+ .text._ZN13LiquidCrystal17writeFromPgmspaceEPKh
+                0x000054ba       0x32 build\boards\mb24\LiquidCrystal.o
+                0x000054ba                LiquidCrystal::writeFromPgmspace(unsigned char const*)
+ .text._ZN13LiquidCrystal11pulseEnableEv
+                0x000054ec       0x42 build\boards\mb24\LiquidCrystal.o
+                0x000054ec                LiquidCrystal::pulseEnable()
+ .text._ZN13LiquidCrystal10write4bitsEh
+                0x0000552e       0xaa build\boards\mb24\LiquidCrystal.o
+                0x0000552e                LiquidCrystal::write4bits(unsigned char)
+ .text._ZN13LiquidCrystal10write8bitsEh
+                0x000055d8       0xaa build\boards\mb24\LiquidCrystal.o
+                0x000055d8                LiquidCrystal::write8bits(unsigned char)
+ .text._ZN13LiquidCrystal4sendEhb
+                0x00005682       0x5a build\boards\mb24\LiquidCrystal.o
+                0x00005682                LiquidCrystal::send(unsigned char, bool)
+ .text._ZN13LiquidCrystal5writeEh
+                0x000056dc        0x8 build\boards\mb24\LiquidCrystal.o
+                0x000056dc                LiquidCrystal::write(unsigned char)
+ .text._ZN13LiquidCrystal7commandEh
+                0x000056e4        0x8 build\boards\mb24\LiquidCrystal.o
+                0x000056e4                LiquidCrystal::command(unsigned char)
+ .text._ZN13LiquidCrystal7displayEv
+                0x000056ec       0x14 build\boards\mb24\LiquidCrystal.o
+                0x000056ec                LiquidCrystal::display()
+ .text._ZN13LiquidCrystal9setCursorEhh
+                0x00005700       0x5e build\boards\mb24\LiquidCrystal.o
+                0x00005700                LiquidCrystal::setCursor(unsigned char, unsigned char)
+ .text._ZN13LiquidCrystal4homeEv
+                0x0000575e       0x10 build\boards\mb24\LiquidCrystal.o
+                0x0000575e                LiquidCrystal::home()
+ .text._ZN13LiquidCrystal5clearEv
+                0x0000576e       0x10 build\boards\mb24\LiquidCrystal.o
+                0x0000576e                LiquidCrystal::clear()
+ .text._ZN13LiquidCrystal5beginEhhh
+                0x0000577e       0xfc build\boards\mb24\LiquidCrystal.o
+                0x0000577e                LiquidCrystal::begin(unsigned char, unsigned char, unsigned char)
+ .text._ZN13LiquidCrystal4initEh3PinS0_S0_S0_S0_S0_S0_S0_S0_S0_S0_
+                0x0000587a      0x244 build\boards\mb24\LiquidCrystal.o
+                0x0000587a                LiquidCrystal::init(unsigned char, Pin, Pin, Pin, Pin, Pin, Pin, Pin, Pin, Pin, Pin, Pin)
+ .text._ZN13LiquidCrystalC1E3PinS0_S0_S0_S0_S0_
+                0x00005abe      0x1be build\boards\mb24\LiquidCrystal.o
+                0x00005abe                LiquidCrystal::LiquidCrystal(Pin, Pin, Pin, Pin, Pin, Pin)
+ .text._ZN4Menu13getUpdateRateEv
+                0x00005c7c        0xa build\boards\mb24\Menu.o
+                0x00005c7c                Menu::getUpdateRate()
+ .text._ZN12SplashScreen13getUpdateRateEv
+                0x00005c86        0xa build\boards\mb24\Menu.o
+                0x00005c86                SplashScreen::getUpdateRate()
+ .text._ZN7JogMode13getUpdateRateEv
+                0x00005c90        0xa build\boards\mb24\Menu.o
+                0x00005c90                JogMode::getUpdateRate()
+ .text._ZN9SnakeMode13getUpdateRateEv
+                0x00005c9a        0xc build\boards\mb24\Menu.o
+                0x00005c9a                SnakeMode::getUpdateRate()
+ .text._ZN11MonitorMode13getUpdateRateEv
+                0x00005ca6        0xa build\boards\mb24\Menu.o
+                0x00005ca6                MonitorMode::getUpdateRate()
+ .text._ZN12SplashScreen19notifyButtonPressedEN25InterfaceBoardDefinitions10ButtonNameE
+                0x00005cb0        0x2 build\boards\mb24\Menu.o
+                0x00005cb0                SplashScreen::notifyButtonPressed(InterfaceBoardDefinitions::ButtonName)
+ .text._ZN12SplashScreen5resetEv
+                0x00005cb2        0x2 build\boards\mb24\Menu.o
+                0x00005cb2                SplashScreen::reset()
+ .text._ZN7JogMode5resetEv
+                0x00005cb4        0xa build\boards\mb24\Menu.o
+                0x00005cb4                JogMode::reset()
+ .text._ZN11MonitorMode5resetEv
+                0x00005cbe        0x6 build\boards\mb24\Menu.o
+                0x00005cbe                MonitorMode::reset()
+ .text._ZN4Menu5resetEv
+                0x00005cc4       0x28 build\boards\mb24\Menu.o
+                0x00005cc4                Menu::reset()
+ .text._ZN4Menu10resetStateEv
+                0x00005cec        0x2 build\boards\mb24\Menu.o
+                0x00005cec                Menu::resetState()
+ .text._ZN4Menu19notifyButtonPressedEN25InterfaceBoardDefinitions10ButtonNameE
+                0x00005cee       0x94 build\boards\mb24\Menu.o
+                0x00005cee                Menu::notifyButtonPressed(InterfaceBoardDefinitions::ButtonName)
+ .text._ZN15CancelBuildMenuC1Ev
+                0x00005d82       0x16 build\boards\mb24\Menu.o
+                0x00005d82                CancelBuildMenu::CancelBuildMenu()
+ .text._ZN15CancelBuildMenu10resetStateEv
+                0x00005d98        0xa build\boards\mb24\Menu.o
+                0x00005d98                CancelBuildMenu::resetState()
+ .text._ZN8MainMenuC1Ev
+                0x00005da2       0x16 build\boards\mb24\Menu.o
+                0x00005da2                MainMenu::MainMenu()
+ .text._ZN6SDMenuC1Ev
+                0x00005db8       0x12 build\boards\mb24\Menu.o
+                0x00005db8                SDMenu::SDMenu()
+ .text._GLOBAL__I_monitorMode
+                0x00005dca       0x36 build\boards\mb24\Menu.o
+ .text._ZN6SDMenu11getFilenameEhPch
+                0x00005e00       0x66 build\boards\mb24\Menu.o
+                0x00005e00                SDMenu::getFilename(unsigned char, char*, unsigned char)
+ .text._ZN6SDMenu12handleSelectEh
+                0x00005e66       0x32 build\boards\mb24\Menu.o
+                0x00005e66                SDMenu::handleSelect(unsigned char)
+ .text._ZN6SDMenu8drawItemEhR13LiquidCrystal
+                0x00005e98       0x92 build\boards\mb24\Menu.o
+                0x00005e98                SDMenu::drawItem(unsigned char, LiquidCrystal&)
+ .text._ZN6SDMenu10countFilesEv
+                0x00005f2a       0x50 build\boards\mb24\Menu.o
+                0x00005f2a                SDMenu::countFiles()
+ .text._ZN6SDMenu10resetStateEv
+                0x00005f7a       0x14 build\boards\mb24\Menu.o
+                0x00005f7a                SDMenu::resetState()
+ .text._ZN8MainMenu12handleSelectEh
+                0x00005f8e       0x32 build\boards\mb24\Menu.o
+                0x00005f8e                MainMenu::handleSelect(unsigned char)
+ .text._ZN8MainMenu8drawItemEhR13LiquidCrystal
+                0x00005fc0       0x3a build\boards\mb24\Menu.o
+                0x00005fc0                MainMenu::drawItem(unsigned char, LiquidCrystal&)
+ .text._ZN15CancelBuildMenu8drawItemEhR13LiquidCrystal
+                0x00005ffa       0x2c build\boards\mb24\Menu.o
+                0x00005ffa                CancelBuildMenu::drawItem(unsigned char, LiquidCrystal&)
+ .text._ZN4Menu12handleCancelEv
+                0x00006026        0x6 build\boards\mb24\Menu.o
+                0x00006026                Menu::handleCancel()
+ .text._ZN11MonitorMode19notifyButtonPressedEN25InterfaceBoardDefinitions10ButtonNameE
+                0x0000602c       0x2a build\boards\mb24\Menu.o
+                0x0000602c                MonitorMode::notifyButtonPressed(InterfaceBoardDefinitions::ButtonName)
+ .text._ZN9SnakeMode19notifyButtonPressedEN25InterfaceBoardDefinitions10ButtonNameE
+                0x00006056       0x4c build\boards\mb24\Menu.o
+                0x00006056                SnakeMode::notifyButtonPressed(InterfaceBoardDefinitions::ButtonName)
+ .text._ZN15CancelBuildMenu12handleSelectEh
+                0x000060a2       0x1a build\boards\mb24\Menu.o
+                0x000060a2                CancelBuildMenu::handleSelect(unsigned char)
+ .text._ZN4Menu6updateER13LiquidCrystalb
+                0x000060bc       0xd0 build\boards\mb24\Menu.o
+                0x000060bc                Menu::update(LiquidCrystal&, bool)
+ .text._ZN7JogMode6updateER13LiquidCrystalb
+                0x0000618c       0xa0 build\boards\mb24\Menu.o
+                0x0000618c                JogMode::update(LiquidCrystal&, bool)
+ .text._ZN12SplashScreen6updateER13LiquidCrystalb
+                0x0000622c       0x66 build\boards\mb24\Menu.o
+                0x0000622c                SplashScreen::update(LiquidCrystal&, bool)
+ .text._ZN9SnakeMode5resetEv
+                0x00006292       0x62 build\boards\mb24\Menu.o
+                0x00006292                SnakeMode::reset()
+ .text._ZN9SnakeMode6updateER13LiquidCrystalb
+                0x000062f4      0x274 build\boards\mb24\Menu.o
+                0x000062f4                SnakeMode::update(LiquidCrystal&, bool)
+ .text._ZN7JogMode3jogEN25InterfaceBoardDefinitions10ButtonNameE
+                0x00006568      0x12c build\boards\mb24\Menu.o
+                0x00006568                JogMode::jog(InterfaceBoardDefinitions::ButtonName)
+ .text._ZN7JogMode19notifyButtonPressedEN25InterfaceBoardDefinitions10ButtonNameE
+                0x00006694       0x4a build\boards\mb24\Menu.o
+                0x00006694                JogMode::notifyButtonPressed(InterfaceBoardDefinitions::ButtonName)
+ .text._Z22queryExtruderParameterhR9OutPacket
+                0x000066de       0xfc build\boards\mb24\Menu.o
+                0x000066de                queryExtruderParameter(unsigned char, OutPacket&)
+ .text._ZN11MonitorMode6updateER13LiquidCrystalb
+                0x000067da      0x146 build\boards\mb24\Menu.o
+                0x000067da                MonitorMode::update(LiquidCrystal&, bool)
+ .text._ZN11Motherboard16getCurrentMicrosEv
+                0x00006920       0x1a build\boards\mb24\Motherboard.o
+                0x00006920                Motherboard::getCurrentMicros()
+ .text._ZN11Motherboard13indicateErrorEi
+                0x0000693a       0x3c build\boards\mb24\Motherboard.o
+                0x0000693a                Motherboard::indicateError(int)
+ .text._ZN11Motherboard15getCurrentErrorEv
+                0x00006976        0x6 build\boards\mb24\Motherboard.o
+                0x00006976                Motherboard::getCurrentError()
+ .text.__vector_15
+                0x0000697c       0xf2 build\boards\mb24\Motherboard.o
+                0x0000697c                __vector_15
+ .text._ZN11Motherboard19runMotherboardSliceEv
+                0x00006a6e       0x3c build\boards\mb24\Motherboard.o
+                0x00006a6e                Motherboard::runMotherboardSlice()
+ .text._ZN11Motherboard11doInterruptEv
+                0x00006aaa       0x44 build\boards\mb24\Motherboard.o
+                0x00006aaa                Motherboard::doInterrupt()
+ .text.__vector_17
+                0x00006aee       0x54 build\boards\mb24\Motherboard.o
+                0x00006aee                __vector_17
+ .text._ZN11Motherboard5resetEv
+                0x00006b42       0xf8 build\boards\mb24\Motherboard.o
+                0x00006b42                Motherboard::reset()
+ .text._ZN11MotherboardC1Ev
+                0x00006c3a      0x480 build\boards\mb24\Motherboard.o
+                0x00006c3a                Motherboard::Motherboard()
+ .text._GLOBAL__I__ZN11Motherboard11motherboardE
+                0x000070ba        0xa build\boards\mb24\Motherboard.o
+ .text._ZN3PSU4initEv
+                0x000070c4        0x2 build\boards\mb24\PSU.o
+                0x000070c4                PSU::init()
+ .text._ZN3PSU6turnOnEb
+                0x000070c6        0x2 build\boards\mb24\PSU.o
+                0x000070c6                PSU::turnOn(bool)
+ .text._ZN16StepperInterface12setDirectionEb
+                0x000070c8       0x40 build\boards\mb24\StepperInterface.o
+                0x000070c8                StepperInterface::setDirection(bool)
+ .text._ZN16StepperInterface4stepEb
+                0x00007108       0x36 build\boards\mb24\StepperInterface.o
+                0x00007108                StepperInterface::step(bool)
+ .text._ZN16StepperInterface10setEnabledEb
+                0x0000713e       0x36 build\boards\mb24\StepperInterface.o
+                0x0000713e                StepperInterface::setEnabled(bool)
+ .text._ZN16StepperInterface11isAtMaximumEv
+                0x00007174       0x40 build\boards\mb24\StepperInterface.o
+                0x00007174                StepperInterface::isAtMaximum()
+ .text._ZN16StepperInterface11isAtMinimumEv
+                0x000071b4       0x40 build\boards\mb24\StepperInterface.o
+                0x000071b4                StepperInterface::isAtMinimum()
+ .text._ZN16StepperInterface4initEh
+                0x000071f4      0x17c build\boards\mb24\StepperInterface.o
+                0x000071f4                StepperInterface::init(unsigned char)
+ .text._ZN4UART6enableEb
+                0x00007370       0x42 build\boards\mb24\UART.o
+                0x00007370                UART::enable(bool)
+ .text._ZN4UART5resetEv
+                0x000073b2       0x1c build\boards\mb24\UART.o
+                0x000073b2                UART::reset()
+ .text.__vector_38
+                0x000073ce       0x90 build\boards\mb24\UART.o
+                0x000073ce                __vector_38
+ .text.__vector_27
+                0x0000745e       0x70 build\boards\mb24\UART.o
+                0x0000745e                __vector_27
+ .text._ZN4UART9beginSendEv
+                0x000074ce       0x48 build\boards\mb24\UART.o
+                0x000074ce                UART::beginSend()
+ .text.__vector_36
+                0x00007516       0x74 build\boards\mb24\UART.o
+                0x00007516                __vector_36
+ .text.__vector_25
+                0x0000758a       0x58 build\boards\mb24\UART.o
+                0x0000758a                __vector_25
+ .text._ZN4UARTC1Eh
+                0x000075e2       0x9e build\boards\mb24\UART.o
+                0x000075e2                UART::UART(unsigned char)
+ .text._GLOBAL__I__ZN4UART4uartE
+                0x00007680       0x16 build\boards\mb24\UART.o
+ .text._GLOBAL__I_PortA
+                0x00007696       0x86 src\shared\AvrPort.o
+ .text._ZN6Packet5resetEv
+                0x0000771c        0xe src\shared\Packet.o
+                0x0000771c                Packet::reset()
+ .text._ZN8InPacketC1Ev
+                0x0000772a        0xe src\shared\Packet.o
+                0x0000772a                InPacket::InPacket()
+ .text._ZN8InPacket5resetEv
+                0x00007738        0xe src\shared\Packet.o
+                0x00007738                InPacket::reset()
+ .text._ZN8InPacket11processByteEh
+                0x00007746      0x10c src\shared\Packet.o
+                0x00007746                InPacket::processByte(unsigned char)
+ .text._ZNK6Packet5read8Eh
+                0x00007852        0xa src\shared\Packet.o
+                0x00007852                Packet::read8(unsigned char) const
+ .text._ZNK6Packet6read16Eh
+                0x0000785c       0x24 src\shared\Packet.o
+                0x0000785c                Packet::read16(unsigned char) const
+ .text._ZN9OutPacketC1Ev
+                0x00007880       0x10 src\shared\Packet.o
+                0x00007880                OutPacket::OutPacket()
+ .text._ZN9OutPacket5resetEv
+                0x00007890       0x10 src\shared\Packet.o
+                0x00007890                OutPacket::reset()
+ .text._ZN9OutPacket16prepareForResendEv
+                0x000078a0        0xc src\shared\Packet.o
+                0x000078a0                OutPacket::prepareForResend()
+ .text._ZN9OutPacket17getNextByteToSendEv
+                0x000078ac       0x8c src\shared\Packet.o
+                0x000078ac                OutPacket::getNextByteToSend()
+ .text._ZN9OutPacket7append8Eh
+                0x00007938       0x38 src\shared\Packet.o
+                0x00007938                OutPacket::append8(unsigned char)
+ .text._ZN9OutPacket8append16Ej
+                0x00007970       0x6c src\shared\Packet.o
+                0x00007970                OutPacket::append16(unsigned int)
+ .text._ZN9OutPacket8append32Em
+                0x000079dc       0xfe src\shared\Packet.o
+                0x000079dc                OutPacket::append32(unsigned long)
+ .text.libgcc   0x00007ada       0x3e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mulsi3.o)
+                0x00007ada                __mulsi3
+ .text.libgcc   0x00007b18       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+                0x00007b18                __udivmodhi4
+ .text.libgcc   0x00007b40       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+                0x00007b40                __divmodhi4
+                0x00007b40                _div
+ .text.libgcc   0x00007b66       0x44 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodsi4.o)
+                0x00007b66                __udivmodsi4
+ .text.libgcc   0x00007baa       0x36 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodsi4.o)
+                0x00007baa                __divmodsi4
+ .text.libgcc   0x00007be0        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_tablejump.o)
+                0x00007be4                __tablejump__
+                0x00007be0                __tablejump2__
+ .text.avr-libc
+                0x00007bec       0xd6 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(rand.o)
+                0x00007c9c                rand_r
+                0x00007ca2                rand
+                0x00007cac                srand
+ .text.avr-libc
+                0x00007cc2       0x12 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memcpy.o)
+                0x00007cc2                memcpy
+ .text.avr-libc
+                0x00007cd4        0xe c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(memset.o)
+                0x00007cd4                memset
+ .text.avr-libc
+                0x00007ce2       0x16 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strchr.o)
+                0x00007ce2                strchr
+ .text.avr-libc
+                0x00007cf8       0x12 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strcmp.o)
+                0x00007cf8                strcmp
+ .text.avr-libc
+                0x00007d0a       0x1c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncmp.o)
+                0x00007d0a                strncmp
+ .text.avr-libc
+                0x00007d26       0x1e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strncpy.o)
+                0x00007d26                strncpy
+ .text.avr-libc
+                0x00007d44       0x16 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrchr.o)
+                0x00007d44                strrchr
+ .text.avr-libc
+                0x00007d5a       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eerd_block_atmega1280.o)
+                0x00007d5a                __eerd_block_m1280
+                0x00007d5e                __eerd_blraw_m1280
+ .text.avr-libc
+                0x00007d7a       0x14 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_block_atmega1280.o)
+                0x00007d7a                __eewr_block_m1280
+ .text.avr-libc
+                0x00007d8e       0x1c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(eewr_byte_atmega1280.o)
+                0x00007d90                __eewr_r18_m1280
+                0x00007d8e                __eewr_byte_m1280
+                0x00007daa                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x00007daa        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+                0x00007daa                exit
+                0x00007daa                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x00007daa        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ *(.fini0)
+                0x00007dae                _etext = .
+
+.data           0x00800200       0x96 load address 0x00007dae
+                0x00800200                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x00800200        0x2 build\SDCard.o
+ .data          0x00800202        0x7 build\boards\mb24\Menu.o
+ .data          0x00800209        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(rand.o)
+ *(.data*)
+ .data._ZN4host13do_host_resetE
+                0x0080020d        0x1 build\Host.o
+                0x0080020d                host::do_host_reset
+ .data._ZN4tool7retriesE
+                0x0080020e        0x1 build\Tool.o
+                0x0080020e                tool::retries
+ *(.rodata)
+ *(.rodata*)
+ .rodata.char_mapping.2690
+                0x0080020f        0xd build\lib_sd\fat.o
+ .rodata._ZTV13LiquidCrystal
+                0x0080021c        0x6 build\boards\mb24\LiquidCrystal.o
+                0x0080021c                vtable for LiquidCrystal
+ .rodata._ZZN13LiquidCrystal9setCursorEhhE3C.9
+                0x00800222        0x8 build\boards\mb24\LiquidCrystal.o
+ .rodata._ZTV6SDMenu
+                0x0080022a       0x14 build\boards\mb24\Menu.o
+                0x0080022a                vtable for SDMenu
+ .rodata._ZTV8MainMenu
+                0x0080023e       0x14 build\boards\mb24\Menu.o
+                0x0080023e                vtable for MainMenu
+ .rodata._ZTV15CancelBuildMenu
+                0x00800252       0x14 build\boards\mb24\Menu.o
+                0x00800252                vtable for CancelBuildMenu
+ .rodata._ZTV11MonitorMode
+                0x00800266        0xc build\boards\mb24\Menu.o
+                0x00800266                vtable for MonitorMode
+ .rodata._ZTV9SnakeMode
+                0x00800272        0xc build\boards\mb24\Menu.o
+                0x00800272                vtable for SnakeMode
+ .rodata._ZTV7JogMode
+                0x0080027e        0xc build\boards\mb24\Menu.o
+                0x0080027e                vtable for JogMode
+ .rodata._ZTV12SplashScreen
+                0x0080028a        0xc build\boards\mb24\Menu.o
+                0x0080028a                vtable for SplashScreen
+ *(.gnu.linkonce.d*)
+                0x00800296                . = ALIGN (0x2)
+                0x00800296                _edata = .
+                0x00800296                PROVIDE (__data_end, .)
+
+.bss            0x00800296     0x25c8
+                0x00800296                PROVIDE (__bss_start, .)
+ *(.bss)
+ *(.bss*)
+ .bss._ZN7command11buffer_dataE
+                0x00800296     0x2000 build\Command.o
+                0x00800296                command::buffer_data
+ .bss._ZN7command14command_bufferE
+                0x00802296        0xa build\Command.o
+                0x00802296                command::command_buffer
+ .bss._ZN7command6pausedE
+                0x008022a0        0x1 build\Command.o
+                0x008022a0                command::paused
+ .bss._ZN7command4modeE
+                0x008022a1        0x2 build\Command.o
+                0x008022a1                command::mode
+ .bss._ZN7command13delay_timeoutE
+                0x008022a3        0xa build\Command.o
+                0x008022a3                command::delay_timeout
+ .bss._ZN7command14homing_timeoutE
+                0x008022ad        0xa build\Command.o
+                0x008022ad                command::homing_timeout
+ .bss._ZN7command17tool_wait_timeoutE
+                0x008022b7        0xa build\Command.o
+                0x008022b7                command::tool_wait_timeout
+ .bss.debugSlaveOut
+                0x008022c1       0x26 build\DebugPacketProcessor.o
+                0x008022c1                debugSlaveOut
+ .bss._ZN4host17packet_in_timeoutE
+                0x008022e7        0xa build\Host.o
+                0x008022e7                host::packet_in_timeout
+ .bss._ZN4host11machineNameE
+                0x008022f1       0x20 build\Host.o
+                0x008022f1                host::machineName
+ .bss._ZN4host9buildNameE
+                0x00802311       0x1f build\Host.o
+                0x00802311                host::buildName
+ .bss._ZN4host12currentStateE
+                0x00802330        0x2 build\Host.o
+                0x00802330                host::currentState
+ .bss._ZN6sdcard9partitionE
+                0x00802332        0x2 build\SDCard.o
+                0x00802332                sdcard::partition
+ .bss._ZN6sdcard2fsE
+                0x00802334        0x2 build\SDCard.o
+                0x00802334                sdcard::fs
+ .bss._ZN6sdcard2ddE
+                0x00802336        0x2 build\SDCard.o
+                0x00802336                sdcard::dd
+ .bss._ZN6sdcard4fileE
+                0x00802338        0x2 build\SDCard.o
+                0x00802338                sdcard::file
+ .bss._ZN6sdcard9capturingE
+                0x0080233a        0x1 build\SDCard.o
+                0x0080233a                sdcard::capturing
+ .bss._ZN6sdcard7playingE
+                0x0080233b        0x1 build\SDCard.o
+                0x0080233b                sdcard::playing
+ .bss._ZN6sdcard13capturedBytesE
+                0x0080233c        0x4 build\SDCard.o
+                0x0080233c                sdcard::capturedBytes
+ .bss._ZN6sdcard9next_byteE
+                0x00802340        0x1 build\SDCard.o
+                0x00802340                sdcard::next_byte
+ .bss._ZN6sdcard8has_moreE
+                0x00802341        0x1 build\SDCard.o
+                0x00802341                sdcard::has_more
+ .bss._ZN8steppers10is_runningE
+                0x00802342        0x1 build\Steppers.o
+                0x00802342                steppers::is_running
+ .bss._ZN8steppers9intervalsE
+                0x00802343        0x4 build\Steppers.o
+                0x00802343                steppers::intervals
+ .bss._ZN8steppers19intervals_remainingE
+                0x00802347        0x4 build\Steppers.o
+                0x00802347                steppers::intervals_remaining
+ .bss._ZN8steppers4axesE
+                0x0080234b       0x87 build\Steppers.o
+                0x0080234b                steppers::axes
+ .bss._ZN8steppers9is_homingE
+                0x008023d2        0x1 build\Steppers.o
+                0x008023d2                steppers::is_homing
+ .bss._ZN8steppers5holdZE
+                0x008023d3        0x1 build\Steppers.o
+                0x008023d3                steppers::holdZ
+ .bss._ZN4tool18transaction_activeE
+                0x008023d4        0x1 build\Tool.o
+                0x008023d4                tool::transaction_active
+ .bss._ZN4tool6lockedE
+                0x008023d5        0x1 build\Tool.o
+                0x008023d5                tool::locked
+ .bss._ZN4tool7timeoutE
+                0x008023d6        0xa build\Tool.o
+                0x008023d6                tool::timeout
+ .bss._ZN4tool10tool_indexE
+                0x008023e0        0x1 build\Tool.o
+                0x008023e0                tool::tool_index
+ .bss._ZL15fat_dir_handles
+                0x008023e1       0x62 build\lib_sd\fat.o
+ .bss._ZL16fat_file_handles
+                0x00802443       0x34 build\lib_sd\fat.o
+ .bss._ZL14fat_fs_handles
+                0x00802477       0x1c build\lib_sd\fat.o
+ .bss._ZL17partition_handles
+                0x00802493       0x11 build\lib_sd\partition.o
+ .bss._ZL17raw_block_written
+                0x008024a4        0x1 build\lib_sd\sd_raw.o
+ .bss._ZL17raw_block_address
+                0x008024a5        0x4 build\lib_sd\sd_raw.o
+ .bss._ZL9raw_block
+                0x008024a9      0x200 build\lib_sd\sd_raw.o
+ .bss._ZL16sd_raw_card_type
+                0x008026a9        0x1 build\lib_sd\sd_raw.o
+ .bss._ZN14interfaceboard5boardE
+                0x008026aa       0x4a build\boards\mb24\Interface.o
+                0x008026aa                interfaceboard::board
+ .bss.monitorMode
+                0x008026f4        0x9 build\boards\mb24\Menu.o
+                0x008026f4                monitorMode
+ .bss.sdMenu    0x008026fd        0x6 build\boards\mb24\Menu.o
+                0x008026fd                sdMenu
+ .bss.jogger    0x00802703        0x5 build\boards\mb24\Menu.o
+                0x00802703                jogger
+ .bss.snake     0x00802708       0x36 build\boards\mb24\Menu.o
+                0x00802708                snake
+ .bss._ZN11Motherboard11motherboardE
+                0x0080273e       0x65 build\boards\mb24\Motherboard.o
+                0x0080273e                Motherboard::motherboard
+ .bss.blink_count
+                0x008027a3        0x1 build\boards\mb24\Motherboard.o
+                0x008027a3                blink_count
+ .bss.blink_state
+                0x008027a4        0x2 build\boards\mb24\Motherboard.o
+                0x008027a4                blink_state
+ .bss.blink_ovfs_remaining
+                0x008027a6        0x2 build\boards\mb24\Motherboard.o
+                0x008027a6                blink_ovfs_remaining
+ .bss.blinked_so_far
+                0x008027a8        0x2 build\boards\mb24\Motherboard.o
+                0x008027a8                blinked_so_far
+ .bss._ZN4UART4uartE
+                0x008027aa       0x9c build\boards\mb24\UART.o
+                0x008027aa                UART::uart
+ .bss.loopback_bytes
+                0x00802846        0x1 build\boards\mb24\UART.o
+                0x00802846                loopback_bytes
+ .bss.byte_in   0x00802847        0x1 build\boards\mb24\UART.o
+                0x00802847                byte_in
+ .bss.PortA     0x00802848        0x2 src\shared\AvrPort.o
+                0x00802848                PortA
+ .bss.PortB     0x0080284a        0x2 src\shared\AvrPort.o
+                0x0080284a                PortB
+ .bss.PortC     0x0080284c        0x2 src\shared\AvrPort.o
+                0x0080284c                PortC
+ .bss.PortD     0x0080284e        0x2 src\shared\AvrPort.o
+                0x0080284e                PortD
+ .bss.PortE     0x00802850        0x2 src\shared\AvrPort.o
+                0x00802850                PortE
+ .bss.PortF     0x00802852        0x2 src\shared\AvrPort.o
+                0x00802852                PortF
+ .bss.PortG     0x00802854        0x2 src\shared\AvrPort.o
+                0x00802854                PortG
+ .bss.PortH     0x00802856        0x2 src\shared\AvrPort.o
+                0x00802856                PortH
+ .bss.PortJ     0x00802858        0x2 src\shared\AvrPort.o
+                0x00802858                PortJ
+ .bss.PortK     0x0080285a        0x2 src\shared\AvrPort.o
+                0x0080285a                PortK
+ .bss.PortL     0x0080285c        0x2 src\shared\AvrPort.o
+                0x0080285c                PortL
+ *(COMMON)
+                0x0080285e                PROVIDE (__bss_end, .)
+                0x00007dae                __data_load_start = LOADADDR (.data)
+                0x00007e44                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x0080285e        0x0
+                0x0080285e                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x0080285e                PROVIDE (__noinit_end, .)
+                0x0080285e                _end = .
+                0x0080285e                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment
+ *(.comment)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0xb70
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x80 build\Command.o
+ .debug_aranges
+                0x00000080       0x28 build\DebugPacketProcessor.o
+ .debug_aranges
+                0x000000a8       0x30 build\EepromMap.o
+ .debug_aranges
+                0x000000d8       0x68 build\Host.o
+ .debug_aranges
+                0x00000140       0x28 build\Main.o
+ .debug_aranges
+                0x00000168       0xc8 build\SDCard.o
+ .debug_aranges
+                0x00000230       0x80 build\Steppers.o
+ .debug_aranges
+                0x000002b0       0x40 build\Timeout.o
+ .debug_aranges
+                0x000002f0       0x60 build\Tool.o
+ .debug_aranges
+                0x00000350       0xf0 build\lib_sd\fat.o
+ .debug_aranges
+                0x00000440       0x28 build\lib_sd\partition.o
+ .debug_aranges
+                0x00000468       0x68 build\lib_sd\sd_raw.o
+ .debug_aranges
+                0x000004d0       0x58 build\boards\mb24\Interface.o
+ .debug_aranges
+                0x00000528       0x70 build\boards\mb24\InterfaceBoard.o
+ .debug_aranges
+                0x00000598      0x138 build\boards\mb24\LiquidCrystal.o
+ .debug_aranges
+                0x000006d0      0x168 build\boards\mb24\Menu.o
+ .debug_aranges
+                0x00000838       0x70 build\boards\mb24\Motherboard.o
+ .debug_aranges
+                0x000008a8       0x28 build\boards\mb24\PSU.o
+ .debug_aranges
+                0x000008d0       0x48 build\boards\mb24\StepperInterface.o
+ .debug_aranges
+                0x00000918       0x68 build\boards\mb24\UART.o
+ .debug_aranges
+                0x00000980       0x20 src\shared\AvrPort.o
+ .debug_aranges
+                0x000009a0       0x50 src\shared\PID.o
+ .debug_aranges
+                0x000009f0       0xa0 src\shared\Packet.o
+ .debug_aranges
+                0x00000a90       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .debug_aranges
+                0x00000ab0       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .debug_aranges
+                0x00000ad0       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .debug_aranges
+                0x00000af0       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .debug_aranges
+                0x00000b10       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .debug_aranges
+                0x00000b30       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .debug_aranges
+                0x00000b50       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+
+.debug_pubnames
+                0x00000000     0x1bca
+ *(.debug_pubnames)
+ .debug_pubnames
+                0x00000000      0x180 build\Command.o
+ .debug_pubnames
+                0x00000180       0x3b build\DebugPacketProcessor.o
+ .debug_pubnames
+                0x000001bb       0x3a build\EepromMap.o
+ .debug_pubnames
+                0x000001f5      0x121 build\Host.o
+ .debug_pubnames
+                0x00000316       0x25 build\Main.o
+ .debug_pubnames
+                0x0000033b      0x1ed build\SDCard.o
+ .debug_pubnames
+                0x00000528      0x125 build\Steppers.o
+ .debug_pubnames
+                0x0000064d       0x7a build\Timeout.o
+ .debug_pubnames
+                0x000006c7       0xde build\Tool.o
+ .debug_pubnames
+                0x000007a5      0x164 build\lib_sd\fat.o
+ .debug_pubnames
+                0x00000909       0x39 build\lib_sd\partition.o
+ .debug_pubnames
+                0x00000942       0xc1 build\lib_sd\sd_raw.o
+ .debug_pubnames
+                0x00000a03       0x81 build\boards\mb24\Interface.o
+ .debug_pubnames
+                0x00000a84      0x15b build\boards\mb24\InterfaceBoard.o
+ .debug_pubnames
+                0x00000bdf      0x439 build\boards\mb24\LiquidCrystal.o
+ .debug_pubnames
+                0x00001018      0x464 build\boards\mb24\Menu.o
+ .debug_pubnames
+                0x0000147c      0x190 build\boards\mb24\Motherboard.o
+ .debug_pubnames
+                0x0000160c       0x30 build\boards\mb24\PSU.o
+ .debug_pubnames
+                0x0000163c       0xd0 build\boards\mb24\StepperInterface.o
+ .debug_pubnames
+                0x0000170c       0xd3 build\boards\mb24\UART.o
+ .debug_pubnames
+                0x000017df       0x80 src\shared\AvrPort.o
+ .debug_pubnames
+                0x0000185f       0x9f src\shared\PID.o
+ .debug_pubnames
+                0x000018fe      0x19e src\shared\Packet.o
+ .debug_pubnames
+                0x00001a9c       0x2c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .debug_pubnames
+                0x00001ac8       0x1f c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .debug_pubnames
+                0x00001ae7       0x22 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .debug_pubnames
+                0x00001b09       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .debug_pubnames
+                0x00001b29       0x22 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_thenan_sf.o)
+ .debug_pubnames
+                0x00001b4b       0x1f c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .debug_pubnames
+                0x00001b6a       0x1f c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .debug_pubnames
+                0x00001b89       0x21 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+ .debug_pubnames
+                0x00001baa       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clz.o)
+
+.debug_info     0x00000000    0x181d4
+ *(.debug_info)
+ .debug_info    0x00000000     0x1ddc build\Command.o
+ .debug_info    0x00001ddc      0xef6 build\DebugPacketProcessor.o
+ .debug_info    0x00002cd2      0x26a build\EepromMap.o
+ .debug_info    0x00002f3c     0x21cf build\Host.o
+ .debug_info    0x0000510b      0xdeb build\Main.o
+ .debug_info    0x00005ef6      0xbaa build\SDCard.o
+ .debug_info    0x00006aa0     0x16d6 build\Steppers.o
+ .debug_info    0x00008176      0xd25 build\Timeout.o
+ .debug_info    0x00008e9b     0x1014 build\Tool.o
+ .debug_info    0x00009eaf       0x5e build\lib_sd\byteordering.o
+ .debug_info    0x00009f0d     0x16c2 build\lib_sd\fat.o
+ .debug_info    0x0000b5cf      0x334 build\lib_sd\partition.o
+ .debug_info    0x0000b903      0xd74 build\lib_sd\sd_raw.o
+ .debug_info    0x0000c677      0x926 build\boards\mb24\Interface.o
+ .debug_info    0x0000cf9d      0xd82 build\boards\mb24\InterfaceBoard.o
+ .debug_info    0x0000dd1f     0x216e build\boards\mb24\LiquidCrystal.o
+ .debug_info    0x0000fe8d     0x2629 build\boards\mb24\Menu.o
+ .debug_info    0x000124b6     0x17d8 build\boards\mb24\Motherboard.o
+ .debug_info    0x00013c8e      0x10a build\boards\mb24\PSU.o
+ .debug_info    0x00013d98      0xa95 build\boards\mb24\StepperInterface.o
+ .debug_info    0x0001482d      0xe65 build\boards\mb24\UART.o
+ .debug_info    0x00015692      0x47b src\shared\AvrPort.o
+ .debug_info    0x00015b0d      0x3ed src\shared\PID.o
+ .debug_info    0x00015efa      0xd08 src\shared\Packet.o
+ .debug_info    0x00016c02      0x47a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .debug_info    0x0001707c      0x485 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .debug_info    0x00017501      0x207 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .debug_info    0x00017708      0x2b0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .debug_info    0x000179b8      0x12c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_thenan_sf.o)
+ .debug_info    0x00017ae4      0x117 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .debug_info    0x00017bfb      0x2df c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .debug_info    0x00017eda      0x251 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+ .debug_info    0x0001812b       0xa9 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clz.o)
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev   0x00000000     0x4fc5
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000      0x4b6 build\Command.o
+ .debug_abbrev  0x000004b6      0x32f build\DebugPacketProcessor.o
+ .debug_abbrev  0x000007e5      0x135 build\EepromMap.o
+ .debug_abbrev  0x0000091a      0x4fe build\Host.o
+ .debug_abbrev  0x00000e18      0x30c build\Main.o
+ .debug_abbrev  0x00001124      0x2fc build\SDCard.o
+ .debug_abbrev  0x00001420      0x3f5 build\Steppers.o
+ .debug_abbrev  0x00001815      0x2a7 build\Timeout.o
+ .debug_abbrev  0x00001abc      0x340 build\Tool.o
+ .debug_abbrev  0x00001dfc       0x2a build\lib_sd\byteordering.o
+ .debug_abbrev  0x00001e26      0x284 build\lib_sd\fat.o
+ .debug_abbrev  0x000020aa       0xea build\lib_sd\partition.o
+ .debug_abbrev  0x00002194      0x3a6 build\lib_sd\sd_raw.o
+ .debug_abbrev  0x0000253a      0x27d build\boards\mb24\Interface.o
+ .debug_abbrev  0x000027b7      0x31d build\boards\mb24\InterfaceBoard.o
+ .debug_abbrev  0x00002ad4      0x397 build\boards\mb24\LiquidCrystal.o
+ .debug_abbrev  0x00002e6b      0x5c3 build\boards\mb24\Menu.o
+ .debug_abbrev  0x0000342e      0x3bb build\boards\mb24\Motherboard.o
+ .debug_abbrev  0x000037e9       0xc1 build\boards\mb24\PSU.o
+ .debug_abbrev  0x000038aa      0x25a build\boards\mb24\StepperInterface.o
+ .debug_abbrev  0x00003b04      0x347 build\boards\mb24\UART.o
+ .debug_abbrev  0x00003e4b      0x14b src\shared\AvrPort.o
+ .debug_abbrev  0x00003f96      0x16e src\shared\PID.o
+ .debug_abbrev  0x00004104      0x306 src\shared\Packet.o
+ .debug_abbrev  0x0000440a      0x1ea c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .debug_abbrev  0x000045f4      0x21b c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .debug_abbrev  0x0000480f      0x148 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .debug_abbrev  0x00004957      0x17f c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .debug_abbrev  0x00004ad6       0xad c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_thenan_sf.o)
+ .debug_abbrev  0x00004b83       0xc4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .debug_abbrev  0x00004c47      0x1c0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .debug_abbrev  0x00004e07      0x154 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+ .debug_abbrev  0x00004f5b       0x6a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clz.o)
+
+.debug_line     0x00000000     0x9800
+ *(.debug_line)
+ .debug_line    0x00000000      0xbef build\Command.o
+ .debug_line    0x00000bef      0x336 build\DebugPacketProcessor.o
+ .debug_line    0x00000f25      0x16a build\EepromMap.o
+ .debug_line    0x0000108f      0xa46 build\Host.o
+ .debug_line    0x00001ad5      0x26d build\Main.o
+ .debug_line    0x00001d42      0x652 build\SDCard.o
+ .debug_line    0x00002394      0x68a build\Steppers.o
+ .debug_line    0x00002a1e      0x1f6 build\Timeout.o
+ .debug_line    0x00002c14      0x3e2 build\Tool.o
+ .debug_line    0x00002ff6       0x3e build\lib_sd\byteordering.o
+ .debug_line    0x00003034     0x1292 build\lib_sd\fat.o
+ .debug_line    0x000042c6      0x183 build\lib_sd\partition.o
+ .debug_line    0x00004449      0xa70 build\lib_sd\sd_raw.o
+ .debug_line    0x00004eb9      0x299 build\boards\mb24\Interface.o
+ .debug_line    0x00005152      0x5f7 build\boards\mb24\InterfaceBoard.o
+ .debug_line    0x00005749      0xe82 build\boards\mb24\LiquidCrystal.o
+ .debug_line    0x000065cb      0xdf4 build\boards\mb24\Menu.o
+ .debug_line    0x000073bf      0x6f7 build\boards\mb24\Motherboard.o
+ .debug_line    0x00007ab6       0xac build\boards\mb24\PSU.o
+ .debug_line    0x00007b62      0x2aa build\boards\mb24\StepperInterface.o
+ .debug_line    0x00007e0c      0x3c6 build\boards\mb24\UART.o
+ .debug_line    0x000081d2       0xd3 src\shared\AvrPort.o
+ .debug_line    0x000082a5      0x251 src\shared\PID.o
+ .debug_line    0x000084f6      0x75e src\shared\Packet.o
+ .debug_line    0x00008c54      0x2af c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .debug_line    0x00008f03      0x239 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .debug_line    0x0000913c      0x135 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .debug_line    0x00009271      0x109 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .debug_line    0x0000937a       0x90 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_thenan_sf.o)
+ .debug_line    0x0000940a       0xa5 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .debug_line    0x000094af      0x18a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .debug_line    0x00009639      0x14b c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+ .debug_line    0x00009784       0x7c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clz.o)
+
+.debug_frame    0x00000000     0x1340
+ *(.debug_frame)
+ .debug_frame   0x00000000       0xe0 build\Command.o
+ .debug_frame   0x000000e0       0x30 build\DebugPacketProcessor.o
+ .debug_frame   0x00000110       0x40 build\EepromMap.o
+ .debug_frame   0x00000150       0xb0 build\Host.o
+ .debug_frame   0x00000200       0x30 build\Main.o
+ .debug_frame   0x00000230      0x170 build\SDCard.o
+ .debug_frame   0x000003a0       0xe0 build\Steppers.o
+ .debug_frame   0x00000480       0x60 build\Timeout.o
+ .debug_frame   0x000004e0       0xa0 build\Tool.o
+ .debug_frame   0x00000580      0x1c0 build\lib_sd\fat.o
+ .debug_frame   0x00000740       0x30 build\lib_sd\partition.o
+ .debug_frame   0x00000770       0xb0 build\lib_sd\sd_raw.o
+ .debug_frame   0x00000820       0x90 build\boards\mb24\Interface.o
+ .debug_frame   0x000008b0       0xc0 build\boards\mb24\InterfaceBoard.o
+ .debug_frame   0x00000970      0x250 build\boards\mb24\LiquidCrystal.o
+ .debug_frame   0x00000bc0      0x2b0 build\boards\mb24\Menu.o
+ .debug_frame   0x00000e70       0xc0 build\boards\mb24\Motherboard.o
+ .debug_frame   0x00000f30       0x30 build\boards\mb24\PSU.o
+ .debug_frame   0x00000f60       0x70 build\boards\mb24\StepperInterface.o
+ .debug_frame   0x00000fd0       0xb0 build\boards\mb24\UART.o
+ .debug_frame   0x00001080       0x20 src\shared\AvrPort.o
+ .debug_frame   0x000010a0       0x80 src\shared\PID.o
+ .debug_frame   0x00001120      0x120 src\shared\Packet.o
+ .debug_frame   0x00001240       0x40 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .debug_frame   0x00001280       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .debug_frame   0x000012a0       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .debug_frame   0x000012c0       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .debug_frame   0x000012e0       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .debug_frame   0x00001300       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .debug_frame   0x00001320       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+
+.debug_str      0x00000000     0x4729
+ *(.debug_str)
+ .debug_str     0x00000000     0x118e build\Command.o
+                               0x12e0 (size before relaxing)
+ .debug_str     0x0000118e      0x23c build\DebugPacketProcessor.o
+                                0xdee (size before relaxing)
+ .debug_str     0x000013ca       0xbf build\EepromMap.o
+                                0x1e7 (size before relaxing)
+ .debug_str     0x00001489      0x53f build\Host.o
+                               0x134e (size before relaxing)
+ .debug_str     0x000019c8       0x28 build\Main.o
+                                0xc41 (size before relaxing)
+ .debug_str     0x000019f0      0x5e4 build\SDCard.o
+                                0x9b2 (size before relaxing)
+ .debug_str     0x00001fd4      0x452 build\Steppers.o
+                               0x1080 (size before relaxing)
+ .debug_str     0x00002426       0x24 build\Timeout.o
+                                0xb7c (size before relaxing)
+ .debug_str     0x0000244a      0x143 build\Tool.o
+                                0xd68 (size before relaxing)
+ .debug_str     0x0000258d       0x1c build\lib_sd\byteordering.o
+                                 0xae (size before relaxing)
+ .debug_str     0x000025a9      0x5d1 build\lib_sd\fat.o
+                                0x88a (size before relaxing)
+ .debug_str     0x00002b7a       0x58 build\lib_sd\partition.o
+                                0x21d (size before relaxing)
+ .debug_str     0x00002bd2      0x26d build\lib_sd\sd_raw.o
+                                0x4c3 (size before relaxing)
+ .debug_str     0x00002e3f      0x407 build\boards\mb24\Interface.o
+                                0x6da (size before relaxing)
+ .debug_str     0x00003246       0x5a build\boards\mb24\InterfaceBoard.o
+                                0x639 (size before relaxing)
+ .debug_str     0x000032a0      0x5dd build\boards\mb24\LiquidCrystal.o
+                                0x828 (size before relaxing)
+ .debug_str     0x0000387d      0x81a build\boards\mb24\Menu.o
+                               0x169c (size before relaxing)
+ .debug_str     0x00004097       0xfc build\boards\mb24\Motherboard.o
+                                0xcf2 (size before relaxing)
+ .debug_str     0x00004193       0x19 build\boards\mb24\PSU.o
+                                 0xe1 (size before relaxing)
+ .debug_str     0x000041ac       0x5b build\boards\mb24\StepperInterface.o
+                                0x40d (size before relaxing)
+ .debug_str     0x00004207       0x88 build\boards\mb24\UART.o
+                                0x7c8 (size before relaxing)
+ .debug_str     0x0000428f       0x40 src\shared\AvrPort.o
+                                0x1fb (size before relaxing)
+ .debug_str     0x000042cf      0x1ce src\shared\PID.o
+                                0x298 (size before relaxing)
+ .debug_str     0x0000449d       0x40 src\shared\Packet.o
+                                0x55d (size before relaxing)
+ .debug_str     0x000044dd      0x186 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+                                0x207 (size before relaxing)
+ .debug_str     0x00004663       0x27 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+                                0x1c0 (size before relaxing)
+ .debug_str     0x0000468a       0x1e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+                                0x17c (size before relaxing)
+ .debug_str     0x000046a8        0xa c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+                                0x19f (size before relaxing)
+ .debug_str     0x00000000      0x104 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_thenan_sf.o)
+ .debug_str     0x000046b2       0x5c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+                                0x112 (size before relaxing)
+ .debug_str     0x0000470e       0x10 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+                                0x19e (size before relaxing)
+ .debug_str     0x0000471e        0xb c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+                                0x180 (size before relaxing)
+ .debug_str     0x00000000       0xf5 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clz.o)
+
+.debug_loc      0x00000000     0x741f
+ *(.debug_loc)
+ .debug_loc     0x00000000      0x9f4 build\Command.o
+ .debug_loc     0x000009f4      0x212 build\DebugPacketProcessor.o
+ .debug_loc     0x00000c06       0xf1 build\EepromMap.o
+ .debug_loc     0x00000cf7      0x72b build\Host.o
+ .debug_loc     0x00001422       0x29 build\Main.o
+ .debug_loc     0x0000144b      0x322 build\SDCard.o
+ .debug_loc     0x0000176d      0x389 build\Steppers.o
+ .debug_loc     0x00001af6       0x84 build\Timeout.o
+ .debug_loc     0x00001b7a     0x2012 build\lib_sd\fat.o
+ .debug_loc     0x00003b8c      0x1da build\lib_sd\partition.o
+ .debug_loc     0x00003d66      0xc05 build\lib_sd\sd_raw.o
+ .debug_loc     0x0000496b       0x28 build\boards\mb24\Interface.o
+ .debug_loc     0x00004993      0x267 build\boards\mb24\InterfaceBoard.o
+ .debug_loc     0x00004bfa      0x956 build\boards\mb24\LiquidCrystal.o
+ .debug_loc     0x00005550      0xcab build\boards\mb24\Menu.o
+ .debug_loc     0x000061fb      0x1c9 build\boards\mb24\Motherboard.o
+ .debug_loc     0x000063c4      0x1bb build\boards\mb24\StepperInterface.o
+ .debug_loc     0x0000657f      0x141 build\boards\mb24\UART.o
+ .debug_loc     0x000066c0      0x19c src\shared\PID.o
+ .debug_loc     0x0000685c      0x3ed src\shared\Packet.o
+ .debug_loc     0x00006c49      0x32a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_addsub_sf.o)
+ .debug_loc     0x00006f73      0x104 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)
+ .debug_loc     0x00007077       0xac c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_si_to_sf.o)
+ .debug_loc     0x00007123       0x7e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_sf_to_si.o)
+ .debug_loc     0x000071a1       0x94 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clzsi2.o)
+ .debug_loc     0x00007235      0x13e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_pack_sf.o)
+ .debug_loc     0x00007373       0xac c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_unpack_sf.o)
+
+.debug_macinfo
+ *(.debug_macinfo)
+OUTPUT(build\MB-mb24-v2.8.elf elf32-avr)
+LOAD linker stubs
+
+.debug_ranges   0x00000000      0xe80
+ .debug_ranges  0x00000000       0xa8 build\Command.o
+ .debug_ranges  0x000000a8       0x20 build\DebugPacketProcessor.o
+ .debug_ranges  0x000000c8       0x28 build\EepromMap.o
+ .debug_ranges  0x000000f0      0x1d0 build\Host.o
+ .debug_ranges  0x000002c0       0x20 build\Main.o
+ .debug_ranges  0x000002e0       0xd8 build\SDCard.o
+ .debug_ranges  0x000003b8       0xf0 build\Steppers.o
+ .debug_ranges  0x000004a8       0x38 build\Timeout.o
+ .debug_ranges  0x000004e0       0x58 build\Tool.o
+ .debug_ranges  0x00000538      0x1a8 build\lib_sd\fat.o
+ .debug_ranges  0x000006e0       0x20 build\lib_sd\partition.o
+ .debug_ranges  0x00000700      0x120 build\lib_sd\sd_raw.o
+ .debug_ranges  0x00000820       0x50 build\boards\mb24\Interface.o
+ .debug_ranges  0x00000870       0x68 build\boards\mb24\InterfaceBoard.o
+ .debug_ranges  0x000008d8      0x190 build\boards\mb24\LiquidCrystal.o
+ .debug_ranges  0x00000a68      0x160 build\boards\mb24\Menu.o
+ .debug_ranges  0x00000bc8       0x68 build\boards\mb24\Motherboard.o
+ .debug_ranges  0x00000c30       0x20 build\boards\mb24\PSU.o
+ .debug_ranges  0x00000c50       0x40 build\boards\mb24\StepperInterface.o
+ .debug_ranges  0x00000c90       0x60 build\boards\mb24\UART.o
+ .debug_ranges  0x00000cf0       0x18 src\shared\AvrPort.o
+ .debug_ranges  0x00000d08       0x48 src\shared\PID.o
+ .debug_ranges  0x00000d50       0xe0 src\shared\Packet.o
+ .debug_ranges  0x00000e30       0x50 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_mul_sf.o)

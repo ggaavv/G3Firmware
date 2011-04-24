@@ -39,7 +39,7 @@ import os
 import re
 from os.path import dirname
 # Parameters
-platform = ARGUMENTS.get('platform','mb24')
+platform = ARGUMENTS.get('platform','rrmbv12')
 f_cpu='16000000L'
 
 default_baud = '19200'

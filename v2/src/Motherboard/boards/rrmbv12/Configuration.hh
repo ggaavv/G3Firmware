@@ -98,7 +98,8 @@
 // The Y stepper enable pin (active low)
 #define Y_ENABLE_PIN    Pin(PortA,7)
 // The Y minimum endstop pin (active high)
-#define Y_MIN_PIN       Pin(PortA,5)
+// #define Y_MIN_PIN       Pin(PortA,5) ---- TEMP
+#define Y_MIN_PIN       Pin(PortB,1)
 // The Y maximum endstop pin (active high)
 #define Y_MAX_PIN       Pin(PortA,6)
 
@@ -118,7 +119,7 @@
 // The A direction pin (forward on logic high)
 #define A_DIR_PIN       Pin(PortC,1)
 // The A stepper enable pin (active low)
-#define A_ENABLE_PIN    Pin(PortB,1)
+// #define A_ENABLE_PIN    Pin(PortB,1)
 
 // The B stepper step pin (active on rising edge)
 //#define B_STEP_PIN      Pin(PortG,5)
