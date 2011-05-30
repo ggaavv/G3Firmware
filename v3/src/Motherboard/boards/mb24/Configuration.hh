@@ -67,7 +67,7 @@
 // Define as 1 if the piezo buzzer is present, 0 if not.
 #define HAS_BUZZER 1
 // The pin that drives the buzzer
-#define BUZZER_PIN Pin(PortC,6)
+#define BUZZER_PIN Pin(1,5)
 
 // --- Emergency Stop configuration ---
 // Define as 1 if the estop is present, 0 if not.

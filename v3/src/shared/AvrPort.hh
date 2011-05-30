@@ -68,10 +68,10 @@ extern Port PortJ, PortK, PortL;
 class Pin {
 private:
 	Port port;
-	uint8_t pin_index : 4;
+	uint32_t pin_index : 4;
 public:
 	Pin() : port(Port()), pin_index(0) {}
-	Pin(Port& port_in, uint8_t pin_index_in) : port(port_in), pin_index(pin_index_in) {}
+	Pin(Port& port_in, uint32_t pin_index_in) : port(port_in), pin_index(pin_index_in) {}
 	bool isNull() { return port.isNull(); }
 	void setDirection(bool out) { port.setPinDirection(pin_index,out); }
 	bool getValue() { return port.getPin(pin_index); }
