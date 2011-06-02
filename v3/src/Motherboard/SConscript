@@ -39,10 +39,8 @@ import os
 import re
 from os.path import dirname
 # Parameters
-platform = ARGUMENTS.get('platform','mb24')
-f_cpu='16000000L'
+platform = ARGUMENTS.get('platform','lpc1786')
 
-default_baud = '19200'
 mcu='atmega168'
 has_queue = 0
 has_psu = 0
@@ -72,8 +70,7 @@ if (platform == 'rrmbv24'):
 target_name = "MB-"+platform+"-v"+str(version//100)+"."+str(version%100)
 
 if (platform == 'lpc1768'):
-	default_baud = '115200'
-	mcu='lpc1768'
+	mcu='cortex-m3'
 	has_queue = 1
 	has_psu = 1
 else:
@@ -81,63 +78,37 @@ else:
 	print "LPC1768: Gen 5 motherboard"
 	exit()
 
-
-upload_port = ARGUMENTS.get('port','/dev/ttyUSB0')
-upload_baud = ARGUMENTS.get('baud',default_baud)
-upload_prog = ARGUMENTS.get('programmer',default_programmer)
-
 srcs = Glob('*.cc') + Glob('lib_sd/*.c') + Glob('boards/%s/*.cc' % platform) + Glob('#/src/shared/*.cc')
 
 include_paths = ['#/src/shared', 'boards/%s' % platform, '.']
 
-flags=[
-	'-DF_CPU='+str(f_cpu),
-	'-DVERSION='+str(version),
-	'-mmcu='+mcu,
-	'-g',
-	'-Os',
-	'-w',
-	'-fno-exceptions',
-	'-ffunction-sections',
-	'-fdata-sections']
-
 if (os.environ.has_key('BUILD_NAME')):
    flags.append('-DBUILD_NAME=' + os.environ['BUILD_NAME'])
 
-if (os.environ.has_key('AVR_TOOLS_PATH')):
-	avr_tools_path = os.environ['AVR_TOOLS_PATH']
-elif (os.environ.has_key('AVR32_HOME')):
-	avr_tools_path = os.environ['AVR32_HOME'] + '\\bin'
+if (os.environ.has_key('CodeSourcery_PATH')):
+	codesourcery_path = os.environ['CodeSourcery_PATH']
 else:
-	avr_tools_path = dirname(os.popen('/usr/bin/which avr-gcc').readlines()[0])
+	avr_tools_path = dirname(os.popen('/C:/Program Files (x86)/CodeSourcery/Sourcery G++ Lite/bin avr-gcc').readlines()[0])
 
-env=Environment(tools=['g++', 'gcc'],
+env=Environment(tools=['gcc', 'gpp', 'as', 'ld'],
+	GCC=codesourcery_path+"/arm-none-eabi-gcc",
+	GPP=codesourcery_path+"/arm-none-eabi-g++",
+	AS=codesourcery_path+"/arm-none-eabi-as",
+	LD=codesourcery_path+"/arm-none-eabi-ld",
+	OBJCOPY=codesourcery_path+"/arm-none-eabi-objcopy",
+	SIZE=codesourcery_path+"/arm-none-eabi-size",
+	CPPPATH=include_paths,
+	CCFLAGS=flags)
 
 OPTIMIZATION = 0
 DEBUG = -g
 #LISTING = -ahls
 
 #  Compiler Options
-GCFLAGS = -Wall -fno-common -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) $(DEBUG)
-GCFLAGS += -D__RAM_MODE__=0
-#GCFLAGS += -Wcast-align -Wcast-qual -Wimplicit -Wpointer-arith -Wswitch
-#GCFLAGS += -Wredundant-decls -Wreturn-type -Wshadow -Wunused
-LDFLAGS = -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) -nostartfiles -Wl,-Map=$(PROJECT).map -T$(LSCRIPT)
-ASFLAGS = $(LISTING) -mcpu=cortex-m3 --defsym RAM_MODE=0
+gcenv=env.Copy(GCFLAGS = '-Wall -fno-common -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) $(DEBUG) -D__RAM_MODE__=0')
+ldenv=env.Copy(LDFLAGS = '-mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) -nostartfiles -Wl,-Map=$(PROJECT).map -T$(LSCRIPT)')
+asenv=env.Copy(ASFLAGS = '-mcpu=cortex-m3 --defsym RAM_MODE=0')
 
-#  Compiler/Assembler/Linker Paths
-GCC = arm-none-eabi-gcc
-AS = arm-none-eabi-as
-LD = arm-none-eabi-ld
-OBJCOPY = arm-none-eabi-objcopy
-REMOVE = rm -f
-SIZE = arm-none-eabi-size
-
-
-	CC=avr_tools_path+"/avr-g++",
-	CXX=avr_tools_path+"/avr-g++",
-	CPPPATH=include_paths,
-	CCFLAGS=flags)
 objs = env.Object(srcs)
 
 # run_alias = Alias('run', [program], program[0].path)
@@ -151,13 +122,6 @@ env.Append(BUILDERS={'Elf':Builder(action=avr_tools_path+"/avr-gcc -mmcu="+mcu+"
 env.Append(BUILDERS={'Hex':Builder(action=avr_tools_path+"/avr-objcopy -O ihex -R .eeprom $SOURCES $TARGET")})
 env.Elf(elf_name, objs) 
 env.Hex(hex_name, elf_name)
-
-avrdude = avr_tools_path+"/avrdude"
-avrdude_flags = "-F -V -p "+mcu.replace("atmega","m")
-avrdude_flags = avrdude_flags + " -P "+upload_port
-avrdude_flags = avrdude_flags + " -c "+upload_prog
-avrdude_flags = avrdude_flags + " -b "+upload_baud
-avrdude_command = " ".join([avrdude,avrdude_flags,"-U","flash:w:$SOURCES"])
 
 # env.Alias instead of just Alias because of
 # http://scons.tigris.org/issues/show_bug.cgi?id=2443
