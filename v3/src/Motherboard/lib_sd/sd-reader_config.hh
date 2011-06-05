@@ -8,8 +8,8 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef SD_READER_CONFIG_H
-#define SD_READER_CONFIG_H
+#ifndef SD_READER_CONFIG_HH
+#define SD_READER_CONFIG_HH
 
 #ifdef __cplusplus
 extern "C"

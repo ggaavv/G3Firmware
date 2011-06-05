@@ -8,12 +8,12 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef PARTITION_H
-#define PARTITION_H
+#ifndef PARTITION_HH
+#define PARTITION_HH
 
 #include <stdint.h>
-#include "sd_raw_config.h"
-#include "partition_config.h"
+#include "sd_raw_config.hh"
+#include "partition_config.hh"
 
 #ifdef __cplusplus
 extern "C"

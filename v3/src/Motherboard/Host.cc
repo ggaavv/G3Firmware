@@ -23,9 +23,9 @@
 #include "DebugPacketProcessor.hh"
 #include "Timeout.hh"
 #include "Version.hh"
-#include <util/atomic.h>
-#include <avr/eeprom.h>
-#include <avr/pgmspace.h>
+//#include <util/atomic.h>
+//#include <avr/eeprom.h>
+//#include <avr/pgmspace.h>
 #include "Main.hh"
 #include "Errors.hh"
 #include "EepromMap.hh"
@@ -134,18 +134,20 @@ bool processCommandPacket(const InPacket& from_host, OutPacket& to_host) {
 			}
 			// Queue command, if there's room.
 			// Turn off interrupts while querying or manipulating the queue!
-			ATOMIC_BLOCK(ATOMIC_FORCEON) {
-				const uint8_t command_length = from_host.getLength();
-				if (command::getRemainingCapacity() >= command_length) {
-					// Append command to buffer
-					for (int i = 0; i < command_length; i++) {
-						command::push(from_host.read8(i));
-					}
-					to_host.append8(RC_OK);
-				} else {
-					to_host.append8(RC_BUFFER_OVERFLOW);
+//			ATOMIC_BLOCK(ATOMIC_FORCEON) {
+			__disable_irq ();
+			const uint8_t command_length = from_host.getLength();
+			if (command::getRemainingCapacity() >= command_length) {
+				// Append command to buffer
+				for (int i = 0; i < command_length; i++) {
+					command::push(from_host.read8(i));
 				}
+				to_host.append8(RC_OK);
+			} else {
+				to_host.append8(RC_BUFFER_OVERFLOW);
 			}
+			__enable_irq ();
+//			}
 			return true;
 		}
 	}
@@ -171,50 +173,54 @@ inline void handleGetBufferSize(const InPacket& from_host, OutPacket& to_host) {
 }
 
 inline void handleGetPosition(const InPacket& from_host, OutPacket& to_host) {
-	ATOMIC_BLOCK(ATOMIC_FORCEON) {
-		const Point p = steppers::getPosition();
-		to_host.append8(RC_OK);
-		to_host.append32(p[0]);
-		to_host.append32(p[1]);
-		to_host.append32(p[2]);
-		// From spec:
-		// endstop status bits: (7-0) : | N/A | N/A | z max | z min | y max | y min | x max | x min |
-		Motherboard& board = Motherboard::getBoard();
-		uint8_t endstop_status = 0;
-		for (int i = 3; i > 0; i--) {
-			StepperInterface& si = board.getStepperInterface(i-1);
-			endstop_status <<= 2;
-			endstop_status |= (si.isAtMaximum()?2:0) | (si.isAtMinimum()?1:0);
-		}
-		to_host.append8(endstop_status);
+//	ATOMIC_BLOCK(ATOMIC_FORCEON) {
+	__disable_irq ();
+	const Point p = steppers::getPosition();
+	to_host.append8(RC_OK);
+	to_host.append32(p[0]);
+	to_host.append32(p[1]);
+	to_host.append32(p[2]);
+	// From spec:
+	// endstop status bits: (7-0) : | N/A | N/A | z max | z min | y max | y min | x max | x min |
+	Motherboard& board = Motherboard::getBoard();
+	uint8_t endstop_status = 0;
+	for (int i = 3; i > 0; i--) {
+		StepperInterface& si = board.getStepperInterface(i-1);
+		endstop_status <<= 2;
+		endstop_status |= (si.isAtMaximum()?2:0) | (si.isAtMinimum()?1:0);
 	}
+	to_host.append8(endstop_status);
+	__enable_irq ();
+//	}
 }
 
 inline void handleGetPositionExt(const InPacket& from_host, OutPacket& to_host) {
-	ATOMIC_BLOCK(ATOMIC_FORCEON) {
-		const Point p = steppers::getPosition();
-		to_host.append8(RC_OK);
-		to_host.append32(p[0]);
-		to_host.append32(p[1]);
-		to_host.append32(p[2]);
+//	ATOMIC_BLOCK(ATOMIC_FORCEON) {
+	__disable_irq ();
+	const Point p = steppers::getPosition();
+	to_host.append8(RC_OK);
+	to_host.append32(p[0]);
+	to_host.append32(p[1]);
+	to_host.append32(p[2]);
 #if STEPPER_COUNT > 3
-		to_host.append32(p[3]);
-		to_host.append32(p[4]);
+	to_host.append32(p[3]);
+	to_host.append32(p[4]);
 #else
-		to_host.append32(0);
-		to_host.append32(0);
+	to_host.append32(0);
+	to_host.append32(0);
 #endif
-		// From spec:
-		// endstop status bits: (15-0) : | b max | b min | a max | a min | z max | z min | y max | y min | x max | x min |
-		Motherboard& board = Motherboard::getBoard();
-		uint8_t endstop_status = 0;
-		for (int i = STEPPER_COUNT; i > 0; i--) {
-			StepperInterface& si = board.getStepperInterface(i-1);
-			endstop_status <<= 2;
-			endstop_status |= (si.isAtMaximum()?2:0) | (si.isAtMinimum()?1:0);
-		}
-		to_host.append16(endstop_status);
+	// From spec:
+	// endstop status bits: (15-0) : | b max | b min | a max | a min | z max | z min | y max | y min | x max | x min |
+	Motherboard& board = Motherboard::getBoard();
+	uint8_t endstop_status = 0;
+	for (int i = STEPPER_COUNT; i > 0; i--) {
+		StepperInterface& si = board.getStepperInterface(i-1);
+		endstop_status <<= 2;
+	endstop_status |= (si.isAtMaximum()?2:0) | (si.isAtMinimum()?1:0);
 	}
+	to_host.append16(endstop_status);
+	__enable_irq ();
+//	}
 }
 
 inline void handleCaptureToFile(const InPacket& from_host, OutPacket& to_host) {
@@ -348,17 +354,19 @@ inline void handlePause(const InPacket& from_host, OutPacket& to_host) {
 
 inline void handleIsFinished(const InPacket& from_host, OutPacket& to_host) {
 	to_host.append8(RC_OK);
-	ATOMIC_BLOCK(ATOMIC_FORCEON) {
-		bool done = !steppers::isRunning() && command::isEmpty();
-		to_host.append8(done?1:0);
-	}
+//	ATOMIC_BLOCK(ATOMIC_FORCEON) {
+	__disable_irq ();
+	bool done = !steppers::isRunning() && command::isEmpty();
+	to_host.append8(done?1:0);
+	__enable_irq ();
+//	}
 }
 
 inline void handleReadEeprom(const InPacket& from_host, OutPacket& to_host) {
 	uint16_t offset = from_host.read16(1);
 	uint8_t length = from_host.read8(3);
 	uint8_t data[16];
-	eeprom_read_block(data, (const void*) offset, length);
+//	eeprom_read_block(data, (const void*) offset, length);		    //NEED doing
 	to_host.append8(RC_OK);
 	for (int i = 0; i < length; i++) {
 		to_host.append8(data[i]);
@@ -369,11 +377,11 @@ inline void handleWriteEeprom(const InPacket& from_host, OutPacket& to_host) {
 	uint16_t offset = from_host.read16(1);
 	uint8_t length = from_host.read8(3);
 	uint8_t data[16];
-	eeprom_read_block(data, (const void*) offset, length);
+//	eeprom_read_block(data, (const void*) offset, length);    //NEED doing
 	for (int i = 0; i < length; i++) {
 		data[i] = from_host.read8(i + 4);
 	}
-	eeprom_write_block(data, (void*) offset, length);
+//	eeprom_write_block(data, (void*) offset, length);		//NEED doing
 	to_host.append8(RC_OK);
 	to_host.append8(length);
 }
@@ -385,10 +393,10 @@ enum { // bit assignments
 
 inline void handleExtendedStop(const InPacket& from_host, OutPacket& to_host) {
 	uint8_t flags = from_host.read8(1);
-	if (flags & _BV(ES_STEPPERS)) {
+	if (flags & (1 << (ES_STEPPERS))) {
 		steppers::abort();
 	}
-	if (flags & _BV(ES_COMMANDS)) {
+	if (flags & (1 << (ES_COMMANDS))) {
 		command::reset();
 	}
 	to_host.append8(RC_OK);
@@ -502,11 +510,12 @@ char* getMachineName() {
 	}
 
 	// If it's still zero, load in a default.
-	static PROGMEM prog_uchar defaultMachineName[] =  "Thing-O-Matic";
+//	static PROGMEM prog_uchar defaultMachineName[] =  "Thing-O-Matic";
+	static char defaultMachineName[] =  "Thing-O-Matic";
 
 	if (machineName[0] == 0) {
 		for(uint8_t i = 0; i < 14; i++) {
-			machineName[i] = pgm_read_byte_near(defaultMachineName+i);
+//			machineName[i] = pgm_read_byte_near(defaultMachineName+i);			//NEEDS doing
 		}
 	}
 

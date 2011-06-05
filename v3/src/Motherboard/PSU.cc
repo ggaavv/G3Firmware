@@ -16,7 +16,7 @@
  */
 
 #include "PSU.hh"
-#include <avr/io.h>
+//#include <avr/io.h>
 #include <util/delay.h>
 #include "Configuration.hh"
 #include "AvrPort.hh"

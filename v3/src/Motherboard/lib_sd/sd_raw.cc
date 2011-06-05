@@ -9,8 +9,8 @@
  */
 
 #include <string.h>
-#include <avr/io.h>
-#include "sd_raw.h"
+//#include <avr/io.h>
+#include "sd_raw.hh"
 
 /**
  * \addtogroup sd_raw MMC/SD/SDHC card raw access

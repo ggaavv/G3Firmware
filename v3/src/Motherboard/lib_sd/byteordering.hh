@@ -8,8 +8,8 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef BYTEORDERING_H
-#define BYTEORDERING_H
+#ifndef BYTEORDERING_HH
+#define BYTEORDERING_HH
 
 #include <stdint.h>
 
@@ -53,7 +53,15 @@ extern "C"
  * \returns The given 32-bit integer converted to little-endian byte order.
  */
 
+#define LITTLE_ENDIAN 1 //LPC1768 is little endian
+
 #if DOXYGEN || LITTLE_ENDIAN || __AVR__
+/*
+uint32_t __REV (uint32_t value)		//Reverse byte order in integer value.
+uint32_t __REV16 (uint16_t value)	//Reverse byte order in unsigned short value.
+sint32_t __REVSH (sint16_t value)	//Reverse byte order in signed short value with sign extension to integer.
+uint32_t __RBIT (uint32_t value)	//Reverse bit order of value
+*/
 #define HTOL16(val) (val)
 #define HTOL32(val) (val)
 #elif BIG_ENDIAN

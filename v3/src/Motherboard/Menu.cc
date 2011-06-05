@@ -6,7 +6,7 @@
 #include "Errors.hh"
 #include "Tool.hh"
 #include "Host.hh"
-#include <util/delay.h>
+//#include <util/delay.h>
 #include <stdlib.h>
 
 #define HOST_PACKET_TIMEOUT_MS 20

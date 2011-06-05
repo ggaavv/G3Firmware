@@ -8,7 +8,7 @@
  * published by the Free Software Foundation.
  */
 
-#include "byteordering.h"
+#include "byteordering.hh"
 
 /**
  * \addtogroup byteordering

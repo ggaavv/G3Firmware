@@ -8,11 +8,11 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef FAT_CONFIG_H
-#define FAT_CONFIG_H
+#ifndef FAT_CONFIG_HH
+#define FAT_CONFIG_HH
 
 #include <stdint.h>
-#include "sd_raw_config.h"
+#include "sd_raw_config.hh"
 
 #ifdef __cplusplus
 extern "C"

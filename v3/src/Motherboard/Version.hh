@@ -18,7 +18,7 @@
 #ifndef VERSION_HH_
 #define VERSION_HH_
 
-#include <stdint.h>
+//#include <stdint.h>
 
 #ifndef VERSION
 #error "Version not defined! Please define the version number for this build."

@@ -8,9 +8,9 @@
  * published by the Free Software Foundation.
  */
 
-#include "partition.h"
-#include "partition_config.h"
-#include "sd-reader_config.h"
+#include "partition.hh"
+#include "partition_config.hh"
+#include "sd-reader_config.hh"
 
 #include <string.h>
 

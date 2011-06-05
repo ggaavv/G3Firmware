@@ -23,12 +23,11 @@
 
 namespace eeprom {
 
-const static uint16_t EEPROM_SIZE				= 0x0200;
-
+uint16_t EEPROM_SIZE				= 0x0200;
 /// Version, low byte: 1 byte
-const static uint16_t VERSION_LOW				= 0x0000;
+uint16_t VERSION_LOW				= 0x0000;
 /// Version, high byte: 1 byte
-const static uint16_t VERSION_HIGH				= 0x0001;
+uint16_t VERSION_HIGH				= 0x0001;
 
 // Axis inversion flags: 1 byte.
 // Axis N (where X=0, Y=1, etc.) is inverted if the Nth bit is set.

@@ -8,11 +8,11 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef FAT_H
-#define FAT_H
+#ifndef FAT_HH
+#define FAT_HH
 
 #include <stdint.h>
-#include "fat_config.h"
+#include "fat_config.hh"
 
 #ifdef __cplusplus
 extern "C"

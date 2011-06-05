@@ -16,9 +16,9 @@
  */
 
 #include <stdint.h>
-#include <avr/interrupt.h>
-#include <avr/io.h>
-#include <util/atomic.h>
+//#include <avr/interrupt.h>
+//#include <avr/io.h>
+//#include <util/atomic.h>
 #include "Motherboard.hh"
 #include "Configuration.hh"
 #include "Steppers.hh"

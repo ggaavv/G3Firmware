@@ -22,8 +22,8 @@
 #include "Configuration.hh"
 #include "Timeout.hh"
 #include "CircularBuffer.hh"
-#include <util/atomic.h>
-#include <avr/eeprom.h>
+//#include <util/atomic.h>
+//#include <avr/eeprom.h>
 #include "EepromMap.hh"
 #include "SDCard.hh"
 
@@ -39,9 +39,9 @@ bool paused = false;
 
 uint16_t getRemainingCapacity() {
 	uint16_t sz;
-	ATOMIC_BLOCK(ATOMIC_FORCEON) {
+//	ATOMIC_BLOCK(ATOMIC_FORCEON) {
 		sz = command_buffer.getRemainingCapacity();
-	}
+//	}
 	return sz;
 }
 
@@ -93,7 +93,7 @@ int32_t pop32() {
 	return shared.a;
 }
 
-enum {
+enum current_enum{
 	READY,
 	MOVING,
 	DELAY,
@@ -234,7 +234,7 @@ void runCommandSlice() {
 					uint8_t axes = command_buffer.pop();
 					bool enable = (axes & 0x80) != 0;
 					for (int i = 0; i < STEPPER_COUNT; i++) {
-						if ((axes & _BV(i)) != 0) {
+						if ((axes & (1 << (i))) != 0) {
 							steppers::enableAxis(i, enable);
 						}
 					}
@@ -313,9 +313,9 @@ void runCommandSlice() {
 						if ( axes & (1 << i) ) {
 							uint16_t offset = eeprom::AXIS_HOME_POSITIONS + 4*i;
 							uint32_t position = steppers::getPosition()[i];
-							cli();
-							eeprom_write_block(&position, (void*) offset, 4);
-							sei();
+							__enable_irq ();
+//	NEEDS fixing			eeprom_write_block(&position, (void*) offset, 4);
+							__disable_irq ();
 						}
 					}
 				}
@@ -330,9 +330,9 @@ void runCommandSlice() {
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
 							uint16_t offset = eeprom::AXIS_HOME_POSITIONS + 4*i;
-							cli();
-							eeprom_read_block(&(newPoint[i]), (void*) offset, 4);
-							sei();
+							__enable_irq ();
+//	NEEDS fixing			eeprom_read_block(&(newPoint[i]), (void*) offset, 4);
+							__disable_irq ();
 						}
 					}
 

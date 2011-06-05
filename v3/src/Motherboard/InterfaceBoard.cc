@@ -1,5 +1,5 @@
-#include <AvrPort.hh>
-#include <util/atomic.h>
+#include "LPCPort.hh"
+//#include <util/atomic.h>
 #include "InterfaceBoard.hh"
 #include "Configuration.hh"
 #include "SDCard.hh"
@@ -12,10 +12,10 @@ void ButtonArray::init() {
 	previousC = 0;
 
 	// Set all of the known buttons to inputs (see above note)
-	DDRL = DDRL & 0x1;
-	DDRC = DDRC & 0xF9;
-	PORTL = PORTL & 0x1;
-	PORTC = PORTC & 0xF9;
+//	DDRL = DDRL & 0x1;
+//	DDRC = DDRC & 0xF9;				//NEED doing
+//	PORTL = PORTL & 0x1;
+//	PORTC = PORTC & 0xF9;
 }
 
 void ButtonArray::scanButtons() {
@@ -24,8 +24,10 @@ void ButtonArray::scanButtons() {
 		return;
 	}
 
-	uint8_t newL = PINL;// & 0xFE;
-	uint8_t newC = PINC;// & 0x06;
+//	uint8_t newL = PINL;// & 0xFE;				//NEED doing
+//	uint8_t newC = PINC;// & 0x06;
+	uint8_t newL;
+	uint8_t newC;
 
 	if (newL != previousL) {
 		uint8_t diff = newL ^ previousL;
@@ -65,12 +67,14 @@ bool ButtonArray::getButton(InterfaceBoardDefinitions::ButtonName& button) {
 	bool buttonValid;
 	uint8_t buttonNumber;
 
-	ATOMIC_BLOCK(ATOMIC_FORCEON)
-	{
-		buttonValid =  buttonPressWaiting;
-		buttonNumber = buttonPress;
-		buttonPressWaiting = false;
-	}
+//	ATOMIC_BLOCK(ATOMIC_FORCEON)
+//	{
+	__disable_irq ();
+	buttonValid =  buttonPressWaiting;
+	buttonNumber = buttonPress;
+	buttonPressWaiting = false;
+	__enable_irq ();
+//	}
 
 	if (buttonValid) {
 		button = (InterfaceBoardDefinitions::ButtonName)(buttonNumber);

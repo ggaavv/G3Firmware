@@ -68,12 +68,22 @@ extern "C"
  */
 #define SD_RAW_SDHC 0
 
-/**
+/**c
  * @}
  */
 
 /* defines for customisation of sd/mmc port access */
-#if defined(__AVR_ATmega8__) || \
+#if defined(__LPC17xx_H__)
+
+#define configure_pin_mosi() MOSI_PIN.setDirection(true)
+#define configure_pin_sck() SCK_PIN.setDirection(true)
+#define configure_pin_ss() SS_PIN.setDirection(true)
+#define configure_pin_miso() MISO_PIN.setDirection(true)
+
+#define select_card() (SD_SELECT_PIN.setDirection(true), SD_SELECT_PIN.setValue(true));
+#define unselect_card() (SD_SELECT_PIN.setDirection(false), SD_SELECT_PIN.setValue(false));
+
+#elif defined(__AVR_ATmega8__) || \
     defined(__AVR_ATmega48__) || \
     defined(__AVR_ATmega48P__) || \
     defined(__AVR_ATmega88__) || \

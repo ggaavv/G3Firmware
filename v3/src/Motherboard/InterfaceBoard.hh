@@ -31,20 +31,20 @@
  * buttons directly by scanning their ports. If any of these definitions are
  * modified, the scanButtons() function
  */
-#define INTERFACE_X+_PIN		Pin(PortL,7)
-#define INTERFACE_X-_PIN		Pin(PortL,6)
-#define INTERFACE_Y+_PIN		Pin(PortL,5)
-#define INTERFACE_Y-_PIN		Pin(PortL,4)
-#define INTERFACE_Z+_PIN		Pin(PortL,3)
-#define INTERFACE_Z-_PIN		Pin(PortL,2)
-#define INTERFACE_ZERO_PIN		Pin(PortL,1)
+#define INTERFACE_XP_PIN		Pin(Port1,7)
+#define INTERFACE_XN_PIN		Pin(Port1,6)
+#define INTERFACE_YP_PIN		Pin(Port1,5)
+#define INTERFACE_YN_PIN		Pin(Port1,4)
+#define INTERFACE_ZP_PIN		Pin(Port1,3)
+#define INTERFACE_ZN_PIN		Pin(Port1,2)
+#define INTERFACE_ZERO_PIN		Pin(Port1,1)
 
-#define INTERFACE_OK_PIN		Pin(PortC,2)
-#define INTERFACE_CANCEL_PIN	Pin(PortC,1)
+#define INTERFACE_OK_PIN		Pin(Port1,2)
+#define INTERFACE_CANCEL_PIN	Pin(Port1,1)
 
-#define INTERFACE_FOO_PIN		Pin(PortC,0)
-#define INTERFACE_BAR_PIN		Pin(PortL,0)
-#define INTERFACE_DEBUG_PIN		Pin(PortB,7)
+#define INTERFACE_FOO_PIN		Pin(Port1,0)
+#define INTERFACE_BAR_PIN		Pin(Port1,0)
+#define INTERFACE_DEBUG_PIN		Pin(Port1,7)
 
 class ButtonArray {
 private:

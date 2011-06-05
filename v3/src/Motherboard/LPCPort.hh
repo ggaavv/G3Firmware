@@ -18,7 +18,7 @@
 #ifndef SHARED_AVR_PORT_HH_
 #define SHARED_AVR_PORT_HH_
 
-#include <avr/io.h>
+#include "lpc17xx_gpio.h"
 
 // The AVR port and pin mapping is based on a convention that has held true for all ATMega chips
 // released so far: that the ports begin in sequence from register 0x00 from A onwards, and are
@@ -27,18 +27,18 @@
 // 1 DDRx
 // 2 PORTx
 // This is verified true for the 168/644p/1280.
+/* GPIO style -------------------------------
+void GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir);
+void GPIO_SetValue(uint8_t portNum, uint32_t bitValue);
+void GPIO_ClearValue(uint8_t portNum, uint32_t bitValue);
+uint32_t GPIO_ReadValue(uint8_t portNum);
+void GPIO_IntCmd(uint8_t portNum, uint32_t bitValue, uint8_t edgeState);
+FunctionalState GPIO_GetIntStatus(uint8_t portNum, uint32_t pinNum, uint8_t edgeState);
+void GPIO_ClearInt(uint8_t portNum, uint32_t bitValue);
+*/
 
-#define PINx _SFR_MEM8(port_base+0)
-#define DDRx _SFR_MEM8(port_base+1)
-#define PORTx _SFR_MEM8(port_base+2)
-
-#if defined (__AVR_ATmega1280__) || defined (__AVR_ATmega2560__)
-typedef uint16_t port_base_t;
-#define NULL_PORT 0xffff
-#else
 typedef uint8_t port_base_t;
 #define NULL_PORT 0xff
-#endif
 
 class Port {
 private:
@@ -49,21 +49,17 @@ public:
 
 	bool isNull() { return port_base == NULL_PORT; }
 	void setPinDirection(uint8_t pin_index, bool out) {
-		DDRx = (DDRx & ~_BV(pin_index)) | (out?_BV(pin_index):0);
+		GPIO_SetDir(port_base, pin_index, out);
 	}
 	bool getPin(uint8_t pin_index) {
-		return (PINx & _BV(pin_index)) != 0;
+		return ((GPIO_ReadValue(port_base)&pin_index) != 0);
 	}
 	void setPin(uint8_t pin_index, bool on) {
-		PORTx = (PORTx & ~_BV(pin_index)) | (on?_BV(pin_index):0);
+		GPIO_SetValue(pin_index, ((GPIO_ReadValue(port_base)&pin_index) & pin_index) | (on?pin_index:0));
 	}
 };
 
-extern Port PortA, PortB, PortC, PortD;
-#if defined (__AVR_ATmega1280__) || defined (__AVR_ATmega2560__)
-extern Port PortE, PortF, PortG, PortH;
-extern Port PortJ, PortK, PortL;
-#endif // __AVR_ATmega1280__
+extern Port Port1, Port2, Port3, Port4;
 
 class Pin {
 private:

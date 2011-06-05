@@ -20,7 +20,7 @@
 
 #include "Configuration.hh"
 #include <stdint.h>
-#include "AvrPort.hh"
+#include "LPCPort.hh"
 #include "Command.hh"
 
 #include "Types.hh"

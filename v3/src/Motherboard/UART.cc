@@ -17,10 +17,10 @@
 
 #include "UART.hh"
 #include <stdint.h>
-#include <avr/sfr_defs.h>
-#include <avr/interrupt.h>
-#include <avr/io.h>
-#include <util/delay.h>
+//#include <avr/sfr_defs.h>
+//#include <avr/interrupt.h>
+//#include <avr/io.h>
+//#include <util/delay.h>
 #include "Configuration.hh"
 
 // MEGA644P_DOUBLE_SPEED_MODE is 1 if USXn is 1.

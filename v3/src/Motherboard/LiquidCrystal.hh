@@ -4,8 +4,8 @@
 // TODO: Proper attribution
 
 #include <stdint.h>
-#include <avr/pgmspace.h>
-#include "AvrPort.hh"
+//#include <avr/pgmspace.h>
+#include "LPCPort.hh"
 
 // commands
 #define LCD_CLEARDISPLAY 0x01
@@ -89,7 +89,7 @@ public:
 
   void writeString(char message[]);
 
-  void writeFromPgmspace(const prog_uchar message[]);
+  void writeFromPgmspace(const char message[]);
 
   void command(uint8_t);
 

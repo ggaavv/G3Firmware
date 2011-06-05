@@ -8,11 +8,11 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef SD_RAW_H
-#define SD_RAW_H
+#ifndef SD_RAW_HH
+#define SD_RAW_HH
 
 #include <stdint.h>
-#include "sd_raw_config.h"
+#include "sd_raw_config.hh"
 
 #ifdef __cplusplus
 extern "C"
