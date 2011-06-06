@@ -25,7 +25,7 @@
 #include "Version.hh"
 //#include <util/atomic.h>
 //#include <avr/eeprom.h>
-//#include <avr/pgmspace.h>
+#include "pgmspace.h"
 #include "Main.hh"
 #include "Errors.hh"
 #include "EepromMap.hh"
@@ -511,11 +511,12 @@ char* getMachineName() {
 
 	// If it's still zero, load in a default.
 //	static PROGMEM prog_uchar defaultMachineName[] =  "Thing-O-Matic";
-	static char defaultMachineName[] =  "Thing-O-Matic";
+	static PROGMEM char defaultMachineName[] =  "Thing-O-Matic";
 
 	if (machineName[0] == 0) {
 		for(uint8_t i = 0; i < 14; i++) {
-//			machineName[i] = pgm_read_byte_near(defaultMachineName+i);			//NEEDS doing
+//			machineName[i] = pgm_read_byte_near(defaultMachineName+i);
+			machineName[i] = defaultMachineName[i];
 		}
 	}
 

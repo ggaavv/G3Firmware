@@ -17,9 +17,9 @@
 
 #include "PSU.hh"
 //#include <avr/io.h>
-#include <util/delay.h>
+//#include <util/delay.h>
 #include "Configuration.hh"
-#include "AvrPort.hh"
+#include "LPCPort.hh"
 
 void PSU::init() {
 #if defined(HAS_PSU) && HAS_PSU == 1

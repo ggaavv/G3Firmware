@@ -8,6 +8,7 @@
 #include "Host.hh"
 //#include <util/delay.h>
 #include <stdlib.h>
+#include "pgmspace.h"
 
 #define HOST_PACKET_TIMEOUT_MS 20
 #define HOST_PACKET_TIMEOUT_MICROS (1000L*HOST_PACKET_TIMEOUT_MS)
@@ -69,10 +70,10 @@ bool queryExtruderParameter(uint8_t parameter, OutPacket& responsePacket) {
 }
 
 void SplashScreen::update(LiquidCrystal& lcd, bool forceRedraw) {
-	static PROGMEM prog_uchar splash1[] = "                ";
-	static PROGMEM prog_uchar splash2[] = " Thing-O-Matic  ";
-	static PROGMEM prog_uchar splash3[] = "   ---------    ";
-	static PROGMEM prog_uchar splash4[] = "                ";
+	static PROGMEM char splash1[] = "                ";
+	static PROGMEM char splash2[] = " Thing-O-Matic  ";
+	static PROGMEM char splash3[] = "   ---------    ";
+	static PROGMEM char splash4[] = "                ";
 
 
 	if (forceRedraw) {
@@ -107,13 +108,13 @@ void JogMode::reset() {
 }
 
 void JogMode::update(LiquidCrystal& lcd, bool forceRedraw) {
-	static PROGMEM prog_uchar jog1[] = "Jog mode: ";
-	static PROGMEM prog_uchar jog2[] = "  Y+          Z+";
-	static PROGMEM prog_uchar jog3[] = "X-  X+    (mode)";
-	static PROGMEM prog_uchar jog4[] = "  Y-          Z-";
+	static PROGMEM char jog1[] = "Jog mode: ";
+	static PROGMEM char jog2[] = "  Y+          Z+";
+	static PROGMEM char jog3[] = "X-  X+    (mode)";
+	static PROGMEM char jog4[] = "  Y-          Z-";
 
-	static PROGMEM prog_uchar distanceShort[] = "SHORT";
-	static PROGMEM prog_uchar distanceLong[] = "LONG";
+	static PROGMEM char distanceShort[] = "SHORT";
+	static PROGMEM char distanceLong[] = "LONG";
 
 	if (forceRedraw || distanceChanged) {
 		lcd.clear();
@@ -209,7 +210,7 @@ void JogMode::notifyButtonPressed(InterfaceBoardDefinitions::ButtonName button) 
 
 
 void SnakeMode::update(LiquidCrystal& lcd, bool forceRedraw) {
-	static PROGMEM prog_uchar gameOver[] =  "GAME OVER!";
+	static PROGMEM char gameOver[] =  "GAME OVER!";
 
 	// If we are dead, restart the game.
 	if (!snakeAlive) {
@@ -333,8 +334,8 @@ void MonitorMode::reset() {
 }
 
 void MonitorMode::update(LiquidCrystal& lcd, bool forceRedraw) {
-	static PROGMEM prog_uchar extruder_temp[] =   "Tool:    /   C";
-	static PROGMEM prog_uchar platform_temp[] =   "Bed:     /   C";
+	static PROGMEM char extruder_temp[] =   "Tool:    /   C";
+	static PROGMEM char platform_temp[] =   "Bed:     /   C";
 
 	if (forceRedraw) {
 		lcd.clear();
@@ -406,7 +407,7 @@ void MonitorMode::notifyButtonPressed(InterfaceBoardDefinitions::ButtonName butt
 
 
 void Menu::update(LiquidCrystal& lcd, bool forceRedraw) {
-	static PROGMEM prog_uchar blankLine[] =  "                ";
+	static PROGMEM char blankLine[] =  "                ";
 
 	// Do we need to redraw the whole menu?
 	if ((itemIndex/LCD_SCREEN_HEIGHT) != (lastDrawIndex/LCD_SCREEN_HEIGHT)
@@ -499,9 +500,9 @@ void CancelBuildMenu::resetState() {
 }
 
 void CancelBuildMenu::drawItem(uint8_t index, LiquidCrystal& lcd) {
-	static PROGMEM prog_uchar cancel[] = "Cancel Build?";
-	static PROGMEM prog_uchar yes[] =   "Yes";
-	static PROGMEM prog_uchar no[] =   "No";
+	static PROGMEM char cancel[] = "Cancel Build?";
+	static PROGMEM char yes[] =   "Yes";
+	static PROGMEM char no[] =   "No";
 
 	switch (index) {
 	case 0:
@@ -540,10 +541,10 @@ MainMenu::MainMenu() {
 }
 
 void MainMenu::drawItem(uint8_t index, LiquidCrystal& lcd) {
-	static PROGMEM prog_uchar monitor[] = "Monitor Mode";
-	static PROGMEM prog_uchar build[] =   "Build from SD";
-	static PROGMEM prog_uchar jog[] =   "Jog Mode";
-	static PROGMEM prog_uchar snake[] =   "Snake Game";
+	static PROGMEM char monitor[] = "Monitor Mode";
+	static PROGMEM char build[] =   "Build from SD";
+	static PROGMEM char jog[] =   "Jog Mode";
+	static PROGMEM char snake[] =   "Snake Game";
 
 	switch (index) {
 	case 0:

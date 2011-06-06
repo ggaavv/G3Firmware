@@ -17,7 +17,7 @@
 
 #include "SDCard.hh"
 
-#include <avr/io.h>
+//#include <avr/io.h>
 #include <string.h>
 #include "lib_sd/sd-reader_config.hh"
 #include "lib_sd/fat.hh"

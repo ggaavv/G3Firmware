@@ -17,12 +17,25 @@
 
 #include "UART.hh"
 #include <stdint.h>
+#include "usb_serial.h"
 //#include <avr/sfr_defs.h>
 //#include <avr/interrupt.h>
 //#include <avr/io.h>
 //#include <util/delay.h>
 #include "Configuration.hh"
 
+/*
+NOTE: you will need to call SystemCoreClockUpdate() as the very
+first line in your main function. This will update the various
+registers and constants to allow accurate timing.
+If you include the following files in you compilation and include
+the call SerialInit(UART0,9600); in your main function, you
+*should* be able to use uart_putchar(char,NULL) to output
+individual characters to the USB UART, and use putst(const char * s);
+to output a whole string.
+*/
+
+/*
 // MEGA644P_DOUBLE_SPEED_MODE is 1 if USXn is 1.
 #ifndef MEGA644P_DOUBLE_SPEED_MODE
 #define MEGA644P_DOUBLE_SPEED_MODE 1
@@ -44,12 +57,14 @@
     UBRR##uart_##H = UBRR##uart_##_VALUE >> 8; \
     UBRR##uart_##L = UBRR##uart_##_VALUE & 0xff; \
     \
-    /* set config for uart_ */ \
+    // set config for uart_
     UCSR##uart_##A = UCSRA_VALUE(uart_); \
     UCSR##uart_##B = _BV(RXEN##uart_) | _BV(TXEN##uart_); \
     UCSR##uart_##C = _BV(UCSZ##uart_##1)|_BV(UCSZ##uart_##0); \
-    /* defaults to 8-bit, no parity, 1 stop bit */ \
+    // defaults to 8-bit, no parity, 1 stop bit  \
 }
+
+
 
 #define ENABLE_SERIAL_INTERRUPTS(uart_) \
 { \
@@ -60,6 +75,7 @@
 { \
 	UCSR##uart_##B &= ~(_BV(RXCIE##uart_) | _BV(TXCIE##uart_)); \
 }
+*/
 
 UART UART::uart[2] = {
 		UART(0),
@@ -79,9 +95,11 @@ inline void speak() {
 
 UART::UART(uint8_t index) : index_(index), enabled_(false) {
 	if (index_ == 0) {
-		INIT_SERIAL(0);
+		SerialInit(UART0,115200);
+//		INIT_SERIAL(0);
 	} else if (index_ == 1) {
-		INIT_SERIAL(1);
+		SerialInit(UART1,38400);
+//		INIT_SERIAL(1);
 		// UART1 is an RS485 port, and requires additional setup.
 		// Read enable: PD5, active low
 		// Tx enable: PD4, active high

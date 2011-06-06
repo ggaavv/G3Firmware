@@ -17,6 +17,7 @@
 
 #include <stdint.h>
 //#include <avr/interrupt.h>
+#include "lpc17xx_timer.h"
 //#include <avr/io.h>
 //#include <util/atomic.h>
 #include "Motherboard.hh"
@@ -72,15 +73,65 @@ void Motherboard::reset() {
 	getSlaveUART().in.reset();
 	// Reset and configure timer 1, the microsecond and stepper
 	// interrupt timer.
-	TCCR1A = 0x00;
-	TCCR1B = 0x09;
-	TCCR1C = 0x00;
-	OCR1A = INTERVAL_IN_MICROSECONDS * 16;
-	TIMSK1 = 0x02; // turn on OCR1A match interrupt
+	TIM_TIMERCFG_Type TMR1_Cfg;
+	TIM_MATCHCFG_Type TMR1_Match;
+	/* On reset, Timer0/1 are enabled (PCTIM0/1 = 1), and Timer2/3 are disabled (PCTIM2/3 = 0).*/
+	/* Initialize timer 1, prescale count time of 100uS */
+	TMR1_Cfg.PrescaleOption = TIM_PRESCALE_USVAL;
+	TMR1_Cfg.PrescaleValue = 1;
+	/* Use channel 1, MR1 */
+	TMR1_Match.MatchChannel = 1;
+	/* Enable interrupt when MR0 matches the value in TC register */
+	TMR1_Match.IntOnMatch = ENABLE;
+	/* Enable reset on MR0: TIMER will reset if MR0 matches it */
+	TMR1_Match.ResetOnMatch = TRUE;
+	/* Don't stop on MR0 if MR0 matches it*/
+	TMR1_Match.StopOnMatch = FALSE;
+	/* Do nothing for external output pin if match (see cmsis help, there are another options) */
+	TMR1_Match.ExtMatchOutputType = TIM_EXTMATCH_NOTHING;
+	/* Set Match value, count value of INTERVAL_IN_MICROSECONDS (64 * 1uS = 64us = 1s --> 15 kHz) */
+	TMR1_Match.MatchValue = INTERVAL_IN_MICROSECONDS;
+	/* Set configuration for Tim_config and Tim_MatchConfig */
+	TIM_Init(LPC_TIM1, TIM_TIMER_MODE, &TMR1_Cfg);
+	TIM_ConfigMatch(LPC_TIM1, &TMR1_Match);
+
+
+
+	INTERVAL_IN_MICROSECONDS * 16;
+//	TCCR1A = 0x00;
+//	TCCR1B = 0x09;
+//	TCCR1C = 0x00;
+//	OCR1A = INTERVAL_IN_MICROSECONDS * 16;
+//	TIMSK1 = 0x02; // turn on OCR1A match interrupt
 	// Reset and configure timer 2, the debug LED flasher timer.
-	TCCR2A = 0x00;
-	TCCR2B = 0x07; // prescaler at 1/1024
-	TIMSK2 = 0x01; // OVF flag on
+	TIM_TIMERCFG_Type TMR2_Cfg;
+	TIM_MATCHCFG_Type TMR2_Match;
+	/* On reset, Timer0/1 are enabled (PCTIM0/1 = 1), and Timer2/3 are disabled (PCTIM2/3 = 0).*/
+	/* Initialize timer 2, prescale count time of 100uS */
+	TMR2_Cfg.PrescaleOption = TIM_PRESCALE_USVAL;
+	TMR2_Cfg.PrescaleValue = 10000;
+	/* Use channel 1, MR1 */
+	TMR2_Match.MatchChannel = 1;
+	/* Enable interrupt when MR0 matches the value in TC register */
+	TMR2_Match.IntOnMatch = ENABLE;
+	/* Enable reset on MR0: TIMER will reset if MR0 matches it */
+	TMR2_Match.ResetOnMatch = TRUE;
+	/* Don't stop on MR0 if MR0 matches it*/
+	TMR2_Match.StopOnMatch = FALSE;
+	/* Do nothing for external output pin if match (see cmsis help, there are another options) */
+	TMR2_Match.ExtMatchOutputType = TIM_EXTMATCH_NOTHING;
+	/* Set Match value, count value of 100 (10 * 10000uS = 100000us = 1s --> 10 Hz) */
+	TMR2_Match.MatchValue = 100;
+	/* Set configuration for Tim_config and Tim_MatchConfig */
+	TIM_Init(LPC_TIM2, TIM_TIMER_MODE, &TMR2_Cfg);
+	TIM_ConfigMatch(LPC_TIM2, &TMR2_Match);
+//	TCCR2A = 0x00;
+//	TCCR2B = 0x07; // prescaler at 1/1024
+//	TIMSK2 = 0x01; // OVF flag on
+
+
+
+
 	// Configure the debug pin.
 	DEBUG_PIN.setDirection(true);
 
@@ -99,9 +150,9 @@ void Motherboard::reset() {
 /// the board was booted.
 micros_t Motherboard::getCurrentMicros() {
 	micros_t micros_snapshot;
-	ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+//	ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 		micros_snapshot = micros;
-	}
+//	}
 	return micros_snapshot;
 }
 
@@ -128,7 +179,10 @@ void Motherboard::runMotherboardSlice() {
 
 
 /// Timer one comparator match interrupt
-ISR(TIMER1_COMPA_vect) {
+
+//ISR(TIMER1_COMPA_vect) {
+void TIMER1_IRQHandler (){
+	TIM_ClearIntPending(LPC_TIM1,TIM_MR1_INT);
 	Motherboard::getBoard().doInterrupt();
 }
 
@@ -136,7 +190,7 @@ ISR(TIMER1_COMPA_vect) {
 volatile uint8_t blink_count = 0;
 
 /// The current state of the debug LED
-enum {
+enum debugled{
 	BLINK_NONE,
 	BLINK_ON,
 	BLINK_OFF,
@@ -173,7 +227,9 @@ int blink_ovfs_remaining = 0;
 int blinked_so_far = 0;
 
 /// Timer 2 overflow interrupt
-ISR(TIMER2_OVF_vect) {
+//ISR(TIMER2_OVF_vect) {
+void TIMER2_IRQHandler (){
+	TIM_ClearIntPending(LPC_TIM2,TIM_MR2_INT);
 	if (blink_ovfs_remaining > 0) {
 		blink_ovfs_remaining--;
 	} else {

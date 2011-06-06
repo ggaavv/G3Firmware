@@ -75,9 +75,9 @@ else:
 	print "LPC1768: Gen 5 motherboard"
 	exit()
 
-srcs = Glob('*.cc') + Glob('lib_sd/*.c') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('system/*.c') + Glob('system/*.S')
+srcs = Glob('*.cc') + Glob('lib_sd/*.c') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('system/*.c') + Glob('stm_v_com/*.c') + Glob('system/*.S')
 
-include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'system', '#/src/Motherboard']
+include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'stm_v_com', 'system', '#/src/Motherboard']
 
 if (os.environ.has_key('BUILD_NAME')):
    flags.append('-DBUILD_NAME=' + os.environ['BUILD_NAME'])

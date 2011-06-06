@@ -18,7 +18,7 @@
 #ifndef BOARDS_RRMBV12_STEPPERINTERFACE_HH_
 #define BOARDS_RRMBV12_STEPPERINTERFACE_HH_
 
-#include <AvrPort.hh>
+#include <LPCPort.hh>
 
 /// StepperInterface instances encapsulate the low-level communication
 /// with a stepper board.
