@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Adam Mayer	 <adam@makerbot.com>
+ * Copyright 2011 by Matt Mets <matt.mets@makerbot.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,25 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef VERSION_HH
-#define VERSION_HH
+#ifndef COOLING_FAN_HH_
+#define COOLING_FAN_HH_
 
-#include <stdint.h>
+#include "Heater.hh"
 
-#ifndef VERSION
-#error "Version not defined! Please define the version number for this build."
-#else
-const uint16_t firmware_version = VERSION;
+class CoolingFan {
+public:
+	CoolingFan(Heater heater);
+	void setSetpoint(int temperature);
+	void enable();
+	void disable();
+
+	bool isEnabled() { return enabled; }
+	int getSetpoint() { return setPoint; }
+
+	void reset();
+
+	// Call once each cooling fan update interval
+	void manageCoolingFan();
+
+private:
+	void enableFan();
+	void disableFan();
+
+	Heater heater;
+
+	bool enabled;
+	int setPoint;
+};
+
 #endif
-
-#ifndef BUILD_NAME
-#ifdef DEFAULT_EXTERNAL_STEPPER
-const char* const build_name = "Ext. Stepper";
-#else
-const char* const build_name = "Extruder";
-#endif
-#else
-const char* const build_name = BUILD_NAME;
-#endif
-
-#endif // VERSION_HH
