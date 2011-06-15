@@ -555,13 +555,19 @@ void I2S_IRQCmd(LPC_I2S_TypeDef *I2Sx, uint8_t TRMode, FunctionalState NewState)
  * 				- ENABLE: interrupt is enable
  * 				- DISABLE: interrupt is disable
  *********************************************************************/
+FunctionalState isenabled(long unsigned int boool){
+	if (boool = 1)
+		return ENABLE;
+	else
+		return DISABLE;
+}
 FunctionalState I2S_GetIRQStatus(LPC_I2S_TypeDef *I2Sx,uint8_t TRMode)
 {
 	CHECK_PARAM(PARAM_I2Sx(I2Sx));
 	if(TRMode == I2S_TX_MODE)
-		return ((I2Sx->I2SIRQ >> 1)&0x01);
+		return isenabled(((I2Sx->I2SIRQ >> 1)&0x01));
 	else
-		return ((I2Sx->I2SIRQ)&0x01);
+		return isenabled(((I2Sx->I2SIRQ)&0x01));
 }
 
 /********************************************************************//**

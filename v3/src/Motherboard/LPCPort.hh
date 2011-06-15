@@ -27,6 +27,7 @@
 // 1 DDRx
 // 2 PORTx
 // This is verified true for the 168/644p/1280.
+
 /* GPIO style -------------------------------
 void GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir);
 void GPIO_SetValue(uint8_t portNum, uint32_t bitValue);
@@ -37,8 +38,13 @@ FunctionalState GPIO_GetIntStatus(uint8_t portNum, uint32_t pinNum, uint8_t edge
 void GPIO_ClearInt(uint8_t portNum, uint32_t bitValue);
 */
 
+//#if defined Eight_Sixteen_bit
+//typedef uint16_t port_base_t;
+//#define NULL_PORT 0xffff
+//#else
 typedef uint8_t port_base_t;
 #define NULL_PORT 0xff
+//#endif
 
 class Port {
 private:
@@ -46,7 +52,6 @@ private:
 public:
 	Port() : port_base(NULL_PORT) {}
 	Port(port_base_t port_base_in) : port_base(port_base_in) {}
-
 	bool isNull() { return port_base == NULL_PORT; }
 	void setPinDirection(uint8_t pin_index, bool out) {
 		GPIO_SetDir(port_base, pin_index, out);

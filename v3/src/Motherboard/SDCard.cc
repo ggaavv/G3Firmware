@@ -19,10 +19,10 @@
 
 //#include <avr/io.h>
 #include <string.h>
-#include "lib_sd/sd-reader_config.hh"
-#include "lib_sd/fat.hh"
-#include "lib_sd/sd_raw.hh"
-#include "lib_sd/partition.hh"
+#include "lib_sd/sd-reader_config.h"
+#include "lib_sd/fat.h"
+#include "lib_sd/sd_raw.h"
+#include "lib_sd/partition.h"
 
 #ifndef USE_DYNAMIC_MEMORY
 #error Dynamic memory should be explicitly disabled in the G3 mobo.

@@ -75,9 +75,14 @@ else:
 	print "LPC1768: Gen 5 motherboard"
 	exit()
 
-srcs = Glob('*.cc') + Glob('lib_sd/*.c') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('system/*.c') + Glob('stm_v_com/*.c') + Glob('system/*.S')
+srcs = Glob('*.cc') + Glob('lib_sd/*.c') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('system/*.c') + Glob('system/*.S') + Glob('USBCDC/*.c') + Glob('#src/shared/*.cc')
+#srcs_c = Glob('lib_sd/*.c') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('system/*.c') + Glob('USBCDC/*.c') + Glob('maplelib/*.c')
+#srcs_cc = Glob('*.cc')
+#srcs_s = Glob('system/*.S')
 
-include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'stm_v_com', 'system', '#/src/Motherboard']
+include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'system', 'USBCDC', 'maplelib', '#/src/Motherboard']
+search_paths = '-B#/src/shared -B /lib/include -B /lib/source -B /system -B /USBCDC -B /maplelib -B #/src/Motherboard'
+#include_paths_B = [-B #/src/shared -B lib/include -B lib/source -B system -B USBCDC -B maplelib -B #/src/Motherboard]
 
 if (os.environ.has_key('BUILD_NAME')):
    flags.append('-DBUILD_NAME=' + os.environ['BUILD_NAME'])
@@ -89,39 +94,75 @@ if (os.environ.has_key('BUILD_NAME')):
 codesourcery_path = 'C:/PROGRA~2/CodeSourcery/SOURCE~1/bin'
 
 OBJECTS = 'startup_LPC17xx.o core_cm3.o system_LPC17xx.o main_LPC17xx.o'
-LSCRIPT = 'ldscript_rom_gnu.ld'
+#LSCRIPT = 'C:\msysgit\git\G3Firmware\v3\src\Motherboard\system\ldscript_rom_gnu.ld'
+LSCRIPT = 'C:/msysgit/git/G3Firmware/v3/src/Motherboard/system/ldscript_rom_gnu.ld'
+#LSCRIPT = '/C/msysgit/git/G3Firmware/v3/src/Motherboard/system/ldscript_rom_gnu.ld'
+#LSCRIPT = '/C/msysgit/git/G3Firmware/v3/src/Motherboard/system/make.LPC17xx.gnu'
+#LSCRIPT = '/system/ldscript_rom_gnu.ld'
 optimization='0'
 DEBUG = '-g'
 #LISTING = -ahls
 
+
+hex_name = target_name + '.hex'
+bin_name = target_name + '.bin'
+elf_name = target_name + '.elf'
+map_name = target_name + '.map'
+
 env=Environment(tools=['mingw'],
-	CC=codesourcery_path+'/arm-none-eabi-gcc',
+#	CC=codesourcery_path+'/arm-none-eabi-gcc',
+	CC=codesourcery_path+'/arm-none-eabi-g++',
+#	LINK=codesourcery_path+'/arm-none-eabi-gcc',
 	CXX=codesourcery_path+'/arm-none-eabi-g++',
 	AS=codesourcery_path+'/arm-none-eabi-as',
+	AR=codesourcery_path+'/arm-none-eabi-ar',
 	LD=codesourcery_path+'/arm-none-eabi-ld',
 	OBJCOPY=codesourcery_path+'/arm-none-eabi-objcopy',
 	SIZE=codesourcery_path+'/arm-none-eabi-size',
 	#  Compiler Options
 	CCFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
-#	CXXFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
-	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map -T '+LSCRIPT+'',
+	CXXFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
+#	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map -Wl,-T -Xlinker '+LSCRIPT+'',
+	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map -Wl,-T '+LSCRIPT+' -Wl,--allow-multiple-definition',
+#	LDFLAGS = '-O'+optimization+' -nostartfiles -b '+mcu+' -o '+elf_name+' -Map '+map_name+' -T '+LSCRIPT+' --stats --allow-multiple-definition -B #/src/shared -B lib/include -B lib/source -B system -B USBCDC -B maplelib -B #/src/Motherboard',
+#	LDFLAGS = '-O'+optimization+' -nostartfiles -Wl,-T -Xlinker '+LSCRIPT+'',
+#	-Wl,--allow-multiple-definition',
 	ASFLAGS = '-mcpu='+mcu+' --defsym RAM_MODE=0',
+	LIBPATH=search_paths,
 	CPPPATH=include_paths)
 
 objs = env.Object(srcs)
+#env['LINKFLAGS']+=' -T ldscript_rom_gnu.ld '
 
 # run_alias = Alias('run', [program], program[0].path)
 # AlwaysBuild(run_alias)
 
-hex_name = target_name + '.hex'
-elf_name = target_name + '.elf'
-map_name = target_name + '.map'
-
 #env.Program(target_name, objs)
 
-#env.Append(BUILDERS={'Elf':Builder(action=codesourcery_path+"/arm-none-eabi-gcc $GCFLAGS")})
+# env['target_name']   = '.elf'
+
+#elf = env.Program("elf_name", include_paths)
+
+#program = env.Program('#build/${target_name}.elf', objs, 
+#    LINKSCRIPT = File('$LSCRIPT'))
+#env.Depends(program, '$LSCRIPT')
+
+env.Append(BUILDERS={'Elf':Builder(action=codesourcery_path+"/arm-none-eabi-g++ -o $TARGET $SOURCES $LDFLAGS")})
+#env.Append(BUILDERS={'Elf':Builder(action=codesourcery_path+"/arm-none-eabi-gcc $LDFLAGS -o $TARGET $SOURCES")})
 #env.Append(BUILDERS={'Hex':Builder(action=codesourcery_path+"/arm-none-eabi-objcopy -O ihex -R .eeprom $SOURCES $TARGET")})
-#env.Elf(elf_name, objs) 
+
+#env.Append(BUILDERS={'Elf':Builder(action=avr_tools_path+"/avr-gcc -mmcu="+mcu+" -Os -Wl,--gc-sections -Wl,-Map,"+map_name+" -o $TARGET $SOURCES")})
+#env.Append(BUILDERS={'Hex':Builder(action=avr_tools_path+"/avr-objcopy -O ihex -R .eeprom $SOURCES $TARGET")})
+
+#	$(OBJCOPY) -O binary -j .text -j .data $(PROJECT).elf $(PROJECT).bin
+	
+#	env['PROGSUFFIX']   = '.elf'
+
+#objcopy -O <output-format> <in-file> <out-file>
+#arm-none-eabi-objcopy -O binary add.elf add.bin
+
+#env.Bin(bin_name, objs) 
+env.Elf(elf_name, objs) 
 #env.Hex(hex_name, elf_name)
 
 # env.Alias instead of just Alias because of

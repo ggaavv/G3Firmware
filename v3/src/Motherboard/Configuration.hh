@@ -56,14 +56,17 @@
 #define SS_PIN   Pin(Port1,0)
 #define MISO_PIN   Pin(Port1,0)
 
+//USB
+#define USB_DISC_PIN Pin(Port1,7)
+
 // --- Slave UART configuration ---
 // The slave UART is presumed to be an RS485 connection through a sn75176 chip.
 // Define as 1 if the slave UART is present; 0 if not.
 #define HAS_SLAVE_UART  1
 // The pin that connects to the driver enable line on the RS485 chip.
-#define TX_ENABLE_PIN   Pin(PortC,5)
+#define TX_ENABLE_PIN   Pin(Port1,5)
 // The pin that connects to the active-low recieve enable line on the RS485 chip.
-#define RX_ENABLE_PIN   Pin(PortC,7)
+#define RX_ENABLE_PIN   Pin(Port1,7)
 
 // --- Host UART configuration ---
 // The host UART is presumed to always be present on the RX/TX lines.
@@ -78,7 +81,7 @@
 // Define as 1 if the estop is present, 0 if not.
 #define HAS_ESTOP 1
 // The pin connected to the emergency stop
-#define ESTOP_PIN Pin(PortE,4)
+#define ESTOP_PIN Pin(Port1,4)
 
 // --- Axis configuration ---
 // Define the number of stepper axes supported by the board.  The axes are

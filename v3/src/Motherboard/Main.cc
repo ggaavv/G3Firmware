@@ -47,36 +47,11 @@ void SysTick_Handler(void) {
 /*------------------------------------------------------------------------------
   delays number of tick Systicks (happens every 1 ms)
  *------------------------------------------------------------------------------*/
-__INLINE static void Delay (uint32_t dlyTicks) {
+  static void Delay (uint32_t dlyTicks) {
   uint32_t curTicks;
 
   curTicks = msTicks;
   while ((msTicks - curTicks) < dlyTicks);
-}
-
-/*------------------------------------------------------------------------------
-  configer LED pins
- *------------------------------------------------------------------------------*/
-__INLINE static void LED_Config(void) {
-
-  LPC_GPIO1->FIODIR = 0xFFFFFFFF;               /* LEDs PORT1 are Output */
-}
-
-/*------------------------------------------------------------------------------
-  Switch on LEDs
- *------------------------------------------------------------------------------*/
-__INLINE static void LED_On (uint32_t led) {
-
-  LPC_GPIO1->FIOPIN |=  (led);                  /* Turn On  LED */
-}
-
-
-/*------------------------------------------------------------------------------
-  Switch off LEDs
- *------------------------------------------------------------------------------*/
-__INLINE static void LED_Off (uint32_t led) {
-
-  LPC_GPIO1->FIOPIN &= ~(led);                  /* Turn Off LED */
 }
 
 /*----------------------------------------------------------------------------
@@ -86,6 +61,7 @@ __INLINE static void LED_Off (uint32_t led) {
 void reset(bool hard_reset) {
 //	ATOMIC_BLOCK(ATOMIC_FORCEON) {
 	__disable_irq ();
+	while (SysTick_Config(SystemCoreClock / 1000));   /* Setup SysTick Timer for 1 msec interrupts  */
 	Motherboard& board = Motherboard::getBoard();
 	sdcard::reset();
 	steppers::abort();
@@ -129,24 +105,5 @@ int main (void) {
 		board.runMotherboardSlice();
 	}
 	return 0;
-
-
-
-
-
-
-  if (SysTick_Config(SystemCoreClock / 1000)) { /* Setup SysTick Timer for 1 msec interrupts  */
-    while (1);                                  /* Capture error */
-  }
-  
-  LED_Config();                             
- 
-  while(1) {
-    LED_On ((1<<18));                           /* Turn on the LED. */
-    Delay (100);                                /* delay  100 Msec */
-    LED_Off ((1<<18));                          /* Turn off the LED. */
-    Delay (100);                                /* delay  100 Msec */
-  }
-  
 }
 

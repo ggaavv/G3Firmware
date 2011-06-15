@@ -16,10 +16,9 @@
  */
 
 
-#include "lpc17xx_gpio.h"
+#include "LPCPort.hh"
 
-
-#define Port Port1(0x01);
-#define Port Port2(0x02);
-#define Port Port3(0x04);
-#define Port Port4(0x08);
+Port Port1(0x01);
+Port Port2(0x02);
+Port Port3(0x04);
+Port Port4(0x08);

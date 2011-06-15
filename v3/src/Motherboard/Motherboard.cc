@@ -97,7 +97,6 @@ void Motherboard::reset() {
 
 
 
-	INTERVAL_IN_MICROSECONDS * 16;
 //	TCCR1A = 0x00;
 //	TCCR1B = 0x09;
 //	TCCR1C = 0x00;

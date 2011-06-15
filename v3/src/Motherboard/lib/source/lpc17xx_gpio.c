@@ -51,7 +51,7 @@ static GPIO_Byte_TypeDef *FIO_ByteGetPointer(uint8_t portNum);
  **********************************************************************/
 static LPC_GPIO_TypeDef *GPIO_GetPointer(uint8_t portNum)
 {
-	LPC_GPIO_TypeDef *pGPIO = NULL;
+	LPC_GPIO_TypeDef *pGPIO = 0;
 
 	switch (portNum) {
 	case 0:
@@ -84,7 +84,7 @@ static LPC_GPIO_TypeDef *GPIO_GetPointer(uint8_t portNum)
  **********************************************************************/
 static GPIO_HalfWord_TypeDef *FIO_HalfWordGetPointer(uint8_t portNum)
 {
-	GPIO_HalfWord_TypeDef *pFIO = NULL;
+	GPIO_HalfWord_TypeDef *pFIO = 0;
 
 	switch (portNum) {
 	case 0:
@@ -117,7 +117,7 @@ static GPIO_HalfWord_TypeDef *FIO_HalfWordGetPointer(uint8_t portNum)
  **********************************************************************/
 static GPIO_Byte_TypeDef *FIO_ByteGetPointer(uint8_t portNum)
 {
-	GPIO_Byte_TypeDef *pFIO = NULL;
+	GPIO_Byte_TypeDef *pFIO = 0;
 
 	switch (portNum) {
 	case 0:
@@ -287,16 +287,22 @@ void GPIO_IntCmd(uint8_t portNum, uint32_t bitValue, uint8_t edgeState)
  * 								edge on P0.0
  * 						- DISABLE: A rising edge has not been detected on P0.0
  **********************************************************************/
+FunctionalState isenabled(long unsigned int boool){
+	if (boool = 1)
+		return ENABLE;
+	else
+		return DISABLE;
+}
 FunctionalState GPIO_GetIntStatus(uint8_t portNum, uint32_t pinNum, uint8_t edgeState)
 {
 	if((portNum == 0) && (edgeState == 0))//Rising Edge
-		return (((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1);
+		return (isenabled(((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1));
 	else if ((portNum == 2) && (edgeState == 0))
-		return (((LPC_GPIOINT->IO2IntStatR)>>pinNum)& 0x1);
+		return (isenabled(((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1));
 	else if ((portNum == 0) && (edgeState == 1))//Falling Edge
-		return (((LPC_GPIOINT->IO0IntStatF)>>pinNum)& 0x1);
+		return (isenabled(((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1));
 	else if ((portNum == 2) && (edgeState == 1))
-		return (((LPC_GPIOINT->IO2IntStatF)>>pinNum)& 0x1);
+		return (isenabled(((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1));
 	else
 		//Error
 		while(1);

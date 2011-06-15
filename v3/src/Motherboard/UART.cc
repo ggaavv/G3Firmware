@@ -17,12 +17,18 @@
 
 #include "UART.hh"
 #include <stdint.h>
-#include "usb_serial.h"
+#include "usbhw.h"
+#include "usbcfg.h"
+#include "cdcuser.h"
+#include "lpc17xx_uart.h"
+#include "main.hh"
 //#include <avr/sfr_defs.h>
 //#include <avr/interrupt.h>
 //#include <avr/io.h>
 //#include <util/delay.h>
 #include "Configuration.hh"
+
+#define FIFO_Enabled 0;
 
 /*
 NOTE: you will need to call SystemCoreClockUpdate() as the very
@@ -95,11 +101,25 @@ inline void speak() {
 
 UART::UART(uint8_t index) : index_(index), enabled_(false) {
 	if (index_ == 0) {
-		SerialInit(UART0,115200);
-//		INIT_SERIAL(0);
+		// Init USB for UART
+		USB_Init();					// USB Initialization
 	} else if (index_ == 1) {
-		SerialInit(UART1,38400);
-//		INIT_SERIAL(1);
+		// UART Configuration Structure
+		UART_CFG_Type u_cfg;
+		u_cfg.Baud_rate = 38400;
+		u_cfg.Databits = UART_DATABIT_8;
+		u_cfg.Parity = UART_PARITY_NONE;
+		u_cfg.Stopbits = UART_STOPBIT_1;
+		UART_Init((LPC_UART_TypeDef *)LPC_UART1, &u_cfg);
+#ifndef FIFO_Enabled
+		// UART FIFO Configuration Structure
+		UART_FIFO_CFG_Type fifo_cfg;
+		fifo_cfg.FIFO_ResetRxBuf = ENABLE;
+		fifo_cfg.FIFO_ResetTxBuf = ENABLE;
+		fifo_cfg.FIFO_DMAMode = DISABLE;
+		fifo_cfg.FIFO_Level = UART_FIFO_TRGLEV0;
+		UART_FIFOConfig((LPC_UART_TypeDef *)LPC_UART1, &fifo_cfg);
+#endif
 		// UART1 is an RS485 port, and requires additional setup.
 		// Read enable: PD5, active low
 		// Tx enable: PD4, active high
@@ -110,30 +130,47 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 	}
 }
 
-#define SEND_BYTE(uart_,data_) UDR##uart_ = data_
-
-/// Subsequent bytes will be triggered by the tx complete interrupt.
+/// UART bytes will be triggered by the tx complete interrupt.
+/// USB bytes sent as whole packets
 void UART::beginSend() {
 	if (!enabled_) { return; }
 	uint8_t send_byte = out.getNextByteToSend();
-	if (index_ == 0) {
-		SEND_BYTE(0,send_byte);
+	if (index_ == 0) {		//uart0 eg usb
+		// get first 2 bytes, second = size
+#ifndef FIFO_Enabled
+		char serBuf[USB_CDC_BUFSIZE];
+		serBuf[0] = send_byte;
+		serBuf[1] = out.getNextByteToSend();
+		// remaining bytes
+		for (uint8_t i = 2; i > (serBuf[1] + 3); i++){
+			serBuf[i] = out.getNextByteToSend();
+		}
+		// send all bytes
+		USB_WriteEP (CDC_DEP_IN, (unsigned char *)&serBuf[0], serBuf[1]);
+#else
+		USB_WriteEP (CDC_DEP_IN, &send_byte, 1);
+#endif
 	} else if (index_ == 1) {
 		speak();
-		_delay_us(10);
+//		_delay_us(10);
+		Delay (1);						//NEED to reduce delay from 1ms to 10us
 		loopback_bytes = 1;
-		SEND_BYTE(1,send_byte);
+		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, send_byte);  // NEED to choose which UART
 	}
 }
 
 void UART::enable(bool enabled) {
 	enabled_ = enabled;
 	if (index_ == 0) {
-		if (enabled) { ENABLE_SERIAL_INTERRUPTS(0); }
-		else { DISABLE_SERIAL_INTERRUPTS(0); }
+		if (enabled) {
+			USB_Connect(TRUE);			// USB Connect
+		}
+		else {
+			USB_Connect(FALSE);			// USB Disconnect
+		}
 	} else if (index_ == 1) {
-		if (enabled) { ENABLE_SERIAL_INTERRUPTS(1); }
-		else { DISABLE_SERIAL_INTERRUPTS(1); }
+		if (enabled) { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART1, ENABLE); }
+		else { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART1, DISABLE); }
 	}
 }
 
@@ -147,38 +184,45 @@ void UART::reset() {
 }
 
 // Send and receive interrupts
-ISR(USART0_RX_vect)
-{
-	UART::uart[0].in.processByte( UDR0 );
-}
+//ISR(USART0_RX_vect)
+//{
+//	UART::uart[0].in.processByte( UDR0 );
+//}
 
 volatile uint8_t byte_in;
 
-ISR(USART1_RX_vect)
+//ISR(USART1_RX_vect)
+void UART1_IRQHandler(void)
 {
-	byte_in = UDR1;
-	if (loopback_bytes > 0) {
-		loopback_bytes--;
-	} else {
-		UART::uart[1].in.processByte( byte_in );
+	uint32_t intsrc, tmp, tmp1;
+	/* Determine the interrupt source */
+	intsrc = UART_GetIntId((LPC_UART_TypeDef *)LPC_UART1);
+	tmp = intsrc & UART_IIR_INTID_MASK;
+	// Receive Line Status
+	if (tmp == UART_IIR_INTID_RLS){
+		// Check line status
+		tmp1 = UART_GetLineStatus(LPC_UART0);
+		// Mask out the Receive Ready and Transmit Holding empty status
+		tmp1 &= (UART_LSR_OE | UART_LSR_PE | UART_LSR_FE | UART_LSR_BI | UART_LSR_RXFE);
+		// If any error exist
+		// if (tmp1) {
+		//	UART_IntErr(tmp1);
+		// }
+	}
+	// Receive Data Available or Character time-out
+	if ((tmp == UART_IIR_INTID_RDA) || (tmp == UART_IIR_INTID_CTI)) {
+		UART::uart[1].in.processByte(UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART1));
+	}
+
+	// Transmit Holding Empty
+	if (tmp == UART_IIR_INTID_THRE){
+		if (UART::uart[1].out.isSending()) {
+			loopback_bytes++;
+			UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::uart[1].out.getNextByteToSend());  // NEED to choose which UART
+		} else {
+			//	_delay_us(10);
+				Delay (1);						//NEED to reduce delay from 1ms to 10us
+			listen();
+		}
 	}
 }
-
-ISR(USART0_TX_vect)
-{
-	if (UART::uart[0].out.isSending()) {
-		UDR0 = UART::uart[0].out.getNextByteToSend();
-	}
-}
-
-ISR(USART1_TX_vect)
-{
-	if (UART::uart[1].out.isSending()) {
-		loopback_bytes++;
-		UDR1 = UART::uart[1].out.getNextByteToSend();
-	} else {
-		_delay_us(10);
-		listen();
-	}
-}
-

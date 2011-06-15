@@ -587,7 +587,7 @@ retry:
 			else {
 end_stage:
 				// Disable interrupt
-				I2C_IntCmd(I2Cx, 0);
+				I2C_IntCmd(I2Cx, FALSE);
 				// Send stop
 				I2C_Stop(I2Cx);
 
@@ -684,14 +684,14 @@ void I2C_SlaveHandler (LPC_I2C_TypeDef  *I2Cx)
 	/* A Stop or a repeat start condition */
 	case I2C_I2STAT_S_RX_STA_STO_SLVREC_SLVTRX:
 		// Temporally lock the interrupt for timeout condition
-		I2C_IntCmd(I2Cx, 0);
+		I2C_IntCmd(I2Cx, FALSE);
 		I2Cx->I2CONCLR = I2C_I2CONCLR_SIC;
 		// enable time out
 		timeout = I2C_SLAVE_TIME_OUT;
 		while(1){
 			if (I2Cx->I2CONSET & I2C_I2CONSET_SI){
 				// re-Enable interrupt
-				I2C_IntCmd(I2Cx, 1);
+				I2C_IntCmd(I2Cx, TRUE);
 				break;
 			} else {
 				timeout--;
@@ -739,7 +739,7 @@ void I2C_SlaveHandler (LPC_I2C_TypeDef  *I2Cx)
 	default:
 s_int_end:
 		// Disable interrupt
-		I2C_IntCmd(I2Cx, 0);
+		I2C_IntCmd(I2Cx, FALSE);
 		I2Cx->I2CONCLR = I2C_I2CONCLR_AAC | I2C_I2CONCLR_SIC | I2C_I2CONCLR_STAC;
 		I2C_SlaveComplete[tmp] = TRUE;
 		break;
@@ -891,7 +891,7 @@ retry:
 				 */
 				if (TransferCfg->rx_count < (TransferCfg->rx_length - 1)){
 					// Issue an ACK signal for next data frame
-					CodeStatus = I2C_GetByte(I2Cx, &tmp, 1);
+					CodeStatus = I2C_GetByte(I2Cx, &tmp, TRUE);
 					if (CodeStatus != I2C_I2STAT_M_RX_DAT_ACK){
 						TransferCfg->retransmissions_count++;
 						if (TransferCfg->retransmissions_count > TransferCfg->retransmissions_max){
@@ -904,7 +904,7 @@ retry:
 					}
 				} else {
 					// Do not issue an ACK signal
-					CodeStatus = I2C_GetByte(I2Cx, &tmp, 0);
+					CodeStatus = I2C_GetByte(I2Cx, &tmp, FALSE);
 					if (CodeStatus != I2C_I2STAT_M_RX_DAT_NACK){
 						TransferCfg->retransmissions_count++;
 						if (TransferCfg->retransmissions_count > TransferCfg->retransmissions_max){
@@ -941,7 +941,7 @@ error:
 		/* First Start condition -------------------------------------------------------------- */
 		I2Cx->I2CONCLR = I2C_I2CONCLR_SIC;
 		I2Cx->I2CONSET = I2C_I2CONSET_STA;
-		I2C_IntCmd(I2Cx, 1);
+		I2C_IntCmd(I2Cx, TRUE);
 
 		return (SUCCESS);
 	}
@@ -1151,7 +1151,7 @@ s_error:
 		// Enable AA
 		I2Cx->I2CONSET = I2C_I2CONSET_AA;
 		I2Cx->I2CONCLR = I2C_I2CONCLR_SIC | I2C_I2CONCLR_STAC;
-		I2C_IntCmd(I2Cx, 1);
+		I2C_IntCmd(I2Cx, TRUE);
 
 		return (SUCCESS);
 	}

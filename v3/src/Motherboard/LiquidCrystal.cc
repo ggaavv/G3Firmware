@@ -1,7 +1,9 @@
 #include "LiquidCrystal.hh"
-#include "main.cc"
+#include "main.hh"
 #include <stdio.h>
 #include <string.h>
+#include "lpc_types.h"
+#include "pgmspace.h"
 //#include <util/delay.h>
 
 
@@ -300,9 +302,9 @@ void LiquidCrystal::writeString(char message[]) {
 
 void LiquidCrystal::writeFromPgmspace(const char message[]) {
 	char letter;
-//	while (letter = pgm_read_byte(message++)) {				//NEED doing
+	while (letter = pgm_read_byte (message++)) {
 		write(letter);
-//	}
+	}
 }
 
 /************ low level data pushing commands **********/
