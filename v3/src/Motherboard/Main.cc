@@ -22,7 +22,9 @@
  *
  ******************************************************************************/
 
-#include "LPC17xx.h"
+extern "C" {
+	#include "LPC17xx.h"
+}
 #include "DebugPacketProcessor.hh"
 #include "Host.hh"
 #include "Tool.hh"

@@ -54,7 +54,7 @@ protected:
 	uint8_t firstItemIndex;
 
 	// Draw an item at the current cursor position
-	virtual void drawItem(uint8_t index, LiquidCrystal& lcd);
+	virtual void drawItem(uint8_t index, LiquidCrystal& lcd) = 0;
 
 	// The given item was selected; do something about it.
 	virtual void handleSelect(uint8_t index);

@@ -17,7 +17,9 @@
 
 #include <stdint.h>
 //#include <avr/interrupt.h>
-#include "lpc17xx_timer.h"
+extern "C" {
+	#include "lpc17xx_timer.h"
+}
 //#include <avr/io.h>
 //#include <util/atomic.h>
 #include "Motherboard.hh"

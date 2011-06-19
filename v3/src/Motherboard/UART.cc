@@ -17,10 +17,12 @@
 
 #include "UART.hh"
 #include <stdint.h>
-#include "usbhw.h"
-#include "usbcfg.h"
-#include "cdcuser.h"
-#include "lpc17xx_uart.h"
+extern "C" {
+	#include "usbhw.h"
+	#include "usbcfg.h"
+	#include "cdcuser.h"
+	#include "lpc17xx_uart.h"
+}
 //#include <avr/sfr_defs.h>
 //#include <avr/interrupt.h>
 //#include <avr/io.h>

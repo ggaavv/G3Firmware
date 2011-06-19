@@ -18,7 +18,9 @@
 #ifndef SHARED_AVR_PORT_HH_
 #define SHARED_AVR_PORT_HH_
 
-#include "lpc17xx_gpio.h"
+extern "C" {
+	#include "lpc17xx_gpio.h"
+}
 
 // The AVR port and pin mapping is based on a convention that has held true for all ATMega chips
 // released so far: that the ports begin in sequence from register 0x00 from A onwards, and are

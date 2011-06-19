@@ -2,7 +2,9 @@
 #include "main.hh"
 #include <stdio.h>
 #include <string.h>
-#include "lpc_types.h"
+extern "C" {
+	#include "lpc_types.h"
+}
 //#include <util/delay.h>
 #include "Delay_ms.hh"
 

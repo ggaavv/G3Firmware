@@ -1,4 +1,6 @@
-#include "LPC17xx.h"
+extern "C" {
+	#include "LPC17xx.h"
+}
 
 volatile uint32_t msTicks;                            /* counts 1ms timeTicks */
 /*----------------------------------------------------------------------------
