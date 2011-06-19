@@ -29,7 +29,7 @@
 
 namespace command {
 
-#define COMMAND_BUFFER_SIZE 8192	//512 1024 2048 4096 8192  (512 default)
+#define COMMAND_BUFFER_SIZE 512	//512 1024 2048 4096 8192  (512 default)
 uint8_t buffer_data[COMMAND_BUFFER_SIZE];
 CircularBuffer command_buffer(COMMAND_BUFFER_SIZE, buffer_data);
 

@@ -16,9 +16,11 @@
  * they apply. */
 
 OUTPUT_FORMAT ("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
+/*STARTUP(startup_LPC17xx.o)*/
 /*ENTRY(_start)*/
 SEARCH_DIR(.)
 /*GROUP(-lc)*/
+/*GROUP(-lgcc -lc -lcs3 -lcs3hosted -lcs3arm)*/
 
 MEMORY
 {

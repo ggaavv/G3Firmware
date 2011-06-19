@@ -21,11 +21,11 @@
 #include "usbcfg.h"
 #include "cdcuser.h"
 #include "lpc17xx_uart.h"
-#include "main.hh"
 //#include <avr/sfr_defs.h>
 //#include <avr/interrupt.h>
 //#include <avr/io.h>
 //#include <util/delay.h>
+#include "Delay_ms.hh"
 #include "Configuration.hh"
 
 #define FIFO_Enabled 0;

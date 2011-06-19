@@ -75,13 +75,14 @@ else:
 	print "LPC1768: Gen 5 motherboard"
 	exit()
 
-srcs = Glob('*.cc') + Glob('lib_sd/*.c') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('system/*.c') + Glob('system/*.S') + Glob('USBCDC/*.c') + Glob('#src/shared/*.cc')
+srcs = Glob('lib_sd/*.c') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('system/*.c') + Glob('system/*.S') + Glob('USBCDC/*.c') + Glob('#src/shared/*.cc') + Glob('*.cc')
+#srrcs = Glob('system/libnosys_gnu.c')
 #srcs_c = Glob('lib_sd/*.c') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('system/*.c') + Glob('USBCDC/*.c') + Glob('maplelib/*.c')
 #srcs_cc = Glob('*.cc')
 #srcs_s = Glob('system/*.S')
 
-include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'system', 'USBCDC', 'maplelib', '#/src/Motherboard']
-search_paths = '-B#/src/shared -B /lib/include -B /lib/source -B /system -B /USBCDC -B /maplelib -B #/src/Motherboard'
+include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'lib_sd', 'system', 'USBCDC', '#/src/Motherboard']
+search_paths = '-I#/src/shared -I/lib/include -I/lib/source -I/lib_sd -I/system -I/USBCDC -I#/src/Motherboard'
 #include_paths_B = [-B #/src/shared -B lib/include -B lib/source -B system -B USBCDC -B maplelib -B #/src/Motherboard]
 
 if (os.environ.has_key('BUILD_NAME')):
@@ -109,10 +110,11 @@ bin_name = target_name + '.bin'
 elf_name = target_name + '.elf'
 map_name = target_name + '.map'
 
-env=Environment(tools=['mingw'],
+ennv=Environment(tools=['mingw'],
 #	CC=codesourcery_path+'/arm-none-eabi-gcc',
 	CC=codesourcery_path+'/arm-none-eabi-g++',
 #	LINK=codesourcery_path+'/arm-none-eabi-gcc',
+#	CXX=codesourcery_path+'/arm-none-eabi-gcc',
 	CXX=codesourcery_path+'/arm-none-eabi-g++',
 	AS=codesourcery_path+'/arm-none-eabi-as',
 	AR=codesourcery_path+'/arm-none-eabi-ar',
@@ -123,7 +125,30 @@ env=Environment(tools=['mingw'],
 	CCFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
 	CXXFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
 #	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map -Wl,-T -Xlinker '+LSCRIPT+'',
-	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map -Wl,-T '+LSCRIPT+' -Wl,--allow-multiple-definition',
+	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -v -nostartfiles -Wl,-Map='+target_name+'.map -Wl,-T '+LSCRIPT+' -Wl,--allow-multiple-definition',
+#	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map -Wl,-T '+LSCRIPT+' $LIBPATH -Wl,--allow-multiple-definition',
+#	LDFLAGS = '-O'+optimization+' -nostartfiles -b '+mcu+' -o '+elf_name+' -Map '+map_name+' -T '+LSCRIPT+' --stats --allow-multiple-definition -B #/src/shared -B lib/include -B lib/source -B system -B USBCDC -B maplelib -B #/src/Motherboard',
+#	LDFLAGS = '-O'+optimization+' -nostartfiles -Wl,-T -Xlinker '+LSCRIPT+'',
+#	-Wl,--allow-multiple-definition',
+	ASFLAGS = '-mcpu='+mcu+' --defsym RAM_MODE=0',
+	LIBPATH=search_paths,
+	CPPPATH=include_paths)
+
+env=Environment(tools=['mingw'],
+	CC=codesourcery_path+'/arm-none-eabi-gcc',
+#	LINK=codesourcery_path+'/arm-none-eabi-gcc',
+	CXX=codesourcery_path+'/arm-none-eabi-g++',
+	AS=codesourcery_path+'/arm-none-eabi-as',
+	AR=codesourcery_path+'/arm-none-eabi-ar',
+	LD=codesourcery_path+'/arm-none-eabi-ld',
+	OBJCOPY=codesourcery_path+'/arm-none-eabi-objcopy',
+	SIZE=codesourcery_path+'/arm-none-eabi-size',
+	#  Compiler Options
+	CCFLAGS = '-ARCH=armv7-m -Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
+	CXXFLAGS = '-ARCH=armv7-m -Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
+#	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map -Wl,-T -Xlinker '+LSCRIPT+'',
+	LDFLAGS = '-ARCH=armv7-m -mcpu='+mcu+' -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map -Wl,-T '+LSCRIPT+' -Wl,--allow-multiple-definition',
+#	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map -Wl,-T '+LSCRIPT+' $LIBPATH -Wl,--allow-multiple-definition',
 #	LDFLAGS = '-O'+optimization+' -nostartfiles -b '+mcu+' -o '+elf_name+' -Map '+map_name+' -T '+LSCRIPT+' --stats --allow-multiple-definition -B #/src/shared -B lib/include -B lib/source -B system -B USBCDC -B maplelib -B #/src/Motherboard',
 #	LDFLAGS = '-O'+optimization+' -nostartfiles -Wl,-T -Xlinker '+LSCRIPT+'',
 #	-Wl,--allow-multiple-definition',
@@ -147,7 +172,8 @@ objs = env.Object(srcs)
 #    LINKSCRIPT = File('$LSCRIPT'))
 #env.Depends(program, '$LSCRIPT')
 
-env.Append(BUILDERS={'Elf':Builder(action=codesourcery_path+"/arm-none-eabi-g++ -o $TARGET $SOURCES $LDFLAGS")})
+env.Append(BUILDERS={'Elf':Builder(action=codesourcery_path+"/arm-none-eabi-g++ -o $TARGET $OBJECTS $SOURCES $LDFLAGS")})
+#env.Append(BUILDERS={'Elf':Builder(action=codesourcery_path+"/arm-none-eabi-g++ -o $TARGET $SOURCES $LDFLAGS")})
 #env.Append(BUILDERS={'Elf':Builder(action=codesourcery_path+"/arm-none-eabi-gcc $LDFLAGS -o $TARGET $SOURCES")})
 #env.Append(BUILDERS={'Hex':Builder(action=codesourcery_path+"/arm-none-eabi-objcopy -O ihex -R .eeprom $SOURCES $TARGET")})
 

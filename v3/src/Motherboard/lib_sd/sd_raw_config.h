@@ -12,7 +12,7 @@
 #define SD_RAW_CONFIG_H
 
 #include <stdint.h>
-#include "Configuration.hh"
+#include "lpc17xx_gpio.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -75,62 +75,65 @@ extern "C"
 /* defines for customisation of sd/mmc port access */
 #if defined(__LPC17xx_H__)
 
-#define configure_pin_mosi() MOSI_PIN.setDirection(true)
-#define configure_pin_sck() SCK_PIN.setDirection(true)
-#define configure_pin_ss() SS_PIN.setDirection(true)
-#define configure_pin_miso() MISO_PIN.setDirection(true)
+//GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir)
+//GPIO_SetValue(uint8_t portNum, uint32_t bitValue)
+//GPIO_ReadValue(uint8_t portNum)
 
-#define select_card() (SD_SELECT_PIN.setDirection(true), SD_SELECT_PIN.setValue(true));
-#define unselect_card() (SD_SELECT_PIN.setDirection(false), SD_SELECT_PIN.setValue(false));
+/* Define as 1 if and SD card slot is present; 0 if not.
+#define HAS_SD          1
+// The pin that connects to the write protect line on the SD header.
+#define SD_WRITE_PIN    Pin(Port1,0)
+// The pin that connects to the card detect line on the SD header.
+#define SD_DETECT_PIN   Pin(Port1,1)
+// The pin that connects to the chip select line on the SD header.
+#define SD_SELECT_PIN   Pin(Port1,0)
+*/
 
-#elif defined(__AVR_ATmega8__) || \
-    defined(__AVR_ATmega48__) || \
-    defined(__AVR_ATmega48P__) || \
-    defined(__AVR_ATmega88__) || \
-    defined(__AVR_ATmega88P__) || \
-    defined(__AVR_ATmega168__) || \
-    defined(__AVR_ATmega168P__) || \
-    defined(__AVR_ATmega328P__) || \
-    defined(__AVR_ATmega1248P__)
-    #define configure_pin_mosi() DDRB |= (1 << DDB3)
-    #define configure_pin_sck() DDRB |= (1 << DDB5)
-    #define configure_pin_ss() DDRB |= (1 << DDB2)
-    #define configure_pin_miso() DDRB &= ~(1 << DDB4)
+// The pin that connects to the write protect line on the SD header.
+#define SD_WRITE_PIN_Port    1
+#define SD_WRITE_PIN_Pin    (0<<1)
 
-    #define select_card() PORTB &= ~(1 << PORTB2)
-    #define unselect_card() PORTB |= (1 << PORTB2)
-#elif defined(__AVR_ATmega16__) || \
-      defined(__AVR_ATmega32__) || \
-      defined(__AVR_ATmega644P__) || \
-	  defined(__AVR_ATmega1284P__)
-    #define configure_pin_mosi() DDRB |= (1 << DDB5)
-    #define configure_pin_sck() DDRB |= (1 << DDB7)
-    #define configure_pin_ss() DDRB |= (1 << DDB4)
-    #define configure_pin_miso() DDRB &= ~(1 << DDB6)
+// The pin that connects to the card detect line on the SD header.
+#define SD_DETECT_PIN_Port   1
+#define SD_DETECT_PIN_Pin   (0<<1)
 
-    #define select_card() PORTB &= ~(1 << PORTB4)
-    #define unselect_card() PORTB |= (1 << PORTB4)
-#elif defined(__AVR_ATmega64__) || \
-      defined(__AVR_ATmega128__) || \
-      defined(__AVR_ATmega169__) || \
-	  defined(__AVR_ATmega1280__) || \
-	  defined(__AVR_ATmega2560__)
-    #define configure_pin_mosi() DDRB |= (1 << DDB2)
-    #define configure_pin_sck() DDRB |= (1 << DDB1)
-    #define configure_pin_ss() DDRB |= (1 << DDB0)
-    #define configure_pin_miso() DDRB &= ~(1 << DDB3)
+// The pin that connects to the chip select line on the SD header.
+#define SD_SELECT_PIN_Port   1
+#define SD_SELECT_PIN_Pin   (0<<1)
 
-    #define select_card() PORTB &= ~(1 << PORTB0)
-    #define unselect_card() PORTB |= (1 << PORTB0)
+#define MOSI_PIN_Port	1
+#define MOSI_PIN_Pin	(0<<1)
+#define SCK_PIN_Port   1
+#define SCK_PIN_Pin   (0<<4)
+#define SS_PIN_Port   1
+#define SS_PIN_Pin   (0<<1)
+#define MISO_PIN_Port   1
+#define MISO_PIN_Pin   (0<<1)
+
+#define configure_pin_mosi() GPIO_SetDir(MOSI_PIN_Port, MOSI_PIN_Pin, 1)
+#define configure_pin_sck() GPIO_SetDir(SCK_PIN_Port, SCK_PIN_Pin, 1)
+#define configure_pin_ss() GPIO_SetDir(SS_PIN_Port, SS_PIN_Pin, 1)
+#define configure_pin_miso() GPIO_SetDir(MISO_PIN_Port, MISO_PIN_Pin, 1)
+
+//#define select_card() (SD_SELECT_PIN.setDirection(true), SD_SELECT_PIN.setValue(true));
+#define select_card() (GPIO_SetDir(SD_SELECT_PIN_Port, SD_SELECT_PIN_Pin, 1), GPIO_SetValue(SD_SELECT_PIN_Port, ((GPIO_ReadValue(SD_SELECT_PIN_Port)&SD_SELECT_PIN_Port) & SD_SELECT_PIN_Pin) | (1?SD_SELECT_PIN_Pin:0)));
+//#define unselect_card() (SD_SELECT_PIN.setDirection(false), SD_SELECT_PIN.setValue(false));
+#define unselect_card() (GPIO_SetDir(SD_SELECT_PIN_Port, SD_SELECT_PIN_Pin, 1), GPIO_SetValue(SD_SELECT_PIN_Port, ((GPIO_ReadValue(SD_SELECT_PIN_Port)&SD_SELECT_PIN_Port) & SD_SELECT_PIN_Pin) | (0?SD_SELECT_PIN_Pin:0)));
+
+
 #else
     #error "no sd/mmc pin mapping available!"
 #endif
 
-#define configure_pin_available() SD_DETECT_PIN.setDirection(false)
-#define configure_pin_locked() SD_WRITE_PIN.setDirection(false)
+//#define configure_pin_available() SD_DETECT_PIN.setDirection(false)
+#define configure_pin_available() GPIO_SetDir(SD_DETECT_PIN_Port, SD_DETECT_PIN_Pin, 0)
+//#define configure_pin_locked() SD_WRITE_PIN.setDirection(false)
+#define configure_pin_locked() GPIO_SetDir(SD_WRITE_PIN_Port, SD_WRITE_PIN_Pin, 0)
 
-#define get_pin_available() SD_DETECT_PIN.getValue()
-#define get_pin_locked() !SD_WRITE_PIN.getValue()
+//#define get_pin_available() SD_DETECT_PIN.getValue()
+#define get_pin_available() ((GPIO_ReadValue(SD_DETECT_PIN_Port)&SD_DETECT_PIN_Pin) != 0)
+//#define get_pin_locked() !SD_WRITE_PIN.getValue()
+#define get_pin_locked() !((GPIO_ReadValue(SD_WRITE_PIN_Port)&SD_WRITE_PIN_Pin) != 0)
 
 #if SD_RAW_SDHC
     typedef uint64_t offset_t;

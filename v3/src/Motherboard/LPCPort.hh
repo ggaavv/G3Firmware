@@ -60,7 +60,7 @@ public:
 		return ((GPIO_ReadValue(port_base)&pin_index) != 0);
 	}
 	void setPin(uint8_t pin_index, bool on) {
-		GPIO_SetValue(pin_index, ((GPIO_ReadValue(port_base)&pin_index) & pin_index) | (on?pin_index:0));
+		GPIO_SetValue(port_base, ((GPIO_ReadValue(port_base)&pin_index) & pin_index) | (on?pin_index:0));
 	}
 };
 

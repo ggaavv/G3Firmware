@@ -33,7 +33,7 @@ long _undef_read_r(struct _reent *r, int fd, char *ptr, int len) {
 	return len;
 }
 
-__attribute__((weak))    const devoptab_t devoptab_tty0 = { "tty0", _undef_open_r,
+__attribute__(())    const devoptab_t devoptab_tty0 = { "tty0", _undef_open_r,
 		_undef_close_r, _undef_write_r, _undef_read_r };
 
 const devoptab_t *devoptab_list[] = { &devoptab_tty0, /* standard input */
@@ -43,7 +43,7 @@ const devoptab_t *devoptab_list[] = { &devoptab_tty0, /* standard input */
 0 /* terminates the list */
 };
 
-long _write_r(struct _reent *ptr, int fd, const void *buf, size_t cnt) {
+long _write_r(struct _reent *ptr, int fd, const char *buf, size_t cnt) {
 	return devoptab_list[fd]->write_r(ptr, fd, buf, cnt);
 }
 

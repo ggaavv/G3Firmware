@@ -25,6 +25,7 @@
 
 #include <stdint.h>
 #include "LPC17xx.h"
+#include "newlibMinimal.h"
 
 
 /** @addtogroup LPC17xx_System

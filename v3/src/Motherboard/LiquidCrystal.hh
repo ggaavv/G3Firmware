@@ -3,8 +3,7 @@
 
 // TODO: Proper attribution
 
-#include <stdint.h>
-//#include <avr/pgmspace.h>
+#include "pgmspace.h"
 #include "LPCPort.hh"
 
 // commands

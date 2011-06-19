@@ -18,9 +18,6 @@
 #ifndef MAIN_HH_
 #define MAIN_HH_
 
-void SysTick_Handler(void);
-static void Delay (uint32_t dlyTicks);
-
 // Reset the machine. Pass in true if this is a power-up reset; false
 // otherwise.
 void reset(bool hard_reset);

@@ -25,7 +25,6 @@
 #include "lpc_types.h"
 #include "usb.h"
 
-
 /* USB RAM Definitions */
 #define USB_RAM_ADR     0x20080000  /* USB RAM Start Address */
 #define USB_RAM_SZ      0x00004000  /* USB RAM Size (4kB) */

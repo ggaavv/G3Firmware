@@ -15,7 +15,6 @@
 #include "fat.h"
 #include "fat_config.h"
 #include "sd-reader_config.h"
-
 #include <string.h>
 
 #if USE_DYNAMIC_MEMORY
@@ -519,7 +518,8 @@ cluster_t fat_append_clusters(struct fat_fs_struct* fs, cluster_t cluster_num, c
         cluster_count = fs->header.fat_size / sizeof(fat_entry16);
 
     fs->cluster_free = 0;
-    for(cluster_t cluster_left = cluster_count; cluster_left > 0; --cluster_left, ++cluster_current)
+    cluster_t cluster_left;
+    for(cluster_left = cluster_count; cluster_left > 0; --cluster_left, ++cluster_current)
     {
         if(cluster_current < 2 || cluster_current >= cluster_count)
             cluster_current = 2;
@@ -1589,7 +1589,7 @@ uint8_t fat_reset_dir(struct fat_dir_struct* dd)
  */
 uint8_t fat_dir_entry_read_callback(uint8_t* buffer, offset_t offset, void* p)
 {
-  struct fat_read_dir_callback_arg* arg = (fat_read_dir_callback_arg*)p;
+  struct fat_read_dir_callback_arg* arg = p;
     struct fat_dir_entry_struct* dir_entry = arg->dir_entry;
 
     arg->bytes_read += 32;
@@ -1629,7 +1629,8 @@ uint8_t fat_dir_entry_read_callback(uint8_t* buffer, offset_t offset, void* p)
          */
         uint16_t char_offset = ((buffer[0] & 0x3f) - 1) * 13;
         const uint8_t char_mapping[] = { 1, 3, 5, 7, 9, 14, 16, 18, 20, 22, 24, 28, 30 };
-        for(uint8_t i = 0; i <= 12 && char_offset + i < sizeof(dir_entry->long_name) - 1; ++i)
+        uint8_t i;
+        for(i = 0; i <= 12 && char_offset + i < sizeof(dir_entry->long_name) - 1; ++i)
             long_name[char_offset + i] = buffer[char_mapping[i]];
 
         return 1;
@@ -1718,7 +1719,8 @@ uint8_t fat_dir_entry_read_callback(uint8_t* buffer, offset_t offset, void* p)
 uint8_t fat_calc_83_checksum(const uint8_t* file_name_83)
 {
     uint8_t checksum = file_name_83[0];
-    for(uint8_t i = 1; i < 11; ++i)
+    uint8_t i;
+    for(i = 1; i < 11; ++i)
         checksum = ((checksum >> 1) | (checksum << 7)) + file_name_83[i];
 
     return checksum;
@@ -1980,7 +1982,8 @@ uint8_t fat_write_dir_entry(const struct fat_fs_struct* fs, struct fat_dir_entry
     uint8_t checksum = fat_calc_83_checksum(buffer);
     
     /* write lfn entries */
-    for(uint8_t lfn_entry = lfn_entry_count; lfn_entry > 0; --lfn_entry)
+    uint8_t lfn_entry;
+    for(lfn_entry = lfn_entry_count; lfn_entry > 0; --lfn_entry)
     {
         memset(buffer, 0xff, sizeof(buffer));
         
@@ -2431,7 +2434,8 @@ uint8_t fat_get_fs_free_16_callback(uint8_t* buffer, offset_t offset, void* p)
     struct fat_usage_count_callback_arg* count_arg = (struct fat_usage_count_callback_arg*) p;
     uintptr_t buffer_size = count_arg->buffer_size;
 
-    for(uintptr_t i = 0; i < buffer_size; i += 2, buffer += 2)
+    uintptr_t i;
+    for(i = 0; i < buffer_size; i += 2, buffer += 2)
     {
         uint16_t cluster = *((uint16_t*) &buffer[0]);
         if(cluster == HTOL16(FAT16_CLUSTER_FREE))

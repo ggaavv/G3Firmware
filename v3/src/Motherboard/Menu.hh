@@ -6,19 +6,20 @@
 #include "InterfaceBoardDefinitions.hh"
 #include "LiquidCrystal.hh"
 
+//#include "Interface.hh"
 
 class Screen {
 public:
-	virtual micros_t getUpdateRate();
+	virtual micros_t getUpdateRate() = 0;
 
 	// Do internal updates, redraw, etc
-	virtual void update(LiquidCrystal& lcd, bool forceRedraw);
+	virtual void update(LiquidCrystal& lcd, bool forceRedraw) = 0;
 
 	// Reset the menu to it's default state
-	virtual void reset();
+	virtual void reset() = 0;
 
 	// Get notified that a button was pressed
-	virtual void notifyButtonPressed(InterfaceBoardDefinitions::ButtonName button);
+	virtual void notifyButtonPressed(InterfaceBoardDefinitions::ButtonName button) = 0;
 };
 
 

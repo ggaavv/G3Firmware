@@ -212,7 +212,8 @@ uint8_t sd_raw_init()
         return 0;
 
     /* card needs 74 cycles minimum to start up */
-    for(uint8_t i = 0; i < 10; ++i)
+    uint8_t i;
+    for(i = 0; i < 10; ++i)
     {
         /* wait 8 clock cycles */
         sd_raw_rec_byte();
@@ -223,13 +224,14 @@ uint8_t sd_raw_init()
 
     /* reset card */
     uint8_t response;
-    for(uint16_t i = 0; ; ++i)
+    uint16_t ii;
+    for(ii = 0; ; ++ii)
     {
         response = sd_raw_send_command(CMD_GO_IDLE_STATE, 0);
         if(response == (1 << R1_IDLE_STATE))
             break;
 
-        if(i == 0x1ff)
+        if(ii == 0x1ff)
         {
             unselect_card();
             return 0;
@@ -269,7 +271,8 @@ uint8_t sd_raw_init()
     }
 
     /* wait for card to get ready */
-    for(uint16_t i = 0; ; ++i)
+    uint16_t iii;
+    for(iii = 0; ; ++iii)
     {
         if(sd_raw_card_type & ((1 << SD_RAW_SPEC_1) | (1 << SD_RAW_SPEC_2)))
         {
@@ -289,7 +292,7 @@ uint8_t sd_raw_init()
         if((response & (1 << R1_IDLE_STATE)) == 0)
             break;
 
-        if(i == 0x7fff)
+        if(iii == 0x7fff)
         {
             unselect_card();
             return 0;
@@ -442,7 +445,8 @@ uint8_t sd_raw_send_command(uint8_t command, uint32_t arg)
     }
     
     /* receive response */
-    for(uint8_t i = 0; i < 10; ++i)
+    uint8_t iiii;
+    for(iiii = 0; iiii < 10; ++iiii)
     {
         response = sd_raw_rec_byte();
         if(response != 0xff)
@@ -506,16 +510,18 @@ uint8_t sd_raw_read(offset_t offset, uint8_t* buffer, uintptr_t length)
 #if SD_RAW_SAVE_RAM
             /* read byte block */
             uint16_t read_to = block_offset + read_length;
-            for(uint16_t i = 0; i < 512; ++i)
+            uint16_t iiiii;
+            for(iiiii = 0; iiiii < 512; ++iiiii)
             {
                 uint8_t b = sd_raw_rec_byte();
-                if(i >= block_offset && i < read_to)
+                if(iiiii >= block_offset && iiiii < read_to)
                     *buffer++ = b;
             }
 #else
             /* read byte block */
             uint8_t* cache = raw_block;
-            for(uint16_t i = 0; i < 512; ++i)
+            uint16_t iiiiii;
+            for(iiiiii = 0; iiiiii < 512; ++iiiiii)
                 *cache++ = sd_raw_rec_byte();
             raw_block_address = block_address;
 
@@ -752,7 +758,8 @@ uint8_t sd_raw_write(offset_t offset, const uint8_t* buffer, uintptr_t length)
 
         /* write byte block */
         uint8_t* cache = raw_block;
-        for(uint16_t i = 0; i < 512; ++i)
+        uint16_t iiiiiii;
+        for(iiiiiii = 0; iiiiiii < 512; ++iiiiiii)
             sd_raw_send_byte(*cache++);
 
         /* write dummy crc16 */
@@ -887,25 +894,26 @@ uint8_t sd_raw_get_info(struct sd_raw_info* info)
         return 0;
     }
     while(sd_raw_rec_byte() != 0xfe);
-    for(uint8_t i = 0; i < 18; ++i)
+    uint8_t iiiiiiii;
+    for(iiiiiiii = 0; iiiiiiii < 18; ++iiiiiiii)
     {
         uint8_t b = sd_raw_rec_byte();
 
-        switch(i)
+        switch(iiiiiiii)
         {
             case 0:
                 info->manufacturer = b;
                 break;
             case 1:
             case 2:
-                info->oem[i - 1] = b;
+                info->oem[iiiiiiii - 1] = b;
                 break;
             case 3:
             case 4:
             case 5:
             case 6:
             case 7:
-                info->product[i - 3] = b;
+                info->product[iiiiiiii - 3] = b;
                 break;
             case 8:
                 info->revision = b;
@@ -914,7 +922,7 @@ uint8_t sd_raw_get_info(struct sd_raw_info* info)
             case 10:
             case 11:
             case 12:
-                info->serial |= (uint32_t) b << ((12 - i) * 8);
+                info->serial |= (uint32_t) b << ((12 - iiiiiiii) * 8);
                 break;
             case 13:
                 info->manufacturing_year = b << 4;
@@ -940,11 +948,12 @@ uint8_t sd_raw_get_info(struct sd_raw_info* info)
         return 0;
     }
     while(sd_raw_rec_byte() != 0xfe);
-    for(uint8_t i = 0; i < 18; ++i)
+    uint8_t iiiiiiiii;
+    for(iiiiiiiii = 0; iiiiiiiii < 18; ++iiiiiiiii)
     {
         uint8_t b = sd_raw_rec_byte();
 
-        if(i == 14)
+        if(iiiiiiiii == 14)
         {
             if(b & 0x40)
                 info->flag_copy = 1;
@@ -959,7 +968,7 @@ uint8_t sd_raw_get_info(struct sd_raw_info* info)
 #if SD_RAW_SDHC
             if(sd_raw_card_type & (1 << SD_RAW_SPEC_2))
             {
-                switch(i)
+                switch(iiiiiiiii)
                 {
                     case 7:
                         b &= 0x3f;
@@ -969,7 +978,7 @@ uint8_t sd_raw_get_info(struct sd_raw_info* info)
                         csd_c_size |= b;
                         break;
                 }
-                if(i == 9)
+                if(iiiiiiiii == 9)
                 {
                     ++csd_c_size;
                     info->capacity = (offset_t) csd_c_size * 512 * 1024;
@@ -978,7 +987,7 @@ uint8_t sd_raw_get_info(struct sd_raw_info* info)
             else
 #endif
             {
-                switch(i)
+                switch(iiiiiiiii)
                 {
                     case 5:
                         csd_read_bl_len = b & 0x0f;

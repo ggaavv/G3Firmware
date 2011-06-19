@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "lpc_types.h"
-#include "pgmspace.h"
 //#include <util/delay.h>
+#include "Delay_ms.hh"
 
 
 // When the display powers up, it is configured as follows:
