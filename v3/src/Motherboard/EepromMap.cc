@@ -19,8 +19,82 @@
 #include "EepromMap.hh"
 //#include <avr/eeprom.h>
 #include "Version.hh"
+#include "IAP.hh"
 
 namespace eeprom {
+
+/*
+#define PREP_WR 50
+#define FLASH_WR 51
+#define ERASE_SEC 52
+#define FLASHDIR 0x00001F00
+// Call into embedded utility.
+#define IAP_LOCATION 0x1fff1ff1
+void (*iap_entry)(unsigned long *, unsigned long *) = (void *)IAP_LOCATION;
+unsigned long command[5];
+unsigned long result[4];
+// FLASHDIR is the location in flash to write.
+// sys_state is the structure in RAM to write to flash.
+void
+write_state(void){
+// First we will prepare the sector for erase.
+command[0] = PREP_WR;
+command[1] = FLASHDIR >> 12;
+command[2] = FLASHDIR >> 12;
+iap_entry (command, result);
+if (result[0] != 0) {
+// This is an error.
+result[0] = 0xff;
+return;
+}
+// Next we will erase the sector.
+command[0] = ERASE_SEC;
+command[1] = FLASHDIR;
+command[2] = FLASHDIR;
+command[3] = SystemFrequency / 1000; // Must be in terms of cycles per millisecond.
+command[4] = 0;
+iap_entry (command, result);
+if (result[0] != 0) {
+// This is an error.
+result[0] = 0xff;
+return (-1);
+}
+// We will prepare the sector for write.
+command[0] = PREP_WR;
+command[1] = FLASHDIR >> 12;
+command[2] = FLASHDIR >> 12;
+iap_entry (command, result);
+if (result[0] != 0) {
+// This is an error.
+result[0] = 0xff;
+return;
+}
+// Then we will write the sector.
+command[0] = FLASH_WR;
+command[1] = FLASHDIR;
+command[2] = vRef; //extern volatile uint32_t vRef = 3300;
+command[3] = 256;
+command[4] = SystemFrequency / 1000; // Must be in terms of cycles per millisecond.
+iap_entry (command, result);
+if (result[0] != 0) {
+// This is an error.
+result[0] = 0xff;
+return;
+}
+}
+
+
+uint32_t read_nonvolatile_parameters(void)
+{
+
+unsigned long *add;
+uint32_t value=0;
+
+add=(unsigned long *)FLASHDIR;
+value=*add;
+}
+*/
+
 
 void init() {
 	uint8_t version[2];

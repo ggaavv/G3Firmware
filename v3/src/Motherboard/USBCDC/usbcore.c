@@ -50,7 +50,7 @@ extern MSC_CSW CSW;
 
 #if (USB_CDC)
 #include "cdc.h"
-#include "cdcuser.h"
+//#include "cdcuser.h"
 #endif
 
 #endif

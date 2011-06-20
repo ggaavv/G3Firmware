@@ -21,6 +21,7 @@ extern "C" {
 	#include "usbhw.h"
 	#include "usbcfg.h"
 	#include "cdcuser.h"
+	#include "usbcore.h"
 	#include "lpc17xx_uart.h"
 	#include "lpc17xx_pinsel.h"
 }
@@ -28,11 +29,12 @@ extern "C" {
 //#include <avr/interrupt.h>
 //#include <avr/io.h>
 //#include <util/delay.h>
-#include "Delay_ms.hh"
+#include "Delay_us.hh"
 #include "Configuration.hh"
 
 #define FIFO_Enabled 0
 #define LPC_UART_NO LPC_UART1
+#define LPC_UART_NONO 1
 
 /*
 NOTE: you will need to call SystemCoreClockUpdate() as the very
@@ -118,7 +120,7 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 		UART_Init((LPC_UART_TypeDef *)LPC_UART_NO, &u_cfg);
 		// Initialize UART0 pin connect
 		PINSEL_CFG_Type PinCfg;
-		if (LPC_UART_NO == LPC_UART0){
+		if (LPC_UART_NONO == 0){
 			PinCfg.Funcnum = 1;
 			PinCfg.OpenDrain = 0;
 			PinCfg.Pinmode = 0;
@@ -127,7 +129,7 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 			PINSEL_ConfigPin(&PinCfg);
 			PinCfg.Pinnum = 3;
 			PINSEL_ConfigPin(&PinCfg);
-		} else if (LPC_UART_NO == LPC_UART1){
+		} else if (LPC_UART_NONO == 1){
 			PinCfg.Funcnum = 1;
 			PinCfg.OpenDrain = 0;
 			PinCfg.Pinmode = 0;
@@ -178,10 +180,9 @@ void UART::beginSend() {
 #endif
 	} else if (index_ == 1) {
 		speak();
-//		_delay_us(10);
-		Delay (1);						//NEED to reduce delay from 1ms to 10us
+		Delay_us (10);
 		loopback_bytes = 1;
-		UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, send_byte);  // NEED to choose which UART
+		UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, send_byte);
 	}
 }
 
@@ -209,15 +210,8 @@ void UART::reset() {
 	}
 }
 
-// Send and receive interrupts
-//ISR(USART0_RX_vect)
-//{
-//	UART::uart[0].in.processByte( UDR0 );
-//}
-
 volatile uint8_t byte_in;
 
-//ISR(USART1_RX_vect)
 void UART1_IRQHandler(void)
 {
 	uint32_t intsrc, tmp, tmp1;
@@ -227,7 +221,7 @@ void UART1_IRQHandler(void)
 	// Receive Line Status
 	if (tmp == UART_IIR_INTID_RLS){
 		// Check line status
-		tmp1 = UART_GetLineStatus(LPC_UART_NO);
+		tmp1 = UART_GetLineStatus((LPC_UART_TypeDef *)LPC_UART_NO);
 		// Mask out the Receive Ready and Transmit Holding empty status
 		tmp1 &= (UART_LSR_OE | UART_LSR_PE | UART_LSR_FE | UART_LSR_BI | UART_LSR_RXFE);
 		// If any error exist
@@ -246,8 +240,7 @@ void UART1_IRQHandler(void)
 			loopback_bytes++;
 			UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, UART::uart[1].out.getNextByteToSend());  // NEED to choose which UART
 		} else {
-			//	_delay_us(10);
-				Delay (1);						//NEED to reduce delay from 1ms to 10us
+				Delay_us (10);
 			listen();
 		}
 	}

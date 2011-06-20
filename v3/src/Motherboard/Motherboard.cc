@@ -82,7 +82,7 @@ void Motherboard::reset() {
 	TMR1_Cfg.PrescaleOption = TIM_PRESCALE_USVAL;
 	TMR1_Cfg.PrescaleValue = 1;
 	/* Use channel 1, MR1 */
-	TMR1_Match.MatchChannel = 1;
+	TMR1_Match.MatchChannel = 0;
 	/* Enable interrupt when MR0 matches the value in TC register */
 	TMR1_Match.IntOnMatch = ENABLE;
 	/* Enable reset on MR0: TIMER will reset if MR0 matches it */
@@ -112,7 +112,7 @@ void Motherboard::reset() {
 	TMR2_Cfg.PrescaleOption = TIM_PRESCALE_USVAL;
 	TMR2_Cfg.PrescaleValue = 10000;
 	/* Use channel 1, MR1 */
-	TMR2_Match.MatchChannel = 1;
+	TMR2_Match.MatchChannel = 0;
 	/* Enable interrupt when MR0 matches the value in TC register */
 	TMR2_Match.IntOnMatch = ENABLE;
 	/* Enable reset on MR0: TIMER will reset if MR0 matches it */

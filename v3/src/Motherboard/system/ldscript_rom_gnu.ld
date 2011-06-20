@@ -24,9 +24,22 @@ SEARCH_DIR(.)
 
 MEMORY
 {
-  rom (rx)  : ORIGIN = 0x00000000, LENGTH = 512K
+        /* LPC1768 : 512k ROM + 64k SRAM */
+        /*------------------------------ */
+
+	/* On-chip ROM is a readable (r), executable region (x) */
+	/* On-chip SRAM is a readable (r), writable (w) and */
+	/* executable region (x) */
+
+	/* Main ROM region - 512k for LPC1768 */
+
+	/* Starting at 3000, bootloader 0000-2000 eeprom at 3000 */ 
+  rom (rx)  : ORIGIN = 0x00003000, LENGTH = 512K
+  
+    /* local static RAM - 32k for LPC1768 */
   ram (rwx) : ORIGIN = 0x10000000, LENGTH =  32K
   
+    /* AHB SRAM - 16k for LPC1768 - often used for USB */
   ram1(rwx) : ORIGIN = 0x2007C000, LENGTH = 16k
   ram2(rwx) : ORIGIN = 0x20080000, LENGTH = 16k
 }
