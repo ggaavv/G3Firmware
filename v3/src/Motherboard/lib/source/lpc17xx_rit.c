@@ -165,7 +165,7 @@ void RIT_TimerDebugCmd(LPC_RIT_TypeDef *RITx, FunctionalState NewState)
  *******************************************************************************/
 IntStatus RIT_GetIntStatus(LPC_RIT_TypeDef *RITx)
 {
-	IntStatus result;
+	uint8_t result;
 	CHECK_PARAM(PARAM_RITx(RITx));
 	if((RITx->RICTRL&RIT_CTRL_INTEN)==1)	result= SET;
 	else return RESET;
