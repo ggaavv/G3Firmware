@@ -46,6 +46,7 @@ extern "C" {
 void reset(bool hard_reset) {
 //	ATOMIC_BLOCK(ATOMIC_FORCEON) {
 	__disable_irq ();
+	SystemCoreClockUpdate();
 	while (SysTick_Config(SystemCoreClock / 1000));   /* Setup SysTick Timer for 1 msec interrupts  */
 	Motherboard& board = Motherboard::getBoard();
 	sdcard::reset();

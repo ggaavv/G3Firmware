@@ -22,6 +22,7 @@ extern "C" {
 	#include "usbcfg.h"
 	#include "cdcuser.h"
 	#include "lpc17xx_uart.h"
+	#include "lpc17xx_pinsel.h"
 }
 //#include <avr/sfr_defs.h>
 //#include <avr/interrupt.h>
@@ -30,7 +31,8 @@ extern "C" {
 #include "Delay_ms.hh"
 #include "Configuration.hh"
 
-#define FIFO_Enabled 0;
+#define FIFO_Enabled 0
+#define LPC_UART_NO LPC_UART1
 
 /*
 NOTE: you will need to call SystemCoreClockUpdate() as the very
@@ -104,7 +106,8 @@ inline void speak() {
 UART::UART(uint8_t index) : index_(index), enabled_(false) {
 	if (index_ == 0) {
 		// Init USB for UART
-		USB_Init();					// USB Initialization
+		USB_Init();						// USB Initialization
+		while (!USB_Configuration);		// wait until USB is configured
 	} else if (index_ == 1) {
 		// UART Configuration Structure
 		UART_CFG_Type u_cfg;
@@ -112,7 +115,28 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 		u_cfg.Databits = UART_DATABIT_8;
 		u_cfg.Parity = UART_PARITY_NONE;
 		u_cfg.Stopbits = UART_STOPBIT_1;
-		UART_Init((LPC_UART_TypeDef *)LPC_UART1, &u_cfg);
+		UART_Init((LPC_UART_TypeDef *)LPC_UART_NO, &u_cfg);
+		// Initialize UART0 pin connect
+		PINSEL_CFG_Type PinCfg;
+		if (LPC_UART_NO == LPC_UART0){
+			PinCfg.Funcnum = 1;
+			PinCfg.OpenDrain = 0;
+			PinCfg.Pinmode = 0;
+			PinCfg.Pinnum = 2;
+			PinCfg.Portnum = 0;
+			PINSEL_ConfigPin(&PinCfg);
+			PinCfg.Pinnum = 3;
+			PINSEL_ConfigPin(&PinCfg);
+		} else if (LPC_UART_NO == LPC_UART1){
+			PinCfg.Funcnum = 1;
+			PinCfg.OpenDrain = 0;
+			PinCfg.Pinmode = 0;
+			PinCfg.Pinnum = 15;
+			PinCfg.Portnum = 0;
+			PINSEL_ConfigPin(&PinCfg);
+			PinCfg.Pinnum = 16;
+			PINSEL_ConfigPin(&PinCfg);
+		}
 #ifndef FIFO_Enabled
 		// UART FIFO Configuration Structure
 		UART_FIFO_CFG_Type fifo_cfg;
@@ -120,7 +144,7 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 		fifo_cfg.FIFO_ResetTxBuf = ENABLE;
 		fifo_cfg.FIFO_DMAMode = DISABLE;
 		fifo_cfg.FIFO_Level = UART_FIFO_TRGLEV0;
-		UART_FIFOConfig((LPC_UART_TypeDef *)LPC_UART1, &fifo_cfg);
+		UART_FIFOConfig((LPC_UART_TypeDef *)LPC_UART_NO, &fifo_cfg);
 #endif
 		// UART1 is an RS485 port, and requires additional setup.
 		// Read enable: PD5, active low
@@ -157,7 +181,7 @@ void UART::beginSend() {
 //		_delay_us(10);
 		Delay (1);						//NEED to reduce delay from 1ms to 10us
 		loopback_bytes = 1;
-		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, send_byte);  // NEED to choose which UART
+		UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, send_byte);  // NEED to choose which UART
 	}
 }
 
@@ -171,8 +195,8 @@ void UART::enable(bool enabled) {
 			USB_Connect(FALSE);			// USB Disconnect
 		}
 	} else if (index_ == 1) {
-		if (enabled) { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART1, ENABLE); }
-		else { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART1, DISABLE); }
+		if (enabled) { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART_NO, ENABLE); }
+		else { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART_NO, DISABLE); }
 	}
 }
 
@@ -198,12 +222,12 @@ void UART1_IRQHandler(void)
 {
 	uint32_t intsrc, tmp, tmp1;
 	/* Determine the interrupt source */
-	intsrc = UART_GetIntId((LPC_UART_TypeDef *)LPC_UART1);
+	intsrc = UART_GetIntId((LPC_UART_TypeDef *)LPC_UART_NO);
 	tmp = intsrc & UART_IIR_INTID_MASK;
 	// Receive Line Status
 	if (tmp == UART_IIR_INTID_RLS){
 		// Check line status
-		tmp1 = UART_GetLineStatus(LPC_UART0);
+		tmp1 = UART_GetLineStatus(LPC_UART_NO);
 		// Mask out the Receive Ready and Transmit Holding empty status
 		tmp1 &= (UART_LSR_OE | UART_LSR_PE | UART_LSR_FE | UART_LSR_BI | UART_LSR_RXFE);
 		// If any error exist
@@ -213,14 +237,14 @@ void UART1_IRQHandler(void)
 	}
 	// Receive Data Available or Character time-out
 	if ((tmp == UART_IIR_INTID_RDA) || (tmp == UART_IIR_INTID_CTI)) {
-		UART::uart[1].in.processByte(UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART1));
+		UART::uart[1].in.processByte(UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART_NO));
 	}
 
 	// Transmit Holding Empty
 	if (tmp == UART_IIR_INTID_THRE){
 		if (UART::uart[1].out.isSending()) {
 			loopback_bytes++;
-			UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::uart[1].out.getNextByteToSend());  // NEED to choose which UART
+			UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, UART::uart[1].out.getNextByteToSend());  // NEED to choose which UART
 		} else {
 			//	_delay_us(10);
 				Delay (1);						//NEED to reduce delay from 1ms to 10us
