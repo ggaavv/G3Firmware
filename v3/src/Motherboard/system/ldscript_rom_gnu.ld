@@ -33,11 +33,12 @@ MEMORY
 
 	/* Main ROM region - 512k for LPC1768 */
 
-	/* Starting at 3000, bootloader 0000-2000 eeprom at 3000 */ 
-  rom (rx)  : ORIGIN = 0x00003000, LENGTH = 512K
+	/* Starting at 0x00003000, bootloader 0x00000000-2000 eeprom replacement at 0x00003000 */
+  rom (rx)  : ORIGIN = 0x00003000, LENGTH = 500K    /* 512K - 8K(bootloader) - 4K(eeprom) = 500K */
   
     /* local static RAM - 32k for LPC1768 */
-  ram (rwx) : ORIGIN = 0x10000000, LENGTH =  32K
+    /* Using 0x10000000 to 0x10001000 for temp storage for IAP */
+  ram (rwx) : ORIGIN = 0x10001000, LENGTH =  31K    /* 32K - 1K(eeprom) = 31K */
   
     /* AHB SRAM - 16k for LPC1768 - often used for USB */
   ram1(rwx) : ORIGIN = 0x2007C000, LENGTH = 16k
