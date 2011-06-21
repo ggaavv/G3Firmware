@@ -99,6 +99,8 @@ value=*add;
 void init() {
 	uint8_t version[2];
 //NEED		eeprom_read_block(version,(const uint8_t*)eeprom::VERSION_LOW,2);
+	version[1] = *(eeprom::VERSION_LOW);
+	version[2] = *(eeprom::VERSION_HIGH);
 	if ((version[1]*100+version[0]) == firmware_version) return;
 	if (version[1] == 0xff || version[1] < 2) {
 		// Initialize eeprom map
