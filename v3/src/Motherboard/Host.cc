@@ -505,17 +505,15 @@ char* getMachineName() {
 	// If the machine name hasn't been loaded, load it
 	if (machineName[0] == 0) {
 		for(uint8_t i = 0; i < MAX_MACHINE_NAME_LEN; i++) {
-			machineName[i] = eeprom::getEeprom8(eeprom::MACHINE_NAME+i, 0);
+			machineName[i] = eeprom::getEeprom8(eeprom::MACHINE_NAME_R+i, 0);
 		}
 	}
 
 	// If it's still zero, load in a default.
-//	static PROGMEM prog_uchar defaultMachineName[] =  "Thing-O-Matic";
 	static PROGMEM char defaultMachineName[] =  "Thing-O-Matic";
 
 	if (machineName[0] == 0) {
 		for(uint8_t i = 0; i < 14; i++) {
-//			machineName[i] = pgm_read_byte_near(defaultMachineName+i);
 			machineName[i] = defaultMachineName[i];
 		}
 	}

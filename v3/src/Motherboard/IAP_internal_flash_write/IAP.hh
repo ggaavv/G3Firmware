@@ -20,7 +20,7 @@
 //#include    "mbed.h"
 #include    "system_LPC17xx.h"
 
-#define     USER_FLASH_AREA_START   FLASH_SECTOR_3
+#define     USER_FLASH_AREA_START   FLASH_SECTOR_2
 //#define     USER_FLASH_AREA_START   FLASH_SECTOR_29
 #define     USER_FLASH_AREA_SIZE    (FLASH_SECTOR_SIZE_0_TO_15 * 1)
 

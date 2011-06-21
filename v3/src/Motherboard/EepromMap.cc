@@ -21,6 +21,12 @@
 #include "Version.hh"
 #include "IAP.hh"
 
+void erase_program_variables (void) {
+	IAP in_ap_prog;
+	int error_code_ret = in_ap_prog.erase(USER_FLASH_AREA_START, USER_FLASH_AREA_START);
+	error_code_ret = in_ap_prog.write((char)0x10000000, (char)USER_FLASH_AREA_START, (int)USER_FLASH_AREA_SIZE );
+};
+
 namespace eeprom {
 
 /*
@@ -98,40 +104,33 @@ value=*add;
 
 void init() {
 	uint8_t version[2];
-//NEED		eeprom_read_block(version,(const uint8_t*)eeprom::VERSION_LOW,2);
-	version[1] = *(eeprom::VERSION_LOW);
-	version[2] = *(eeprom::VERSION_HIGH);
+	version[0] = *eeprom::VERSION_LOW_R;
+	version[1] = *eeprom::VERSION_HIGH_R;
 	if ((version[1]*100+version[0]) == firmware_version) return;
 	if (version[1] == 0xff || version[1] < 2) {
 		// Initialize eeprom map
 		// Default: enstops inverted, Y axis inverted
 		uint8_t axis_invert = 1<<1; // Y axis = 1
 		uint8_t endstop_invert = 0b00010111; // all endstops inverted
-//NEED			eeprom_write_byte((uint8_t*)eeprom::AXIS_INVERSION,axis_invert);
-//NEED			eeprom_write_byte((uint8_t*)eeprom::ENDSTOP_INVERSION,endstop_invert);
-//NEED			eeprom_write_byte((uint8_t*)eeprom::MACHINE_NAME,0); // name is null
-		&(eeprom::VERSION_LOW + 0x10000000 + eeprom::AXIS_INVERSION) = axis_invert;
-		&(eeprom::VERSION_LOW + 0x10000000 + eeprom::ENDSTOP_INVERSION) = endstop_invert;
-		&(eeprom::VERSION_LOW + 0x10000000 + eeprom::MACHINE_NAME) = 0; // name is null
+		*eeprom::AXIS_INVERSION_W = axis_invert;
+		*eeprom::ENDSTOP_INVERSION_W = endstop_invert;
+		*eeprom::MACHINE_NAME_W = 0; // name is null
 	}
 	// Write version
 	version[0] = firmware_version % 100;
 	version[1] = firmware_version / 100;
-//NEED		eeprom_write_block(version,(uint8_t*)eeprom::VERSION_LOW,2);
-
+	erase_program_variables();
 }
 
-uint8_t getEeprom8(const uint32_t location, const uint8_t default_value) {
+uint8_t getEeprom8(uint32_t *location, const uint8_t default_value) {
 	uint8_t data;
-//NEED		eeprom_read_block(&data,(const uint8_t*)location,1);
 	data = *location;
 	if (data == 0xff) data = default_value;
 	return data;
 }
 
-uint16_t getEeprom16(const uint32_t location, const uint16_t default_value) {
+uint16_t getEeprom16(uint32_t *location, const uint16_t default_value) {
 	uint16_t data;
-//NEED		eeprom_read_block(&data,(const uint8_t*)location,2);
 	data = *location;
 	if (data == 0xffff) data = default_value;
 	return data;

@@ -141,24 +141,6 @@ void USB_Feature_Event (void) {
 }
 #endif
 
-/*
-void* USB_EndPoint0 = (void*)0;
-void* USB_EndPoint1 = (void*)1;
-void* USB_EndPoint2 = (void*)2;
-void* USB_EndPoint3 = (void*)3;
-void* USB_EndPoint4 = (void*)4;
-void* USB_EndPoint5 = (void*)5;
-void* USB_EndPoint6 = (void*)6;
-void* USB_EndPoint7 = (void*)7;
-void* USB_EndPoint8 = (void*)8;
-void* USB_EndPoint9 = (void*)9;
-void* USB_EndPoint10 = (void*)10;
-void* USB_EndPoint11 = (void*)11;
-void* USB_EndPoint12 = (void*)12;
-void* USB_EndPoint13 = (void*)13;
-void* USB_EndPoint14 = (void*)14;
-void* USB_EndPoint15 = (void*)15;*/
-
 #define P_EP(n) ((USB_EP_EVENT & (1 << (n))) ? USB_EndPoint##n : 0)
 
 /* USB Endpoint Events Callback Pointers */

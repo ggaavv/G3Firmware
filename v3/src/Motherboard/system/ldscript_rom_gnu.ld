@@ -38,7 +38,7 @@ MEMORY
   
     /* local static RAM - 32k for LPC1768 */
     /* Using 0x10000000 to 0x10001000 for temp storage for IAP */
-  ram (rwx) : ORIGIN = 0x10001000, LENGTH =  31K    /* 32K - 1K(eeprom) = 31K */
+  ram (rwx) : ORIGIN = 0x10001000, LENGTH =  28K    /* 32K - 4K(eeprom) = 28K */
   
     /* AHB SRAM - 16k for LPC1768 - often used for USB */
   ram1(rwx) : ORIGIN = 0x2007C000, LENGTH = 16k

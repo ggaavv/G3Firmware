@@ -311,10 +311,11 @@ void runCommandSlice() {
 					// then record it to the eeprom.
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
-							uint16_t offset = eeprom::AXIS_HOME_POSITIONS + 4*i;
+							uint16_t offset = *(eeprom::AXIS_HOME_POSITIONS_R + 4*i);
 							uint32_t position = steppers::getPosition()[i];
 							__enable_irq ();
 //	NEEDS fixing			eeprom_write_block(&position, (void*) offset, 4);
+
 							__disable_irq ();
 						}
 					}
@@ -329,7 +330,7 @@ void runCommandSlice() {
 
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
-							uint16_t offset = eeprom::AXIS_HOME_POSITIONS + 4*i;
+							uint16_t offset = *(eeprom::AXIS_HOME_POSITIONS_R + 4*i);
 							__enable_irq ();
 //	NEEDS fixing			eeprom_read_block(&(newPoint[i]), (void*) offset, 4);
 							__disable_irq ();
