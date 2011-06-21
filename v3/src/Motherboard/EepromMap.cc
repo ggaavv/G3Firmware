@@ -110,11 +110,15 @@ void init() {
 //NEED			eeprom_write_byte((uint8_t*)eeprom::AXIS_INVERSION,axis_invert);
 //NEED			eeprom_write_byte((uint8_t*)eeprom::ENDSTOP_INVERSION,endstop_invert);
 //NEED			eeprom_write_byte((uint8_t*)eeprom::MACHINE_NAME,0); // name is null
+		&(eeprom::VERSION_LOW + 0x10000000 + eeprom::AXIS_INVERSION) = axis_invert;
+		&(eeprom::VERSION_LOW + 0x10000000 + eeprom::ENDSTOP_INVERSION) = endstop_invert;
+		&(eeprom::VERSION_LOW + 0x10000000 + eeprom::MACHINE_NAME) = 0; // name is null
 	}
 	// Write version
 	version[0] = firmware_version % 100;
 	version[1] = firmware_version / 100;
 //NEED		eeprom_write_block(version,(uint8_t*)eeprom::VERSION_LOW,2);
+
 }
 
 uint8_t getEeprom8(const uint32_t location, const uint8_t default_value) {
