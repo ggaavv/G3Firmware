@@ -101,6 +101,7 @@ enum current_enum{
 	WAIT_ON_TOOL,
 	WAIT_ON_PLATFORM
 } mode = READY;
+mode mode_temp;
 
 Timeout delay_timeout;
 Timeout homing_timeout;
@@ -136,7 +137,8 @@ void runCommandSlice() {
 			mode = READY;
 		}
 	}
-	if (mode == WAIT_ON_TOOL) {
+	if (mode == WAIT_ON_TOOL || mode == WAIT_ON_PLATFORM) {
+			mode_temp = mode;
 		if (tool_wait_timeout.hasElapsed()) {
 			mode = READY;
 		} else if (tool::getLock()) {
@@ -144,7 +146,7 @@ void runCommandSlice() {
 			InPacket& in = tool::getInPacket();
 			out.reset();
 			out.append8(tool::tool_index);
-			out.append8(SLAVE_CMD_GET_TOOL_STATUS);
+			out.append8(mode_temp);
 			tool::startTransaction();
 			// WHILE: bounded by timeout in runToolSlice
 			while (!tool::isTransactionDone()) {
@@ -152,29 +154,6 @@ void runCommandSlice() {
 			}
 			if (!in.hasError()) {
 				if (in.read8(1) & 0x01) {
-					mode = READY;
-				}
-			}
-			tool::releaseLock();
-		}
-	}
-	if (mode == WAIT_ON_PLATFORM) {
-		// FIXME: Duplicates most code from WAIT_ON_TOOL
-		if (tool_wait_timeout.hasElapsed()) {
-			mode = READY;
-		} else if (tool::getLock()) {
-			OutPacket& out = tool::getOutPacket();
-			InPacket& in = tool::getInPacket();
-			out.reset();
-			out.append8(tool::tool_index);
-			out.append8(SLAVE_CMD_IS_PLATFORM_READY);
-			tool::startTransaction();
-			// WHILE: bounded by timeout in runToolSlice
-			while (!tool::isTransactionDone()) {
-				tool::runToolSlice();
-			}
-			if (!in.hasError()) {
-				if (in.read8(1) != 0) {
 					mode = READY;
 				}
 			}
@@ -281,19 +260,14 @@ void runCommandSlice() {
 							flags,
 							feedrate);
 				}
-			} else if (command == HOST_CMD_WAIT_FOR_TOOL) {
+			} else if (command == HOST_CMD_WAIT_FOR_TOOL || command == HOST_CMD_WAIT_FOR_PLATFORM) {
 				if (command_buffer.getLength() >= 6) {
-					mode = WAIT_ON_TOOL;
-					command_buffer.pop();
-					uint8_t currentToolIndex = command_buffer.pop();
-					uint16_t toolPingDelay = (uint16_t)pop16();
-					uint16_t toolTimeout = (uint16_t)pop16();
-					tool_wait_timeout.start(toolTimeout*1000000L);
-				}
-			} else if (command == HOST_CMD_WAIT_FOR_PLATFORM) {
-        // FIXME: Almost equivalent to WAIT_FOR_TOOL
-				if (command_buffer.getLength() >= 6) {
-					mode = WAIT_ON_PLATFORM;
+					if (command == HOST_CMD_WAIT_FOR_TOOL){
+						mode = WAIT_ON_TOOL;
+					}
+					else{
+						mode = WAIT_ON_PLATFORM;
+					}
 					command_buffer.pop();
 					uint8_t currentToolIndex = command_buffer.pop();
 					uint16_t toolPingDelay = (uint16_t)pop16();
@@ -301,23 +275,17 @@ void runCommandSlice() {
 					tool_wait_timeout.start(toolTimeout*1000000L);
 				}
 			} else if (command == HOST_CMD_STORE_HOME_POSITION) {
-
 				// check for completion
 				if (command_buffer.getLength() >= 2) {
 					command_buffer.pop();
 					uint8_t axes = pop8();
-
 					// Go through each axis, and if that axis is specified, read it's value,
 					// then record it to the eeprom.
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
-							uint16_t offset = *(eeprom::AXIS_HOME_POSITIONS_R + 4*i);
-							uint32_t position = steppers::getPosition()[i];
-							__enable_irq ();
-//	NEEDS fixing			eeprom_write_block(&position, (void*) offset, 4);
-
-							__disable_irq ();
+							*(eeprom::AXIS_HOME_POSITIONS + 4*i) = steppers::getPosition()[i];
 						}
+						save_to_flash();
 					}
 				}
 			} else if (command == HOST_CMD_RECALL_HOME_POSITION) {
@@ -330,13 +298,9 @@ void runCommandSlice() {
 
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
-							uint16_t offset = *(eeprom::AXIS_HOME_POSITIONS_R + 4*i);
-							__enable_irq ();
-//	NEEDS fixing			eeprom_read_block(&(newPoint[i]), (void*) offset, 4);
-							__disable_irq ();
+							&newPoint[i] = *(eeprom::AXIS_HOME_POSITIONS + 4*i);
 						}
 					}
-
 					steppers::definePosition(newPoint);
 				}
 

@@ -21,105 +21,43 @@
 #include "Version.hh"
 #include "IAP.hh"
 
-void erase_program_variables (void) {
+void read_all_from_flash (void){
+	__enable_irq ();
+	for (uint32_t i = USER_FLASH_AREA_START; i < USER_FLASH_AREA_SIZE; i++){
+	*(EEPROM_START_ADDRESS + i) = *(USER_FLASH_AREA_START + i);
+	__disable_irq ();
+}
+
+void save_to_flash (void) {
+	__enable_irq ();
 	IAP in_ap_prog;
 	int error_code_ret = in_ap_prog.erase(USER_FLASH_AREA_START, USER_FLASH_AREA_START);
 	error_code_ret = in_ap_prog.write((char)0x10000000, (char)USER_FLASH_AREA_START, (int)USER_FLASH_AREA_SIZE );
+	// read all variables back into Ram
+	__disable_irq ();
 };
 
 namespace eeprom {
 
-/*
-#define PREP_WR 50
-#define FLASH_WR 51
-#define ERASE_SEC 52
-#define FLASHDIR 0x00001F00
-// Call into embedded utility.
-#define IAP_LOCATION 0x1fff1ff1
-void (*iap_entry)(unsigned long *, unsigned long *) = (void *)IAP_LOCATION;
-unsigned long command[5];
-unsigned long result[4];
-// FLASHDIR is the location in flash to write.
-// sys_state is the structure in RAM to write to flash.
-void
-write_state(void){
-// First we will prepare the sector for erase.
-command[0] = PREP_WR;
-command[1] = FLASHDIR >> 12;
-command[2] = FLASHDIR >> 12;
-iap_entry (command, result);
-if (result[0] != 0) {
-// This is an error.
-result[0] = 0xff;
-return;
-}
-// Next we will erase the sector.
-command[0] = ERASE_SEC;
-command[1] = FLASHDIR;
-command[2] = FLASHDIR;
-command[3] = SystemFrequency / 1000; // Must be in terms of cycles per millisecond.
-command[4] = 0;
-iap_entry (command, result);
-if (result[0] != 0) {
-// This is an error.
-result[0] = 0xff;
-return (-1);
-}
-// We will prepare the sector for write.
-command[0] = PREP_WR;
-command[1] = FLASHDIR >> 12;
-command[2] = FLASHDIR >> 12;
-iap_entry (command, result);
-if (result[0] != 0) {
-// This is an error.
-result[0] = 0xff;
-return;
-}
-// Then we will write the sector.
-command[0] = FLASH_WR;
-command[1] = FLASHDIR;
-command[2] = vRef; //extern volatile uint32_t vRef = 3300;
-command[3] = 256;
-command[4] = SystemFrequency / 1000; // Must be in terms of cycles per millisecond.
-iap_entry (command, result);
-if (result[0] != 0) {
-// This is an error.
-result[0] = 0xff;
-return;
-}
-}
-
-
-uint32_t read_nonvolatile_parameters(void)
-{
-
-unsigned long *add;
-uint32_t value=0;
-
-add=(unsigned long *)FLASHDIR;
-value=*add;
-}
-*/
-
-
 void init() {
+
 	uint8_t version[2];
-	version[0] = *eeprom::VERSION_LOW_R;
-	version[1] = *eeprom::VERSION_HIGH_R;
+	version[0] = *eeprom::VERSION_LOW;
+	version[1] = *eeprom::VERSION_HIGH;
 	if ((version[1]*100+version[0]) == firmware_version) return;
 	if (version[1] == 0xff || version[1] < 2) {
 		// Initialize eeprom map
 		// Default: enstops inverted, Y axis inverted
 		uint8_t axis_invert = 1<<1; // Y axis = 1
 		uint8_t endstop_invert = 0b00010111; // all endstops inverted
-		*eeprom::AXIS_INVERSION_W = axis_invert;
-		*eeprom::ENDSTOP_INVERSION_W = endstop_invert;
-		*eeprom::MACHINE_NAME_W = 0; // name is null
+		*eeprom::AXIS_INVERSION = axis_invert;
+		*eeprom::ENDSTOP_INVERSION = endstop_invert;
+		*eeprom::MACHINE_NAME = 0; // name is null
 	}
 	// Write version
 	version[0] = firmware_version % 100;
 	version[1] = firmware_version / 100;
-	erase_program_variables();
+	save_to_flash();
 }
 
 uint8_t getEeprom8(uint32_t *location, const uint8_t default_value) {
