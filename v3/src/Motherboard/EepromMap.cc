@@ -20,6 +20,7 @@
 //#include <avr/eeprom.h>
 #include "Version.hh"
 #include "IAP.hh"
+#include "LPC17xx.h"
 
 void read_all_from_flash (void){
 	__enable_irq ();

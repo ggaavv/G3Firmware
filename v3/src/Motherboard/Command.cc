@@ -101,7 +101,7 @@ enum current_enum{
 	WAIT_ON_TOOL,
 	WAIT_ON_PLATFORM
 } mode = READY;
-mode mode_temp;
+current_enum mode_temp = READY;
 
 Timeout delay_timeout;
 Timeout homing_timeout;
@@ -298,7 +298,7 @@ void runCommandSlice() {
 
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
-							&newPoint[i] = *(eeprom::AXIS_HOME_POSITIONS + 4*i);
+							newPoint[i] = *(eeprom::AXIS_HOME_POSITIONS + 4*i);
 						}
 					}
 					steppers::definePosition(newPoint);
