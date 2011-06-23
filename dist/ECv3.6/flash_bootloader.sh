@@ -21,7 +21,7 @@ if [ ! $AVRDUDE ]; then
     fi
 fi
 
-FIRMWARE=PRODUCTION
+FIRMWARE=ATmegaBOOT_168_ec3x
 FWDIR=`dirname $0`
 
 while true; do
@@ -30,8 +30,10 @@ while true; do
     if [ $AD_CONF ]; then
 	CONF_FLAGS="-C $AD_CONF "
     fi
-    # Upload firmware
-    $AVRDUDE $CONF_FLAGS -cstk500v1 -P/dev/ttyUSB0 -b57600 -v -v -pm1280 -P/dev/ttyUSB0 -Uflash:w:${FWDIR}/${FIRMWARE}.hex:i 
+    # Burn lock bits and fuses
+    $AVRDUDE $CONF_FLAGS -v -pm168 -cusbtiny -e -Ulock:w:0x3F:m -Uefuse:w:0x00:m -Uhfuse:w:0xdd:m -Ulfuse:w:0xee:m 
+    # Burn firmware
+    $AVRDUDE $CONF_FLAGS -v -pm168 -cusbtiny -Uflash:w:${FWDIR}/${FIRMWARE}.hex:i -Ulock:w:0x0F:m
 done
 
 #!/bin/bash

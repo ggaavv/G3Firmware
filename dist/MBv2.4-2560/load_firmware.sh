@@ -21,7 +21,7 @@ if [ ! $AVRDUDE ]; then
     fi
 fi
 
-FIRMWARE=PRODUCTION
+FIRMWARE=MB-mb24-2560-v2.9
 FWDIR=`dirname $0`
 
 while true; do
