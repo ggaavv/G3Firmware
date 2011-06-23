@@ -25,9 +25,10 @@
 void read_all_from_flash (void){
 	__enable_irq ();
 	for (uint32_t i = USER_FLASH_AREA_START; i < USER_FLASH_AREA_SIZE; i++){
-	*(EEPROM_START_ADDRESS + i) = *(USER_FLASH_AREA_START + i);
+		*(eeprom::EEPROM_START_ADDRESS + i) = *((uint32_t*)USER_FLASH_AREA_START + i);
+	}
 	__disable_irq ();
-}
+};
 
 void save_to_flash (void) {
 	__enable_irq ();
