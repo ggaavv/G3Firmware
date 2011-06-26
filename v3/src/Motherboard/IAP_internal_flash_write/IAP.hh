@@ -105,6 +105,7 @@
 #define     FLASH_SECTOR_SIZE_0_TO_15    ( 4 * 1024)
 #define     FLASH_SECTOR_SIZE_16_TO_29   (32 * 1024)
 
+/*
 static char * sector_start_adress[]    = {
     (char *)FLASH_SECTOR_0,
     (char *)FLASH_SECTOR_1,
@@ -137,7 +138,7 @@ static char * sector_start_adress[]    = {
     (char *)FLASH_SECTOR_28,
     (char *)FLASH_SECTOR_29    
 };
-
+*/
 
 /**    Error code by IAP routine
  *  

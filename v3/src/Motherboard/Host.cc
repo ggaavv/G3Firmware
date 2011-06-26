@@ -367,6 +367,7 @@ inline void handleReadEeprom(const InPacket& from_host, OutPacket& to_host) {
 	uint8_t length = from_host.read8(3);
 	uint8_t data[16];
 //	eeprom_read_block(data, (const void*) offset, length);		    //NEED doing
+	*(eeprom::AXIS_HOME_POSITIONS + 4*i) = steppers::getPosition()[i];
 	to_host.append8(RC_OK);
 	for (int i = 0; i < length; i++) {
 		to_host.append8(data[i]);

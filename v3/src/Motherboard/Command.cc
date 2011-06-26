@@ -253,7 +253,7 @@ void runCommandSlice() {
 					uint8_t flags = pop8();
 					uint32_t feedrate = pop32(); // feedrate in us per step
 					uint16_t timeout_s = pop16();
-					bool direction = command == HOST_CMD_FIND_AXES_MAXIMUM;
+//					bool direction = command == HOST_CMD_FIND_AXES_MAXIMUM;   //NEED looking at - not used??
 					mode = HOMING;
 					homing_timeout.start(timeout_s * 1000L * 1000L);
 					steppers::startHoming(command==HOST_CMD_FIND_AXES_MAXIMUM,
@@ -269,8 +269,8 @@ void runCommandSlice() {
 						mode = WAIT_ON_PLATFORM;
 					}
 					command_buffer.pop();
-					uint8_t currentToolIndex = command_buffer.pop();
-					uint16_t toolPingDelay = (uint16_t)pop16();
+//					uint8_t currentToolIndex = command_buffer.pop();	//NEED looking at - not used??
+//					uint16_t toolPingDelay = (uint16_t)pop16();   		//NEED looking at - not used??
 					uint16_t toolTimeout = (uint16_t)pop16();
 					tool_wait_timeout.start(toolTimeout*1000000L);
 				}
