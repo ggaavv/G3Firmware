@@ -15,11 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BOARDS_RRMBV12_UART_HH_
-#define BOARDS_RRMBV12_UART_HH_
+#ifndef UART_HH_
+#define UART_HH_
 
 #include "Packet.hh"
+#include "Configuration.hh"
 #include <stdint.h>
+
+enum communication_mode {
+    RS232,
+    RS485
+};
 
 /**
  * UARTs, when constructed, start off disabled.
@@ -27,29 +33,42 @@
  * call is made.  beginSend() calls will send completed
  * packets.
  *
- * All MB UARTs are presumed to run at 38400bps.
  */
 class UART {
 private:
+    static UART hostUART;
+
+#if HAS_SLAVE_UART
+    static UART slaveUART;
+#endif
+
+public:
+    static UART& getHostUART() { return hostUART; }
+
+#if HAS_SLAVE_UART
+    static UART& getSlaveUART() { return slaveUART; }
+#endif
+
+private:
+        UART(uint8_t index, communication_mode mode);
+
+        void init_serial();
+
+        inline void send_byte(char data);
+
+        const communication_mode mode_;
 	const uint8_t index_;
 	volatile bool enabled_;
+
 public:
-	UART(uint8_t index);
 	InPacket in;
 	OutPacket out;
 	void beginSend();
 	void enable(bool enabled);
-	static UART& getHostUART() { return uart[0]; }
-	static UART& getSlaveUART() { return uart[1]; }
+
 	// Reset the UART to a listening state.  This is important for
 	// RS485-based comms.
-	void reset();	// Not meant to be public, but otherwise we'd have to friend interrupt protos.  :/
-	static UART uart[2];
+        void reset();
 };
 
-enum {
-	HOST_UART,
-	SLAVE_UART
-};
-
-#endif // BOARDS_RRMBV12_UART_HH_
+#endif // UART_HH_
