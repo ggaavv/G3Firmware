@@ -25,7 +25,7 @@
 void read_all_from_flash (void){
 	__enable_irq ();
 	for (uint32_t i = USER_FLASH_AREA_START; i < USER_FLASH_AREA_SIZE; i++){
-		*(eeprom::EEPROM_START_ADDRESS + i) = *((uint32_t*)USER_FLASH_AREA_START + i);
+		*((uint32_t*)eeprom::EEPROM_START_ADDRESS + i) = *((uint32_t*)USER_FLASH_AREA_START + i);
 	}
 	__disable_irq ();
 };
@@ -42,19 +42,19 @@ void save_to_flash (void) {
 namespace eeprom {
 
 void init() {
-
+	read_all_from_flash();
 	uint8_t version[2];
-	version[0] = *eeprom::VERSION_LOW;
-	version[1] = *eeprom::VERSION_HIGH;
+	version[0] = *(uint32_t*)eeprom::VERSION_LOW;
+	version[1] = *(uint32_t*)eeprom::VERSION_HIGH;
 	if ((version[1]*100+version[0]) == firmware_version) return;
 	if (version[1] == 0xff || version[1] < 2) {
 		// Initialize eeprom map
 		// Default: enstops inverted, Y axis inverted
 		uint8_t axis_invert = 1<<1; // Y axis = 1
 		uint8_t endstop_invert = 0b00010111; // all endstops inverted
-		*eeprom::AXIS_INVERSION = axis_invert;
-		*eeprom::ENDSTOP_INVERSION = endstop_invert;
-		*eeprom::MACHINE_NAME = 0; // name is null
+		*(uint32_t*)eeprom::AXIS_INVERSION = axis_invert;
+		*(uint32_t*)eeprom::ENDSTOP_INVERSION = endstop_invert;
+		*(uint32_t*)eeprom::MACHINE_NAME = 0; // name is null
 	}
 	// Write version
 	version[0] = firmware_version % 100;
@@ -62,16 +62,16 @@ void init() {
 	save_to_flash();
 }
 
-uint8_t getEeprom8(uint32_t *location, const uint8_t default_value) {
+uint8_t getEeprom8(uint32_t location, const uint8_t default_value) {
 	uint8_t data;
-	data = *location;
+	data = *(uint32_t*)location;
 	if (data == 0xff) data = default_value;
 	return data;
 }
 
-uint16_t getEeprom16(uint32_t *location, const uint16_t default_value) {
+uint16_t getEeprom16(uint32_t location, const uint16_t default_value) {
 	uint16_t data;
-	data = *location;
+	data = *(uint32_t*)location;
 	if (data == 0xffff) data = default_value;
 	return data;
 }

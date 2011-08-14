@@ -283,10 +283,14 @@ void runCommandSlice() {
 					// then record it to the eeprom.
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
-							*(eeprom::AXIS_HOME_POSITIONS + 4*i) = steppers::getPosition()[i];
+							*((uint32_t*)eeprom::AXIS_HOME_POSITIONS + (i*4)) = steppers::getPosition()[i];
 						}
 						save_to_flash();
 					}
+
+//					for (uint32_t i = USER_FLASH_AREA_START; i < USER_FLASH_AREA_SIZE; i++){
+//						*(eeprom::EEPROM_START_ADDRESS + i) = *((uint32_t*)USER_FLASH_AREA_START + i);
+
 				}
 			} else if (command == HOST_CMD_RECALL_HOME_POSITION) {
 				// check for completion
@@ -298,7 +302,7 @@ void runCommandSlice() {
 
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
-							newPoint[i] = *(eeprom::AXIS_HOME_POSITIONS + 4*i);
+							newPoint[i] = *((uint32_t*)eeprom::AXIS_HOME_POSITIONS + 4*i);
 						}
 					}
 					steppers::definePosition(newPoint);
