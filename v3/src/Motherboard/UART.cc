@@ -30,11 +30,19 @@ extern "C" {
 //#include <avr/io.h>
 //#include <util/delay.h>
 #include "Delay_us.hh"
-#include "Configuration.hh"
 
 #define FIFO_Enabled 0
 #define LPC_UART_NO LPC_UART1
 #define LPC_UART_NONO 1
+
+// TODO: There should be a better way to enable this flag?
+#if ASSERT_LINE_FIX
+#include "ExtruderBoard.hh"
+#endif
+
+// We have to track the number of bytes that have been sent, so that we can filter
+// them from our receive buffer later.This is only used for RS485 mode.
+volatile uint8_t loopback_bytes = 0;
 
 /*
 NOTE: you will need to call SystemCoreClockUpdate() as the very
@@ -47,65 +55,13 @@ individual characters to the USB UART, and use putst(const char * s);
 to output a whole string.
 */
 
-/*
-// MEGA644P_DOUBLE_SPEED_MODE is 1 if USXn is 1.
-#ifndef MEGA644P_DOUBLE_SPEED_MODE
-#define MEGA644P_DOUBLE_SPEED_MODE 1
+// TODO: Move these definitions to the board files, where they belong.
+UART UART::hostUART(0, USB);
+#if HAS_SLAVE_UART
+UART UART::slaveUART(1, RS485);
 #endif
 
-#if MEGA644P_DOUBLE_SPEED_MODE
-#define UBRR0_VALUE 16  // 115200 baud
-#define UBRR1_VALUE 51  // 38400 baud
-#define UCSRA_VALUE(uart_) _BV(U2X##uart_)
-#else
-#define UBRR0_VALUE 8   // 115200
-#define UBRR1_VALUE 25  // 38400 baud
-#define UCSRA_VALUE(uart_) 0
-#endif
-
-// Adapted from ancient arduino/wiring rabbit hole
-#define INIT_SERIAL(uart_) \
-{ \
-    UBRR##uart_##H = UBRR##uart_##_VALUE >> 8; \
-    UBRR##uart_##L = UBRR##uart_##_VALUE & 0xff; \
-    \
-    // set config for uart_
-    UCSR##uart_##A = UCSRA_VALUE(uart_); \
-    UCSR##uart_##B = _BV(RXEN##uart_) | _BV(TXEN##uart_); \
-    UCSR##uart_##C = _BV(UCSZ##uart_##1)|_BV(UCSZ##uart_##0); \
-    // defaults to 8-bit, no parity, 1 stop bit  \
-}
-
-
-
-#define ENABLE_SERIAL_INTERRUPTS(uart_) \
-{ \
-	UCSR##uart_##B |=  _BV(RXCIE##uart_) | _BV(TXCIE##uart_); \
-}
-
-#define DISABLE_SERIAL_INTERRUPTS(uart_) \
-{ \
-	UCSR##uart_##B &= ~(_BV(RXCIE##uart_) | _BV(TXCIE##uart_)); \
-}
-*/
-
-UART UART::uart[2] = {
-		UART(0),
-		UART(1)
-};
-
-volatile uint8_t loopback_bytes = 0;
-
-// Unlike the old implementation, we go half-duplex: we don't listen while sending.
-inline void listen() {
-	TX_ENABLE_PIN.setValue(false);
-}
-
-inline void speak() {
-	TX_ENABLE_PIN.setValue(true);
-}
-
-UART::UART(uint8_t index) : index_(index), enabled_(false) {
+void UART::init_serial() {
 	if (index_ == 0) {
 		// Init USB for UART
 		USB_Init();						// USB Initialization
@@ -119,6 +75,7 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 		u_cfg.Stopbits = UART_STOPBIT_1;
 		UART_Init((LPC_UART_TypeDef *)LPC_UART_NO, &u_cfg);
 		// Initialize UART0 pin connect
+		}
 		PINSEL_CFG_Type PinCfg;
 		if (LPC_UART_NONO == 0){
 			PinCfg.Funcnum = 1;
@@ -148,26 +105,37 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 		fifo_cfg.FIFO_Level = UART_FIFO_TRGLEV0;
 		UART_FIFOConfig((LPC_UART_TypeDef *)LPC_UART_NO, &fifo_cfg);
 #endif
-		// UART1 is an RS485 port, and requires additional setup.
-		// Read enable: PD5, active low
-		// Tx enable: PD4, active high
-		TX_ENABLE_PIN.setDirection(true);
-		RX_ENABLE_PIN.setDirection(true);
-		RX_ENABLE_PIN.setValue(false);  // Active low
-		listen();
-	}
+}
+
+// Transition to a non-transmitting state. This is only used for RS485 mode.
+inline void listen() {
+	TX_ENABLE_PIN.setValue(false);
+}
+
+// Transition to a transmitting state
+inline void speak() {
+	TX_ENABLE_PIN.setValue(true);
+}
+
+UART::UART(uint8_t index, communication_mode mode) :
+	index_(index),
+	mode_(mode),
+	enabled_(false) {
+
+		init_serial();
+
 }
 
 /// UART bytes will be triggered by the tx complete interrupt.
 /// USB bytes sent as whole packets
 void UART::beginSend() {
 	if (!enabled_) { return; }
-	uint8_t send_byte = out.getNextByteToSend();
+	uint8_t next_byte = out.getNextByteToSend();
 	if (index_ == 0) {		//uart0 eg usb
 		// get first 2 bytes, second = size
 #ifndef FIFO_Enabled
 		char serBuf[USB_CDC_BUFSIZE];
-		serBuf[0] = send_byte;
+		serBuf[0] = next_byte;
 		serBuf[1] = out.getNextByteToSend();
 		// remaining bytes
 		for (uint8_t i = 2; i > (serBuf[1] + 3); i++){
@@ -176,13 +144,13 @@ void UART::beginSend() {
 		// send all bytes
 		USB_WriteEP (CDC_DEP_IN, (unsigned char *)&serBuf[0], serBuf[1]);
 #else
-		USB_WriteEP (CDC_DEP_IN, &send_byte, 1);
+		USB_WriteEP (CDC_DEP_IN, &next_byte, 1);
 #endif
 	} else if (index_ == 1) {
 		speak();
 		Delay_us (10);
 		loopback_bytes = 1;
-		UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, send_byte);
+		UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, next_byte);
 	}
 }
 
@@ -199,6 +167,12 @@ void UART::enable(bool enabled) {
 		if (enabled) { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART_NO, ENABLE); }
 		else { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART_NO, DISABLE); }
 	}
+	// UART1 is an RS485 port, and requires additional setup.
+	// Read enable: PD5, active low
+	// Tx enable: PD4, active high
+	TX_ENABLE_PIN.setDirection(true);
+	RX_ENABLE_PIN.setDirection(true);
+	RX_ENABLE_PIN.setValue(false);  // Active low
 }
 
 // Reset the UART to a listening state.  This is important for
@@ -231,16 +205,22 @@ void UART1_IRQHandler(void)
 	}
 	// Receive Data Available or Character time-out
 	if ((tmp == UART_IIR_INTID_RDA) || (tmp == UART_IIR_INTID_CTI)) {
-		UART::uart[1].in.processByte(UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART_NO));
+		static uint8_t byte_in;
+		byte_in = UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART_NO);
+		if (loopback_bytes > 0) {
+			loopback_bytes--;
+		} else {
+			UART::getSlaveUART().in.processByte( byte_in );
+		}
 	}
 
 	// Transmit Holding Empty
 	if (tmp == UART_IIR_INTID_THRE){
-		if (UART::uart[1].out.isSending()) {
+		if (UART::getSlaveUART().out.isSending()) {
 			loopback_bytes++;
-			UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, UART::uart[1].out.getNextByteToSend());  // NEED to choose which UART
+			UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, UART::getSlaveUART().out.getNextByteToSend());  // NEED to choose which UART
 		} else {
-				Delay_us (10);
+			Delay_us (10);
 			listen();
 		}
 	}

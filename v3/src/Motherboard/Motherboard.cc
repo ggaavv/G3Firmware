@@ -27,6 +27,8 @@ extern "C" {
 #include "Steppers.hh"
 #include "Command.hh"
 #include "Interface.hh"
+#include "Tool.hh"
+#include "Commands.hh"
 
 
 /// Instantiate static motherboard instance
@@ -53,7 +55,6 @@ Motherboard::Motherboard()
 #endif
 }
 
-
 /// Reset the motherboard to its initial state.
 /// This only resets the board, and does not send a reset
 /// to any attached toolheads.
@@ -69,10 +70,10 @@ void Motherboard::reset() {
 		stepper[i].init(i);
 	}
 	// Initialize the host and slave UARTs
-	getHostUART().enable(true);
-	getHostUART().in.reset();
-	getSlaveUART().enable(true);
-	getSlaveUART().in.reset();
+	UART::getHostUART().enable(true);
+	UART::getHostUART().in.reset();
+	UART::getSlaveUART().enable(true);
+	UART::getSlaveUART().in.reset();
 	// Reset and configure timer 1, the microsecond and stepper
 	// interrupt timer.
 	TIM_TIMERCFG_Type TMR1_Cfg;
@@ -96,8 +97,6 @@ void Motherboard::reset() {
 	/* Set configuration for Tim_config and Tim_MatchConfig */
 	TIM_Init(LPC_TIM1, TIM_TIMER_MODE, &TMR1_Cfg);
 	TIM_ConfigMatch(LPC_TIM1, &TMR1_Match);
-
-
 
 //	TCCR1A = 0x00;
 //	TCCR1B = 0x09;
@@ -130,9 +129,6 @@ void Motherboard::reset() {
 //	TCCR2B = 0x07; // prescaler at 1/1024
 //	TIMSK2 = 0x01; // OVF flag on
 
-
-
-
 	// Configure the debug pin.
 	DEBUG_PIN.setDirection(true);
 
@@ -145,6 +141,9 @@ void Motherboard::reset() {
 
 		interface_update_timeout.start(interfaceboard::getUpdateRate());
 	}
+
+    // Blindly try to reset the toolhead with index 0.
+//        resetToolhead();
 }
 
 /// Get the number of microseconds that have passed since

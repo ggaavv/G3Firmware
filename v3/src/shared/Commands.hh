@@ -65,6 +65,8 @@
 //#define HOST_CMD_BUILD_START_NOTIFICATION 24
 //#define HOST_CMD_BUILD_END_NOTIFICATION 25
 
+#define HOST_CMD_GET_COMMUNICATION_STATS 25
+
 // These are our bufferable commands from the host
 // #define HOST_CMD_QUEUE_POINT_INC   128  // deprecated
 #define HOST_CMD_QUEUE_POINT_ABS   129
@@ -105,10 +107,10 @@
 #define SLAVE_CMD_SET_SERVO_1_POS       14
 #define SLAVE_CMD_SET_SERVO_2_POS       15
 #define SLAVE_CMD_FILAMENT_STATUS       16
-#define SLAVE_CMD_GET_MOTOR_1_PWM       17
-#define SLAVE_CMD_GET_MOTOR_2_PWM       18
-#define SLAVE_CMD_GET_MOTOR_1_RPM       19
-#define SLAVE_CMD_GET_MOTOR_2_RPM       20
+#define SLAVE_CMD_GET_MOTOR_1_RPM       17
+#define SLAVE_CMD_GET_MOTOR_2_RPM       18
+#define SLAVE_CMD_GET_MOTOR_1_PWM       19
+#define SLAVE_CMD_GET_MOTOR_2_PWM       20
 #define SLAVE_CMD_SELECT_TOOL           21
 #define SLAVE_CMD_IS_TOOL_READY         22
 #define SLAVE_CMD_PAUSE_UNPAUSE         23
@@ -125,4 +127,5 @@
 #define SLAVE_CMD_IS_PLATFORM_READY     35
 #define SLAVE_CMD_GET_TOOL_STATUS       36
 #define SLAVE_CMD_GET_PID_STATE         37
+#define SLAVE_CMD_LIGHT_INDICATOR_LED   40
 #endif // SHARED_COMMANDS_H_

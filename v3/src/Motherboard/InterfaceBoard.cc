@@ -139,7 +139,6 @@ void InterfaceBoard::doUpdate() {
 		break;
 	}
 
-
 	static InterfaceBoardDefinitions::ButtonName button;
 
 
