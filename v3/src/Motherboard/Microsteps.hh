@@ -20,10 +20,12 @@
 #define MICROSTEPS_HH_
 
 #include <stdint.h>
+#include "lpc17xx_pinsel.h"
+#include "LPC17xx.h"
 
 namespace microsteps {
 
-	uint32_t I2CDEV_S_ADDR = 0b40;
+	uint32_t I2CDEV_S_ADDR = 0x40;
 //												  ^
 //												 R/W~ bit
 

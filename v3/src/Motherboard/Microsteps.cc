@@ -53,7 +53,7 @@ void init() {
 	transferMCfg.sl_addr7bit = I2CDEV_S_ADDR;
 	transferMCfg.tx_data = Master_Buf;
 	transferMCfg.tx_length = sizeof(Master_Buf);
-	transferMCfg.rx_data = NULL;
+	transferMCfg.rx_data = 0;
 	transferMCfg.rx_length = 0;
 	transferMCfg.retransmissions_max = 3;
 
@@ -63,7 +63,7 @@ void init() {
 	Master_Buf[1] = 0x00;  // Data to Register - all port0 Outputs
 	Master_Buf[2] = 0x00;  // Data to Register - all port1 Outputs
 	/* Send config to I2C */
-	I2C_MasterTransferData(I2CDEV_M, &transferMCfg, I2C_TRANSFER_POLLING);
+	I2C_MasterTransferData(LPC_I2C1, &transferMCfg, I2C_TRANSFER_POLLING);
 
 	/* Fill buffer with I2C port outputs settings*/
 	/* Slave address | Command | Port0 Data | Port1 Data */
@@ -71,7 +71,7 @@ void init() {
 	Master_Buf[1] = *(uint32_t*)eeprom::MICROSTEPS_P0;  // Data to Register - all port0 Outputs
 	Master_Buf[2] = *(uint32_t*)eeprom::MICROSTEPS_P1;  // Data to Register - all port1 Outputs
 	/* Send port output to I2C */
-	I2C_MasterTransferData(I2CDEV_M, &transferMCfg, I2C_TRANSFER_POLLING);
-
+	I2C_MasterTransferData(LPC_I2C1, &transferMCfg, I2C_TRANSFER_POLLING);
+}
 
 }
