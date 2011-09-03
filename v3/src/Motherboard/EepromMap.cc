@@ -50,8 +50,23 @@ void init() {
 	if (version[1] == 0xff || version[1] < 2) {
 		// Initialize eeprom map
 		// Default: enstops inverted, Y axis inverted
-		uint8_t axis_invert = 1<<1; // Y axis = 1
+							//		  bazyx
+		uint8_t axis_invert = 	 0b00000011; // 1<<1; // Y axis = 1
+							//		  bazyx
 		uint8_t endstop_invert = 0b00010111; // all endstops inverted
+							//		  bazyx
+		// Microstepping
+		uint8_t microsteping_port0 = 0b00000000;
+		uint8_t microsteping_port1 = 0b00000000;
+
+			/*	MS1 	MS2 	MS3 	Microstep Resolution
+				Low 	Low 	Low 	Full step
+				High 	Low 	Low 	Half step
+				Low 	High 	Low 	Quarter step
+				High 	High 	Low 	Eighth step
+				High 	High 	High 	Sixteenth step	*/
+		*(uint32_t*)eeprom::MICROSTEPS_P0 = microsteping_port0;
+		*(uint32_t*)eeprom::MICROSTEPS_P1 = microsteping_port1;
 		*(uint32_t*)eeprom::AXIS_INVERSION = axis_invert;
 		*(uint32_t*)eeprom::ENDSTOP_INVERSION = endstop_invert;
 		*(uint32_t*)eeprom::MACHINE_NAME = 0; // name is null

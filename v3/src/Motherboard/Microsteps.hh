@@ -21,5 +21,18 @@
 
 #include <stdint.h>
 
+namespace microsteps {
+
+	uint32_t I2CDEV_S_ADDR = 0b40;
+//												  ^
+//												 R/W~ bit
+
+	uint32_t pin_port_map;
+
+#define BUFFER_SIZE			0x2
+	uint8_t Port0_I2C = 0;
+	uint8_t Port1_I2C = 0;
+
+}
 
 #endif // MICROSTEPS_HH_
