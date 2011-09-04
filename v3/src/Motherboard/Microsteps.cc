@@ -74,4 +74,17 @@ void init() {
 	I2C_MasterTransferData(LPC_I2C1, &transferMCfg, I2C_TRANSFER_POLLING);
 }
 
+uint8_t microstep_pinout(bool port_no) {
+	uint8_t microsteping_port;
+	for (uint8_t ii = 0; ii < STEPPER_COUNT; ii++){
+		for (uint8_t iii = 0; ii < 3; iii++){
+			uint8_t port_bit = 0x1 << microstep_port_array [ii][iii][1];
+			if (microstep_port_array [ii][iii][0] == port_no) {
+				microsteping_port += (microstep_port_array [ii][iii][2] << port_bit);
+			}
+		}
+	}
+	return microsteping_port;
+}
+
 }
