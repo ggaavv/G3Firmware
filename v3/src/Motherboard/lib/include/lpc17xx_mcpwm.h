@@ -1,22 +1,28 @@
-/***********************************************************************//**
- * @file		lpc17xx_mcpwm.h
- * @brief		Contains all macro definitions and function prototypes
- * 				support for Motor Control PWM firmware library on LPC17xx
- * @version		2.0
- * @date		21. May. 2010
- * @author		NXP MCU SW Application Team
- **************************************************************************
- * Software that is described herein is for illustrative purposes only
- * which provides customers with programming information regarding the
- * products. This software is supplied "AS IS" without any warranties.
- * NXP Semiconductors assumes no responsibility or liability for the
- * use of the software, conveys no license or title under any patent,
- * copyright, or mask work right to the product. NXP Semiconductors
- * reserves the right to make changes in the software without
- * notification. NXP Semiconductors also make no representation or
- * warranty that such application will be suitable for the specified
- * use without further testing or modification.
- **************************************************************************/
+/**********************************************************************
+* $Id$		lpc17xx_mcpwm.h				2010-05-21
+*//**
+* @file		lpc17xx_mcpwm.h
+* @brief	Contains all macro definitions and function prototypes
+* 			support for Motor Control PWM firmware library on LPC17xx
+* @version	2.0
+* @date		21. May. 2010
+* @author	NXP MCU SW Application Team
+*
+* Copyright(C) 2010, NXP Semiconductor
+* All rights reserved.
+*
+***********************************************************************
+* Software that is described herein is for illustrative purposes only
+* which provides customers with programming information regarding the
+* products. This software is supplied "AS IS" without any warranties.
+* NXP Semiconductors assumes no responsibility or liability for the
+* use of the software, conveys no license or title under any patent,
+* copyright, or mask work right to the product. NXP Semiconductors
+* reserves the right to make changes in the software without
+* notification. NXP Semiconductors also make no representation or
+* warranty that such application will be suitable for the specified
+* use without further testing or modification.
+**********************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @defgroup MCPWM MCPWM
@@ -105,11 +111,11 @@ extern "C"
  * - MCPWM Control set address
  * - MCPWM Control clear address
  */
-#define MCPWM_CON_RUN(n)		(((n>=0)&&(n<=2)) ? ((uint32_t)(1<<((n*8)+0))) : (0))		/**< Stops/starts timer channel n */
-#define MCPWM_CON_CENTER(n)		(((n>=0)&&(n<=2)) ? ((uint32_t)(1<<((n*8)+1))) : (0))		/**< Edge/center aligned operation for channel n */
-#define MCPWM_CON_POLAR(n)		(((n>=0)&&(n<=2)) ? ((uint32_t)(1<<((n*8)+2))) : (0))		/**< Select polarity of the MCOAn and MCOBn pin */
-#define MCPWM_CON_DTE(n)		(((n>=0)&&(n<=2)) ? ((uint32_t)(1<<((n*8)+3))) : (0))		/**< Control the dead-time feature for channel n */
-#define MCPWM_CON_DISUP(n)		(((n>=0)&&(n<=2)) ? ((uint32_t)(1<<((n*8)+4))) : (0))		/**< Enable/Disable update of functional register for channel n */
+#define MCPWM_CON_RUN(n)		((n<=2) ? ((uint32_t)(1<<((n*8)+0))) : (0))		/**< Stops/starts timer channel n */
+#define MCPWM_CON_CENTER(n)		((n<=2) ? ((uint32_t)(1<<((n*8)+1))) : (0))		/**< Edge/center aligned operation for channel n */
+#define MCPWM_CON_POLAR(n)		((n<=2) ? ((uint32_t)(1<<((n*8)+2))) : (0))		/**< Select polarity of the MCOAn and MCOBn pin */
+#define MCPWM_CON_DTE(n)		((n<=2) ? ((uint32_t)(1<<((n*8)+3))) : (0))		/**< Control the dead-time feature for channel n */
+#define MCPWM_CON_DISUP(n)		((n<=2) ? ((uint32_t)(1<<((n*8)+4))) : (0))		/**< Enable/Disable update of functional register for channel n */
 #define MCPWM_CON_INVBDC		((uint32_t)(1<<29))										/**< Control the polarity for all 3 channels */
 #define MCPWM_CON_ACMODE		((uint32_t)(1<<30))										/**< 3-phase AC mode select */
 #define MCPWM_CON_DCMODE		((uint32_t)(1<<31))										/**< 3-phase DC mode select */
@@ -124,13 +130,13 @@ extern "C"
  * - MCPWM Capture control clear address
  */
 /** Enables/Disable channel (cap) capture event on a rising edge on MCI(mci) */
-#define MCPWM_CAPCON_CAPMCI_RE(cap,mci)	(((cap>=0)&&(cap<=2)&&(mci>=0)&&(mci<=2)) ? ((uint32_t)(1<<((cap*6)+(mci*2)+0))) : (0))
+#define MCPWM_CAPCON_CAPMCI_RE(cap,mci)	(((cap<=2)&&(mci<=2)) ? ((uint32_t)(1<<((cap*6)+(mci*2)+0))) : (0))
 /** Enables/Disable channel (cap) capture event on a falling edge on MCI(mci) */
-#define MCPWM_CAPCON_CAPMCI_FE(cap,mci)	(((cap>=0)&&(cap<=2)&&(mci>=0)&&(mci<=2)) ? ((uint32_t)(1<<((cap*6)+(mci*2)+1))) : (0))
+#define MCPWM_CAPCON_CAPMCI_FE(cap,mci)	(((cap<=2)&&(mci<=2)) ? ((uint32_t)(1<<((cap*6)+(mci*2)+1))) : (0))
 /** TC(n) is reset by channel (n) capture event */
-#define MCPWM_CAPCON_RT(n)				(((n>=0)&&(n<=2)) ? ((uint32_t)(1<<(18+(n)))) : (0))
+#define MCPWM_CAPCON_RT(n)				((n<=2) ? ((uint32_t)(1<<(18+(n)))) : (0))
 /** Hardware noise filter: channel (n) capture events are delayed */
-#define MCPWM_CAPCON_HNFCAP(n)			(((n>=0)&&(n<=2)) ? ((uint32_t)(1<<(21+(n)))) : (0))
+#define MCPWM_CAPCON_HNFCAP(n)			((n<=2) ? ((uint32_t)(1<<(21+(n)))) : (0))
 
 /*********************************************************************//**
  * Macro defines for MCPWM Interrupt register
@@ -173,7 +179,7 @@ extern "C"
  * Macro defines for MCPWM Dead-time register
  **********************************************************************/
 /** Dead time value x for channel n */
-#define MCPWM_DT(n,x)		(((n>=0)&&(n<=2)) ? ((uint32_t)((x&0x3FF)<<(n*10))) : (0))
+#define MCPWM_DT(n,x)		((n<=2) ? ((uint32_t)((x&0x3FF)<<(n*10))) : (0))
 
 /*********************************************************************//**
  * Macro defines for MCPWM Communication Pattern register
@@ -189,7 +195,7 @@ extern "C"
  * Macro defines for MCPWM Capture clear address register
  **********************************************************************/
 /** Clear the MCCAP (n) register */
-#define MCPWM_CAPCLR_CAP(n)		(((n>=0)&&(n<=2)) ? ((uint32_t)(1<<n)) : (0))
+#define MCPWM_CAPCLR_CAP(n)		((n<=2) ? ((uint32_t)(1<<n)) : (0))
 
 
 /**

@@ -1,21 +1,27 @@
-/***********************************************************************//**
- * @file		lpc17xx_rtc.c
- * @brief		Contains all functions support for RTC firmware library on LPC17xx
- * @version		3.0
- * @date		18. June. 2010
- * @author		NXP MCU SW Application Team
- **************************************************************************
- * Software that is described herein is for illustrative purposes only
- * which provides customers with programming information regarding the
- * products. This software is supplied "AS IS" without any warranties.
- * NXP Semiconductors assumes no responsibility or liability for the
- * use of the software, conveys no license or title under any patent,
- * copyright, or mask work right to the product. NXP Semiconductors
- * reserves the right to make changes in the software without
- * notification. NXP Semiconductors also make no representation or
- * warranty that such application will be suitable for the specified
- * use without further testing or modification.
- **********************************************************************/
+/**********************************************************************
+* $Id$		lpc17xx_rtc.c				2011-06-06
+*//**
+* @file		lpc17xx_rtc.c
+* @brief	Contains all functions support for RTC firmware library on LPC17xx
+* @version	3.1
+* @date		6. June. 2011
+* @author	NXP MCU SW Application Team
+*
+* Copyright(C) 2011, NXP Semiconductor
+* All rights reserved.
+*
+***********************************************************************
+* Software that is described herein is for illustrative purposes only
+* which provides customers with programming information regarding the
+* products. This software is supplied "AS IS" without any warranties.
+* NXP Semiconductors assumes no responsibility or liability for the
+* use of the software, conveys no license or title under any patent,
+* copyright, or mask work right to the product. NXP Semiconductors
+* reserves the right to make changes in the software without
+* notification. NXP Semiconductors also make no representation or
+* warranty that such application will be suitable for the specified
+* use without further testing or modification.
+**********************************************************************/
 
 
 /* Peripheral group ----------------------------------------------------------- */
@@ -326,52 +332,52 @@ void RTC_SetTime (LPC_RTC_TypeDef *RTCx, uint32_t Timetype, uint32_t TimeValue)
 	switch ( Timetype)
 	{
 	case RTC_TIMETYPE_SECOND:
-		CHECK_PARAM(TimeValue < RTC_SECOND_MAX);
+		CHECK_PARAM(TimeValue <= RTC_SECOND_MAX);
 
 		RTCx->SEC = TimeValue & RTC_SEC_MASK;
 		break;
 
 	case RTC_TIMETYPE_MINUTE:
-		CHECK_PARAM(TimeValue < RTC_MINUTE_MAX);
+		CHECK_PARAM(TimeValue <= RTC_MINUTE_MAX);
 
 		RTCx->MIN = TimeValue & RTC_MIN_MASK;
 		break;
 
 	case RTC_TIMETYPE_HOUR:
-		CHECK_PARAM(TimeValue < RTC_HOUR_MAX);
+		CHECK_PARAM(TimeValue <= RTC_HOUR_MAX);
 
 		RTCx->HOUR = TimeValue & RTC_HOUR_MASK;
 		break;
 
 	case RTC_TIMETYPE_DAYOFWEEK:
-		CHECK_PARAM(TimeValue < RTC_DAYOFWEEK_MAX);
+		CHECK_PARAM(TimeValue <= RTC_DAYOFWEEK_MAX);
 
 		RTCx->DOW = TimeValue & RTC_DOW_MASK;
 		break;
 
 	case RTC_TIMETYPE_DAYOFMONTH:
-		CHECK_PARAM((TimeValue < RTC_DAYOFMONTH_MAX) \
-				&& (TimeValue > RTC_DAYOFMONTH_MIN));
+		CHECK_PARAM((TimeValue <= RTC_DAYOFMONTH_MAX) \
+				&& (TimeValue >= RTC_DAYOFMONTH_MIN));
 
 		RTCx->DOM = TimeValue & RTC_DOM_MASK;
 		break;
 
 	case RTC_TIMETYPE_DAYOFYEAR:
-		CHECK_PARAM((TimeValue > RTC_DAYOFYEAR_MIN) \
-				&& (TimeValue < RTC_DAYOFYEAR_MAX));
+		CHECK_PARAM((TimeValue >= RTC_DAYOFYEAR_MIN) \
+				&& (TimeValue <= RTC_DAYOFYEAR_MAX));
 
 		RTCx->DOY = TimeValue & RTC_DOY_MASK;
 		break;
 
 	case RTC_TIMETYPE_MONTH:
-		CHECK_PARAM((TimeValue > RTC_MONTH_MIN) \
-				&& (TimeValue < RTC_MONTH_MAX));
+		CHECK_PARAM((TimeValue >= RTC_MONTH_MIN) \
+				&& (TimeValue <= RTC_MONTH_MAX));
 
 		RTCx->MONTH = TimeValue & RTC_MONTH_MASK;
 		break;
 
 	case RTC_TIMETYPE_YEAR:
-		CHECK_PARAM(TimeValue < RTC_YEAR_MAX);
+		CHECK_PARAM(TimeValue <= RTC_YEAR_MAX);
 
 		RTCx->YEAR = TimeValue & RTC_YEAR_MASK;
 		break;
@@ -487,52 +493,52 @@ void RTC_SetAlarmTime (LPC_RTC_TypeDef *RTCx, uint32_t Timetype, uint32_t ALValu
 	switch (Timetype)
 	{
 	case RTC_TIMETYPE_SECOND:
-		CHECK_PARAM(ALValue < RTC_SECOND_MAX);
+		CHECK_PARAM(ALValue <= RTC_SECOND_MAX);
 
 		RTCx->ALSEC = ALValue & RTC_SEC_MASK;
 		break;
 
 	case RTC_TIMETYPE_MINUTE:
-		CHECK_PARAM(ALValue < RTC_MINUTE_MAX);
+		CHECK_PARAM(ALValue <= RTC_MINUTE_MAX);
 
 		RTCx->ALMIN = ALValue & RTC_MIN_MASK;
 		break;
 
 	case RTC_TIMETYPE_HOUR:
-		CHECK_PARAM(ALValue < RTC_HOUR_MAX);
+		CHECK_PARAM(ALValue <= RTC_HOUR_MAX);
 
 		RTCx->ALHOUR = ALValue & RTC_HOUR_MASK;
 		break;
 
 	case RTC_TIMETYPE_DAYOFWEEK:
-		CHECK_PARAM(ALValue < RTC_DAYOFWEEK_MAX);
+		CHECK_PARAM(ALValue <= RTC_DAYOFWEEK_MAX);
 
 		RTCx->ALDOW = ALValue & RTC_DOW_MASK;
 		break;
 
 	case RTC_TIMETYPE_DAYOFMONTH:
-		CHECK_PARAM((ALValue < RTC_DAYOFMONTH_MAX) \
-				&& (ALValue > RTC_DAYOFMONTH_MIN));
+		CHECK_PARAM((ALValue <= RTC_DAYOFMONTH_MAX) \
+				&& (ALValue >= RTC_DAYOFMONTH_MIN));
 
 		RTCx->ALDOM = ALValue & RTC_DOM_MASK;
 		break;
 
 	case RTC_TIMETYPE_DAYOFYEAR:
-		CHECK_PARAM((ALValue > RTC_DAYOFYEAR_MIN) \
-				&& (ALValue < RTC_DAYOFYEAR_MAX));
+		CHECK_PARAM((ALValue >= RTC_DAYOFYEAR_MIN) \
+				&& (ALValue <= RTC_DAYOFYEAR_MAX));
 
 		RTCx->ALDOY = ALValue & RTC_DOY_MASK;
 		break;
 
 	case RTC_TIMETYPE_MONTH:
-		CHECK_PARAM((ALValue > RTC_MONTH_MIN) \
-				&& (ALValue < RTC_MONTH_MAX));
+		CHECK_PARAM((ALValue >= RTC_MONTH_MIN) \
+				&& (ALValue <= RTC_MONTH_MAX));
 
 		RTCx->ALMON = ALValue & RTC_MONTH_MASK;
 		break;
 
 	case RTC_TIMETYPE_YEAR:
-		CHECK_PARAM(ALValue < RTC_YEAR_MAX);
+		CHECK_PARAM(ALValue <= RTC_YEAR_MAX);
 
 		RTCx->ALYEAR = ALValue & RTC_YEAR_MASK;
 		break;

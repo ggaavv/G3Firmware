@@ -1,21 +1,27 @@
-/***********************************************************************//**
- * @file		lpc17xx_can.c
- * @brief		Contains all functions support for CAN firmware library on LPC17xx
- * @version		3.2
- * @date		06. Dec. 2010
- * @author		NXP MCU SW Application Team
- **************************************************************************
- * Software that is described herein is for illustrative purposes only
- * which provides customers with programming information regarding the
- * products. This software is supplied "AS IS" without any warranties.
- * NXP Semiconductors assumes no responsibility or liability for the
- * use of the software, conveys no license or title under any patent,
- * copyright, or mask work right to the product. NXP Semiconductors
- * reserves the right to make changes in the software without
- * notification. NXP Semiconductors also make no representation or
- * warranty that such application will be suitable for the specified
- * use without further testing or modification.
- **********************************************************************/
+/**********************************************************************
+* $Id$		lpc17xx_can.c				2011-03-09
+*//**
+* @file		lpc17xx_can.c
+* @brief	Contains all functions support for CAN firmware library on LPC17xx
+* @version	3.3
+* @date		09. March. 2011
+* @author	NXP MCU SW Application Team
+*
+* Copyright(C) 2011, NXP Semiconductor
+* All rights reserved.
+*
+***********************************************************************
+* Software that is described herein is for illustrative purposes only
+* which provides customers with programming information regarding the
+* products. This software is supplied "AS IS" without any warranties.
+* NXP Semiconductors assumes no responsibility or liability for the
+* use of the software, conveys no license or title under any patent,
+* copyright, or mask work right to the product. NXP Semiconductors
+* reserves the right to make changes in the software without
+* notification. NXP Semiconductors also make no representation or
+* warranty that such application will be suitable for the specified
+* use without further testing or modification.
+**********************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @addtogroup CAN
@@ -222,8 +228,8 @@ CAN_ERROR CAN_SetupAFLUT(LPC_CANAF_TypeDef* CANAFx, AF_SectionDef* AFSection)
 {
 	uint8_t ctrl1,ctrl2;
 	uint8_t dis1, dis2;
-	uint16_t SID, SID_temp,i, count = 0;
-	uint32_t EID, EID_temp, entry, buf;
+	uint16_t SID, ID_temp,i, count = 0;
+	uint32_t EID, entry, buf;
 	uint16_t lowerSID, upperSID;
 	uint32_t lowerEID, upperEID;
 
@@ -257,8 +263,8 @@ CAN_ERROR CAN_SetupAFLUT(LPC_CANAF_TypeDef* CANAFx, AF_SectionDef* AFSection)
 				if(count!=0x00)
 				{
 					buf = LPC_CANAF_RAM->mask[count-1];
-					SID_temp = (buf & 0x000003FF);
-					if(SID_temp > SID)
+					ID_temp = (buf & 0xE7FF); //mask controller & identifier bits
+					if(ID_temp > ((ctrl1<<13)|SID))
 					{
 						return CAN_AF_ENTRY_ERROR;
 					}
@@ -267,12 +273,14 @@ CAN_ERROR CAN_SetupAFLUT(LPC_CANAF_TypeDef* CANAFx, AF_SectionDef* AFSection)
 				LPC_CANAF_RAM->mask[count] &= 0x0000FFFF;
 				LPC_CANAF_RAM->mask[count] |= entry;
 				CANAF_FullCAN_cnt++;
+				if(CANAF_FullCAN_cnt == AFSection->FC_NumEntry) //this is the lastest FullCAN entry
+					count++;
 			}
 			else
 			{
 				buf = LPC_CANAF_RAM->mask[count];
-				SID_temp = (buf & 0x03FF0000)>>16;
-				if(SID_temp > SID)
+				ID_temp = (buf >>16) & 0xE7FF;
+				if(ID_temp > ((ctrl1<<13)|SID))
 				{
 					return CAN_AF_ENTRY_ERROR;
 				}
@@ -310,8 +318,8 @@ CAN_ERROR CAN_SetupAFLUT(LPC_CANAF_TypeDef* CANAFx, AF_SectionDef* AFSection)
 				if(CANAF_std_cnt !=0 )
 				{
 					buf = LPC_CANAF_RAM->mask[count-1];
-					SID_temp = (buf & 0x00000FFF);
-					if(SID_temp > SID)
+					ID_temp = (buf & 0xE7FF); //mask controller & identifier bits
+					if(ID_temp > ((ctrl1<<13)|SID))
 					{
 						return CAN_AF_ENTRY_ERROR;
 					}
@@ -320,12 +328,14 @@ CAN_ERROR CAN_SetupAFLUT(LPC_CANAF_TypeDef* CANAFx, AF_SectionDef* AFSection)
 				LPC_CANAF_RAM->mask[count] &= 0x0000FFFF;
 				LPC_CANAF_RAM->mask[count] |= entry;
 				CANAF_std_cnt++;
+				if(CANAF_std_cnt == AFSection->SFF_NumEntry)//if this is the last SFF entry
+					count++;
 			}
 			else
 			{
 				buf = LPC_CANAF_RAM->mask[count];
-				SID_temp = (buf & 0x0FFF0000)>>16;
-				if(SID_temp > SID)
+				ID_temp = (buf >>16) & 0xE7FF;
+				if(ID_temp > ((ctrl1<<13)|SID))
 				{
 					return CAN_AF_ENTRY_ERROR;
 				}
@@ -367,8 +377,8 @@ CAN_ERROR CAN_SetupAFLUT(LPC_CANAF_TypeDef* CANAFx, AF_SectionDef* AFSection)
 			if(CANAF_gstd_cnt!=0)
 			{
 				buf = LPC_CANAF_RAM->mask[count-1];
-				SID_temp = buf & 0x00000FFF;
-				if(SID_temp > lowerSID)
+				ID_temp = buf & 0xE7FF;
+				if((ctrl1 != ctrl2)||(lowerSID > upperSID)||(ID_temp > ((ctrl1<<13)|lowerSID)))
 				{
 					return CAN_AF_ENTRY_ERROR;
 				}
@@ -398,17 +408,16 @@ CAN_ERROR CAN_SetupAFLUT(LPC_CANAF_TypeDef* CANAFx, AF_SectionDef* AFSection)
 			CHECK_PARAM(PARAM_ID_29(EID));
 			CHECK_PARAM(PARAM_CTRL(ctrl1));
 
-			entry = 0x00; //reset entry value
+			entry = (ctrl1 << 29)|(EID << 0);
 			if(CANAF_ext_cnt != 0)
 			{
 				buf = LPC_CANAF_RAM->mask[count-1];
-				EID_temp = buf & 0x0FFFFFFF;
-				if(EID_temp > EID)
+//				EID_temp = buf & 0x0FFFFFFF;
+				if(buf > entry)
 				{
 					return CAN_AF_ENTRY_ERROR;
 				}
 			}
-			entry = (ctrl1 << 29)|(EID << 0);
 			LPC_CANAF_RAM->mask[count] = entry;
 			CANAF_ext_cnt ++;
 			count++;
@@ -440,8 +449,8 @@ CAN_ERROR CAN_SetupAFLUT(LPC_CANAF_TypeDef* CANAFx, AF_SectionDef* AFSection)
 			if(CANAF_gext_cnt != 0)
 			{
 				buf = LPC_CANAF_RAM->mask[count-1];
-				EID_temp = buf & 0x0FFFFFFF;
-				if(EID_temp > lowerEID)
+//				EID_temp = buf & 0x0FFFFFFF;
+				if((ctrl1 != ctrl2) || (lowerEID > upperEID) || (buf > ((ctrl1 << 29)|(lowerEID << 0))))
 				{
 					return CAN_AF_ENTRY_ERROR;
 				}
@@ -545,7 +554,7 @@ CAN_ERROR CAN_LoadExplicitEntry(LPC_CAN_TypeDef* CANx, uint32_t id, CAN_ID_FORMA
 		{
 			cnt2 = (CANAF_FullCAN_cnt + 1)>>1;
 			/* For entering second ID */
-			if ((LPC_CANAF_RAM->mask[cnt2] >> 16) > id)
+			if (((LPC_CANAF_RAM->mask[cnt2] >> 16)& 0xE7FF) > id)
 			{
 				LPC_CANAF_RAM->mask[cnt2] = (LPC_CANAF_RAM->mask[cnt2] >> 16) | (id << 16);
 			}
@@ -563,13 +572,13 @@ CAN_ERROR CAN_LoadExplicitEntry(LPC_CAN_TypeDef* CANx, uint32_t id, CAN_ID_FORMA
 			while (cnt1 < bound1)
 			{
 				/* Loop through standard existing IDs */
-				if ((LPC_CANAF_RAM->mask[cnt1] >> 16) > id)
+				if (((LPC_CANAF_RAM->mask[cnt1] >> 16) & 0xE7FF) > id)
 				{
 					cnt2 = cnt1 * 2;
 					break;
 				}
 
-				if ((LPC_CANAF_RAM->mask[cnt1] & 0x0000FFFF) > id)
+				if ((LPC_CANAF_RAM->mask[cnt1] & 0x0000E7FF) > id)
 				{
 					cnt2 = cnt1 * 2 + 1;
 					break;
@@ -700,6 +709,7 @@ CAN_ERROR CAN_LoadFullCANEntry (LPC_CAN_TypeDef* CANx, uint16_t id)
 	uint32_t buf0=0, buf1=0, buf2=0;
 	uint32_t tmp0=0, tmp1=0, tmp2=0;
 	int16_t cnt1=0, cnt2=0, bound1=0, total=0;
+	uint32_t abc;
 
 	CHECK_PARAM(PARAM_CANx(CANx));
 
@@ -752,7 +762,7 @@ CAN_ERROR CAN_LoadFullCANEntry (LPC_CAN_TypeDef* CANx, uint16_t id)
 	else if (CANAF_FullCAN_cnt == 1)
 	{
 		/* For entering second ID */
-		if ((LPC_CANAF_RAM->mask[0] >> 16) > id)
+		if (((LPC_CANAF_RAM->mask[0] >> 16)& 0xE7FF) > id)
 		{
 			LPC_CANAF_RAM->mask[0] = (LPC_CANAF_RAM->mask[0] >> 16) | (id << 16);
 		}
@@ -769,14 +779,16 @@ CAN_ERROR CAN_LoadFullCANEntry (LPC_CAN_TypeDef* CANx, uint16_t id)
 		bound1 = (CANAF_FullCAN_cnt - 1) >> 1;
 		while (cnt1 <= bound1)
 		{
+			abc = (LPC_CANAF_RAM->mask[cnt1] >> 16)& 0xE7FF;
 			/* Loop through standard existing IDs */
-			if ((LPC_CANAF_RAM->mask[cnt1] >> 16) > id)
+			if (((LPC_CANAF_RAM->mask[cnt1] >> 16) & 0xE7FF) > (id & 0xE7FF))
 			{
 				cnt2 = cnt1 * 2;
 				break;
 			}
 
-			if ((LPC_CANAF_RAM->mask[cnt1] & 0x0000FFFF) > id)
+			abc = LPC_CANAF_RAM->mask[cnt1] & 0x0000E7FF;
+			if ((LPC_CANAF_RAM->mask[cnt1] & 0x0000E7FF) > (id & 0xE7FF))
 			{
 				cnt2 = cnt1 * 2 + 1;
 				break;
@@ -886,6 +898,7 @@ CAN_ERROR CAN_LoadGroupEntry(LPC_CAN_TypeDef* CANx, uint32_t lowerID, \
 	uint16_t tmp = 0;
 	uint32_t buf0, buf1, entry1, entry2, LID,UID;
 	int16_t cnt1, bound1, total;
+	//LPC_CANAF_RAM_TypeDef *AFLUTTest = LPC_CANAF_RAM;
 
 	CHECK_PARAM(PARAM_CANx(CANx));
 	CHECK_PARAM(PARAM_ID_FORMAT(format));
@@ -929,22 +942,34 @@ CAN_ERROR CAN_LoadGroupEntry(LPC_CAN_TypeDef* CANx, uint32_t lowerID, \
 			bound1 = ((CANAF_FullCAN_cnt+1)>>1) + ((CANAF_std_cnt + 1) >> 1) + CANAF_gstd_cnt;
 			while(cnt1 < bound1)
 			{
+				//compare controller first
+				while((LPC_CANAF_RAM->mask[cnt1] >> 29)< (entry1 >> 29))//increase until meet greater or equal controller
+					cnt1++;
 				buf0 = LPC_CANAF_RAM->mask[cnt1];
-				LID  = (buf0 >> 16)&0x7FF;
-				UID  = buf0 & 0x7FF;
-				if (upperID <= LID)
+				if((LPC_CANAF_RAM->mask[cnt1] >> 29)> (entry1 >> 29)) //meet greater controller
 				{
-					//add new entry before this entry
+					//add at this position
 					LPC_CANAF_RAM->mask[cnt1] = entry1;
 					break;
 				}
-				else if (lowerID >= UID)
+				else //meet equal controller
 				{
-					//load next entry to compare
-					cnt1 ++;
+					LID  = (buf0 >> 16)&0x7FF;
+					UID  = buf0 & 0x7FF;
+					if (upperID <= LID)
+					{
+						//add new entry before this entry
+						LPC_CANAF_RAM->mask[cnt1] = entry1;
+						break;
+					}
+					else if (lowerID >= UID)
+					{
+						//load next entry to compare
+						cnt1 ++;
+					}
+					else
+						return CAN_CONFLICT_ID_ERROR;
 				}
-				else
-					return CAN_CONFLICT_ID_ERROR;
 			}
 			if(cnt1 >= bound1)
 			{
@@ -996,24 +1021,36 @@ CAN_ERROR CAN_LoadGroupEntry(LPC_CAN_TypeDef* CANx, uint32_t lowerID, \
 						+ CANAF_ext_cnt + (CANAF_gext_cnt<<1);
 			while(cnt1 < bound1)
 			{
+				while((LPC_CANAF_RAM->mask[cnt1] >>29)< tmp) //increase until meet greater or equal controller
+					cnt1++;
 				buf0 = LPC_CANAF_RAM->mask[cnt1];
 				buf1 = LPC_CANAF_RAM->mask[cnt1+1];
-				LID  = buf0 & 0x1FFFFFFF; //mask ID
-				UID  = buf1 & 0x1FFFFFFF;
-				if (upperID <= LID)
+				if((LPC_CANAF_RAM->mask[cnt1] >> 29)> (entry1 >> 29)) //meet greater controller
 				{
-					//add new entry before this entry
+					//add at this position
 					LPC_CANAF_RAM->mask[cnt1] = entry1;
 					LPC_CANAF_RAM->mask[++cnt1] = entry2;
 					break;
 				}
-				else if (lowerID >= UID)
+				else //meet equal controller
 				{
-					//load next entry to compare
-					cnt1 +=2;
+					LID  = buf0 & 0x1FFFFFFF; //mask ID
+					UID  = buf1 & 0x1FFFFFFF;
+					if (upperID <= LID)
+					{
+						//add new entry before this entry
+						LPC_CANAF_RAM->mask[cnt1] = entry1;
+						LPC_CANAF_RAM->mask[++cnt1] = entry2;
+						break;
+					}
+					else if (lowerID >= UID)
+					{
+						//load next entry to compare
+						cnt1 +=2;
+					}
+					else
+						return CAN_CONFLICT_ID_ERROR;
 				}
-				else
-					return CAN_CONFLICT_ID_ERROR;
 			}
 			if(cnt1 >= bound1)
 			{

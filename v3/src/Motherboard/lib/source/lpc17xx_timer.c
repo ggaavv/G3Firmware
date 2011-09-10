@@ -1,21 +1,28 @@
-/***********************************************************************//**
- * @file		lpc17xx_timer.c
- * @brief		Contains all functions support for Timer firmware library on LPC17xx
- * @version		3.0
- * @date		18. June. 2010
- * @author		NXP MCU SW Application Team
- **************************************************************************
- * Software that is described herein is for illustrative purposes only
- * which provides customers with programming information regarding the
- * products. This software is supplied "AS IS" without any warranties.
- * NXP Semiconductors assumes no responsibility or liability for the
- * use of the software, conveys no license or title under any patent,
- * copyright, or mask work right to the product. NXP Semiconductors
- * reserves the right to make changes in the software without
- * notification. NXP Semiconductors also make no representation or
- * warranty that such application will be suitable for the specified
- * use without further testing or modification.
- **********************************************************************/
+/**********************************************************************
+* $Id$		lpc17xx_timer.c				2011-03-10
+*//**
+* @file		lpc17xx_timer.c
+* @brief	Contains all functions support for Timer firmware library
+* 			on LPC17xx
+* @version	3.1
+* @date		10. March. 2011
+* @author	NXP MCU SW Application Team
+*
+* Copyright(C) 2011, NXP Semiconductor
+* All rights reserved.
+*
+***********************************************************************
+* Software that is described herein is for illustrative purposes only
+* which provides customers with programming information regarding the
+* products. This software is supplied "AS IS" without any warranties.
+* NXP Semiconductors assumes no responsibility or liability for the
+* use of the software, conveys no license or title under any patent,
+* copyright, or mask work right to the product. NXP Semiconductors
+* reserves the right to make changes in the software without
+* notification. NXP Semiconductors also make no representation or
+* warranty that such application will be suitable for the specified
+* use without further testing or modification.
+**********************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @addtogroup TIM
@@ -213,7 +220,7 @@ void TIM_ClearIntPending(LPC_TIM_TypeDef *TIMx, TIM_INT_TYPE IntFlag)
 {
 	CHECK_PARAM(PARAM_TIMx(TIMx));
 	CHECK_PARAM(PARAM_TIM_INT_TYPE(IntFlag));
-	TIMx->IR |= TIM_IR_CLR(IntFlag);
+	TIMx->IR = TIM_IR_CLR(IntFlag);
 }
 
 /*********************************************************************//**
@@ -236,7 +243,7 @@ void TIM_ClearIntCapturePending(LPC_TIM_TypeDef *TIMx, TIM_INT_TYPE IntFlag)
 {
 	CHECK_PARAM(PARAM_TIMx(TIMx));
 	CHECK_PARAM(PARAM_TIM_INT_TYPE(IntFlag));
-	TIMx->IR |= (1<<(4+IntFlag));
+	TIMx->IR = (1<<(4+IntFlag));
 }
 
 /*********************************************************************//**
@@ -293,14 +300,17 @@ void TIM_Init(LPC_TIM_TypeDef *TIMx, TIM_MODE_OPT TimerCounterMode, void *TIM_Co
 	CHECK_PARAM(PARAM_TIM_MODE_OPT(TimerCounterMode));
 
 	//set power
+
 	if (TIMx== LPC_TIM0)
 	{
 		CLKPWR_ConfigPPWR (CLKPWR_PCONP_PCTIM0, ENABLE);
+		//PCLK_Timer0 = CCLK/4
 		CLKPWR_SetPCLKDiv (CLKPWR_PCLKSEL_TIMER0, CLKPWR_PCLKSEL_CCLK_DIV_4);
 	}
 	else if (TIMx== LPC_TIM1)
 	{
 		CLKPWR_ConfigPPWR (CLKPWR_PCONP_PCTIM1, ENABLE);
+		//PCLK_Timer1 = CCLK/4
 		CLKPWR_SetPCLKDiv (CLKPWR_PCLKSEL_TIMER1, CLKPWR_PCLKSEL_CCLK_DIV_4);
 
 	}
@@ -308,11 +318,13 @@ void TIM_Init(LPC_TIM_TypeDef *TIMx, TIM_MODE_OPT TimerCounterMode, void *TIM_Co
 	else if (TIMx== LPC_TIM2)
 	{
 		CLKPWR_ConfigPPWR (CLKPWR_PCONP_PCTIM2, ENABLE);
+		//PCLK_Timer2= CCLK/4
 		CLKPWR_SetPCLKDiv (CLKPWR_PCLKSEL_TIMER2, CLKPWR_PCLKSEL_CCLK_DIV_4);
 	}
 	else if (TIMx== LPC_TIM3)
 	{
 		CLKPWR_ConfigPPWR (CLKPWR_PCONP_PCTIM3, ENABLE);
+		//PCLK_Timer3= CCLK/4
 		CLKPWR_SetPCLKDiv (CLKPWR_PCLKSEL_TIMER3, CLKPWR_PCLKSEL_CCLK_DIV_4);
 
 	}

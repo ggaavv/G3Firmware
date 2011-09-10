@@ -1,21 +1,27 @@
-/***********************************************************************//**
- * @file		debug_frmwrk.c
- * @brief		Contains some utilities that used for debugging through UART
- * @version		2.0
- * @date		21. May. 2010
- * @author		NXP MCU SW Application Team
- *----------------------------------------------------------------------------
- * Software that is described herein is for illustrative purposes only
- * which provides customers with programming information regarding the
- * products. This software is supplied "AS IS" without any warranties.
- * NXP Semiconductors assumes no responsibility or liability for the
- * use of the software, conveys no license or title under any patent,
- * copyright, or mask work right to the product. NXP Semiconductors
- * reserves the right to make changes in the software without
- * notification. NXP Semiconductors also make no representation or
- * warranty that such application will be suitable for the specified
- * use without further testing or modification.
- **********************************************************************/
+/**********************************************************************
+* $Id$		debug_frmwrk.c				2010-05-21
+*//**
+* @file		debug_frmwrk.c
+* @brief	Contains some utilities that used for debugging through UART
+* @version	2.0
+* @date		21. May. 2010
+* @author	NXP MCU SW Application Team
+*
+* Copyright(C) 2010, NXP Semiconductor
+* All rights reserved.
+*
+***********************************************************************
+* Software that is described herein is for illustrative purposes only
+* which provides customers with programming information regarding the
+* products. This software is supplied "AS IS" without any warranties.
+* NXP Semiconductors assumes no responsibility or liability for the
+* use of the software, conveys no license or title under any patent,
+* copyright, or mask work right to the product. NXP Semiconductors
+* reserves the right to make changes in the software without
+* notification. NXP Semiconductors also make no representation or
+* warranty that such application will be suitable for the specified
+* use without further testing or modification.
+**********************************************************************/
 
 #include "debug_frmwrk.h"
 #include "lpc17xx_pinsel.h"
@@ -261,7 +267,7 @@ void debug_frmwrk_init(void)
 	PINSEL_ConfigPin(&PinCfg);
 	PinCfg.Pinnum = 3;
 	PINSEL_ConfigPin(&PinCfg);
-#elif (USED_UART_DEBUG_PORT==1)
+#elif #if (USED_UART_DEBUG_PORT==1)
 	/*
 	 * Initialize UART1 pin connect
 	 */
@@ -303,3 +309,6 @@ void debug_frmwrk_init(void)
 	_db_get_char = UARTGetChar;
 }
 #endif /*_DBGFWK */
+
+
+/* --------------------------------- End Of File ------------------------------ */

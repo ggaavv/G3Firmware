@@ -284,9 +284,9 @@
 #define PLL0_SETUP            1
 #define PLL0CFG_Val           0x00000008
 #define PLL1_SETUP            1
-#define PLL1CFG_Val           0x00000023
-#define CCLKCFG_Val           0x00000002
-#define USBCLKCFG_Val         0x00000005
+#define PLL1CFG_Val           0x00000022
+#define CCLKCFG_Val           0x00000003
+#define USBCLKCFG_Val         0x00000000
 #define PCLKSEL0_Val          0x00000000
 #define PCLKSEL1_Val          0x00000000
 #define PCONP_Val             0x842887DE
@@ -348,7 +348,7 @@
    #error "PLL1CFG: Invalid values of reserved bits!"
 #endif
 
-#if ((CCLKCFG_Val != 0) && (((CCLKCFG_Val - 1) % 1)))
+#if ((CCLKCFG_Val != 0) && (((CCLKCFG_Val - 1) % 2)))
    #error "CCLKCFG: CCLKSEL field does not contain only odd values or 0!"
 #endif
 
@@ -385,7 +385,7 @@
 /*----------------------------------------------------------------------------
   Define clocks
  *----------------------------------------------------------------------------*/
-#define XTAL        (12000000UL)        /* Oscillator frequency               */
+#define XTAL        (16000000UL)        /* Oscillator frequency               */
 #define OSC_CLK     (      XTAL)        /* Main oscillator frequency          */
 #define RTC_CLK     (   32000UL)        /* RTC oscillator frequency           */
 #define IRC_OSC     ( 4000000UL)        /* Internal RC oscillator frequency   */

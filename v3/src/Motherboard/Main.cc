@@ -38,6 +38,7 @@ extern "C" {
 #include "EepromMap.hh"
 #include "Main.hh"
 #include "Delay_ms.hh"
+#include "test.hh"  // testing
 
 /*----------------------------------------------------------------------------
   reset
@@ -75,7 +76,7 @@ void reset(bool hard_reset) {
   MAIN function
  *----------------------------------------------------------------------------*/
 int main (void) {
-
+	test_uart(); //testing
 	Motherboard& board = Motherboard::getBoard();
 	steppers::init(Motherboard::getBoard());
 	reset(true);
