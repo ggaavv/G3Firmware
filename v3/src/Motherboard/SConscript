@@ -93,8 +93,8 @@ codesourcery_path = 'C:/PROGRA~2/CodeSourcery/SOURCE~1/bin'
 
 OBJECTS = 'startup_LPC17xx.o core_cm3.o system_LPC17xx.o main_LPC17xx.o'
 LSCRIPT = '/src/Motherboard/system/ldscript_rom_gnu.ld'
-optimization='0'
-DEBUG = '-g'
+optimization='3'
+DEBUG = '-g0'
 #LISTING = -ahls
 
 print Dir('.').abspath

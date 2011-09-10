@@ -1,21 +1,28 @@
-/***********************************************************************//**
- * @file		lpc17xx_gpio.c
- * @brief		Contains all functions support for GPIO firmware library on LPC17xx
- * @version		2.0
- * @date		21. May. 2010
- * @author		NXP MCU SW Application Team
- **************************************************************************
- * Software that is described herein is for illustrative purposes only
- * which provides customers with programming information regarding the
- * products. This software is supplied "AS IS" without any warranties.
- * NXP Semiconductors assumes no responsibility or liability for the
- * use of the software, conveys no license or title under any patent,
- * copyright, or mask work right to the product. NXP Semiconductors
- * reserves the right to make changes in the software without
- * notification. NXP Semiconductors also make no representation or
- * warranty that such application will be suitable for the specified
- * use without further testing or modification.
- **********************************************************************/
+/**********************************************************************
+* $Id$		lpc17xx_gpio.c				2010-05-21
+*//**
+* @file		lpc17xx_gpio.c
+* @brief	Contains all functions support for GPIO firmware
+* 			library on LPC17xx
+* @version	2.0
+* @date		21. May. 2010
+* @author	NXP MCU SW Application Team
+*
+* Copyright(C) 2010, NXP Semiconductor
+* All rights reserved.
+*
+***********************************************************************
+* Software that is described herein is for illustrative purposes only
+* which provides customers with programming information regarding the
+* products. This software is supplied "AS IS" without any warranties.
+* NXP Semiconductors assumes no responsibility or liability for the
+* use of the software, conveys no license or title under any patent,
+* copyright, or mask work right to the product. NXP Semiconductors
+* reserves the right to make changes in the software without
+* notification. NXP Semiconductors also make no representation or
+* warranty that such application will be suitable for the specified
+* use without further testing or modification.
+**********************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @addtogroup GPIO
@@ -290,13 +297,13 @@ void GPIO_IntCmd(uint8_t portNum, uint32_t bitValue, uint8_t edgeState)
 FunctionalState GPIO_GetIntStatus(uint8_t portNum, uint32_t pinNum, uint8_t edgeState)
 {
 	if((portNum == 0) && (edgeState == 0))//Rising Edge
-		return (((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1);
+		return ((FunctionalState)(((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1));
 	else if ((portNum == 2) && (edgeState == 0))
-		return (((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1);
+		return ((FunctionalState)(((LPC_GPIOINT->IO2IntStatR)>>pinNum)& 0x1));
 	else if ((portNum == 0) && (edgeState == 1))//Falling Edge
-		return (((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1);
+		return ((FunctionalState)(((LPC_GPIOINT->IO0IntStatF)>>pinNum)& 0x1));
 	else if ((portNum == 2) && (edgeState == 1))
-		return (((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1);
+		return ((FunctionalState)(((LPC_GPIOINT->IO2IntStatF)>>pinNum)& 0x1));
 	else
 		//Error
 		while(1);
@@ -614,13 +621,13 @@ void FIO_ByteSetDir(uint8_t portNum, uint8_t byteNum, uint8_t bitValue, uint8_t 
 	if(pFIO != NULL) {
 		// Output direction
 		if (dir) {
-			if ((byteNum >= 0) && (byteNum <= 3)) {
+			if (byteNum <= 3) {
 				pFIO->FIODIR[byteNum] |= bitValue;
 			}
 		}
 		// Input direction
 		else {
-			if ((byteNum >= 0) && (byteNum <= 3)) {
+			if (byteNum <= 3) {
 				pFIO->FIODIR[byteNum] &= ~bitValue;
 			}
 		}
@@ -652,13 +659,13 @@ void FIO_ByteSetMask(uint8_t portNum, uint8_t byteNum, uint8_t bitValue, uint8_t
 	if(pFIO != NULL) {
 		// Mask
 		if (maskValue) {
-			if ((byteNum >= 0) && (byteNum <= 3)) {
+			if (byteNum <= 3) {
 				pFIO->FIOMASK[byteNum] |= bitValue;
 			}
 		}
 		// Un-mask
 		else {
-			if ((byteNum >= 0) && (byteNum <= 3)) {
+			if (byteNum <= 3) {
 				pFIO->FIOMASK[byteNum] &= ~bitValue;
 			}
 		}
@@ -684,7 +691,7 @@ void FIO_ByteSetValue(uint8_t portNum, uint8_t byteNum, uint8_t bitValue)
 {
 	GPIO_Byte_TypeDef *pFIO = FIO_ByteGetPointer(portNum);
 	if (pFIO != NULL) {
-		if ((byteNum >= 0) && (byteNum <= 3)){
+		if (byteNum <= 3){
 			pFIO->FIOSET[byteNum] = bitValue;
 		}
 	}
@@ -709,7 +716,7 @@ void FIO_ByteClearValue(uint8_t portNum, uint8_t byteNum, uint8_t bitValue)
 {
 	GPIO_Byte_TypeDef *pFIO = FIO_ByteGetPointer(portNum);
 	if (pFIO != NULL) {
-		if ((byteNum >= 0) && (byteNum <= 3)){
+		if (byteNum <= 3){
 			pFIO->FIOCLR[byteNum] = bitValue;
 		}
 	}
@@ -729,7 +736,7 @@ uint8_t FIO_ByteReadValue(uint8_t portNum, uint8_t byteNum)
 {
 	GPIO_Byte_TypeDef *pFIO = FIO_ByteGetPointer(portNum);
 	if (pFIO != NULL) {
-		if ((byteNum >= 0) && (byteNum <= 3)){
+		if (byteNum <= 3){
 			return (pFIO->FIOPIN[byteNum]);
 		}
 	}

@@ -1,21 +1,28 @@
-/***********************************************************************//**
- * @file		lpc17xx_i2c.c
- * @brief		Contains all functions support for I2C firmware library on LPC17xx
- * @version		2.0
- * @date		21. May. 2010
- * @author		NXP MCU SW Application Team
- **************************************************************************
- * Software that is described herein is for illustrative purposes only
- * which provides customers with programming information regarding the
- * products. This software is supplied "AS IS" without any warranties.
- * NXP Semiconductors assumes no responsibility or liability for the
- * use of the software, conveys no license or title under any patent,
- * copyright, or mask work right to the product. NXP Semiconductors
- * reserves the right to make changes in the software without
- * notification. NXP Semiconductors also make no representation or
- * warranty that such application will be suitable for the specified
- * use without further testing or modification.
- **********************************************************************/
+/**********************************************************************
+* $Id$		lpc17xx_gpio.c				2011-03-31
+*//**
+* @file		lpc17xx_gpio.c
+* @brief	Contains all functions support for I2C firmware
+* 			library on LPC17xx
+* @version	2.1
+* @date		31. Mar. 2011
+* @author	NXP MCU SW Application Team
+*
+* Copyright(C) 2010, NXP Semiconductor
+* All rights reserved.
+*
+***********************************************************************
+* Software that is described herein is for illustrative purposes only
+* which provides customers with programming information regarding the
+* products. This software is supplied "AS IS" without any warranties.
+* NXP Semiconductors assumes no responsibility or liability for the
+* use of the software, conveys no license or title under any patent,
+* copyright, or mask work right to the product. NXP Semiconductors
+* reserves the right to make changes in the software without
+* notification. NXP Semiconductors also make no representation or
+* warranty that such application will be suitable for the specified
+* use without further testing or modification.
+**********************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @addtogroup I2C
@@ -121,8 +128,8 @@ static int32_t I2C_getNum(LPC_I2C_TypeDef *I2Cx){
  *********************************************************************/
 static uint32_t I2C_Start (LPC_I2C_TypeDef *I2Cx)
 {
-	I2Cx->I2CONCLR = I2C_I2CONCLR_SIC;
 	I2Cx->I2CONSET = I2C_I2CONSET_STA;
+	I2Cx->I2CONCLR = I2C_I2CONCLR_SIC;
 
 	// Wait for complete
 	while (!(I2Cx->I2CONSET & I2C_I2CONSET_SI));
@@ -691,7 +698,7 @@ void I2C_SlaveHandler (LPC_I2C_TypeDef  *I2Cx)
 		while(1){
 			if (I2Cx->I2CONSET & I2C_I2CONSET_SI){
 				// re-Enable interrupt
-				I2C_IntCmd(I2Cx, TRUE);
+				I2C_IntCmd(I2Cx, 1);
 				break;
 			} else {
 				timeout--;

@@ -299,9 +299,9 @@
 #define PLL0_SETUP            1
 #define PLL0CFG_Val           0x00000008
 #define PLL1_SETUP            1
-#define PLL1CFG_Val           0x00000023
+#define PLL1CFG_Val           0x00000022
 #define CCLKCFG_Val           0x00000002
-#define USBCLKCFG_Val         0x00000005
+#define USBCLKCFG_Val         0x00000000
 #define PCLKSEL0_Val          0x00000000
 #define PCLKSEL1_Val          0x00000000
 #define PCONP_Val             0x042887DE
@@ -351,7 +351,7 @@
    #error "PLL1CFG: Invalid values of reserved bits!"
 #endif
 
-#if ((CCLKCFG_Val != 0) && (((CCLKCFG_Val - 1) % 1)))  // change from 2 - no reason why this should only be multiples of 2
+#if ((CCLKCFG_Val != 0) && (((CCLKCFG_Val - 1) % 1)))
    #error "CCLKCFG: CCLKSEL field does not contain only odd values or 0!"
 #endif
 
