@@ -49,21 +49,22 @@ enum step_dev {
 		High 	High 	Low 	Eighth step
 		High 	High 	High 	Sixteenth step	*/
 
-bool X_MS1 = 1;
-bool X_MS2 = 1;
-bool X_MS3 = 1;
-bool Y_MS1 = 1;
-bool Y_MS2 = 1;
-bool Y_MS3 = 1;
-bool Z_MS1 = 1;
-bool Z_MS2 = 1;
-bool Z_MS3 = 1;
-bool A_MS1 = 1;
-bool A_MS2 = 1;
-bool A_MS3 = 1;
-bool B_MS1 = 1;
-bool B_MS2 = 1;
-bool B_MS3 = 1;
+#define X_MS1 1
+#define X_MS2 1
+#define X_MS3 1
+#define Y_MS1 1
+#define Y_MS2 1
+#define Y_MS3 1
+#define Z_MS1 1
+#define Z_MS2 1
+#define Z_MS3 1
+#define A_MS1 1
+#define A_MS2 1
+#define A_MS3 1
+#define B_MS1 1
+#define B_MS2 1
+#define B_MS3 1
+
 
 uint8_t microstep_port_array [STEPPER_COUNT][3][3] = {
 			//	port no MS1		port no MS2		port no MS3

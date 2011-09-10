@@ -1,28 +1,22 @@
-/**********************************************************************
-* $Id$		lpc17xx_rtc.h				2010-05-21
-*//**
-* @file		lpc17xx_rtc.h
-* @brief	Contains all macro definitions and function prototypes
-* 			support for RTC firmware library on LPC17xx
-* @version	2.0
-* @date		21. May. 2010
-* @author	NXP MCU SW Application Team
-*
-* Copyright(C) 2010, NXP Semiconductor
-* All rights reserved.
-*
-***********************************************************************
-* Software that is described herein is for illustrative purposes only
-* which provides customers with programming information regarding the
-* products. This software is supplied "AS IS" without any warranties.
-* NXP Semiconductors assumes no responsibility or liability for the
-* use of the software, conveys no license or title under any patent,
-* copyright, or mask work right to the product. NXP Semiconductors
-* reserves the right to make changes in the software without
-* notification. NXP Semiconductors also make no representation or
-* warranty that such application will be suitable for the specified
-* use without further testing or modification.
-**********************************************************************/
+/***********************************************************************//**
+ * @file		lpc17xx_rtc.h
+ * @brief		Contains all macro definitions and function prototypes
+ * 				support for RTC firmware library on LPC17xx
+ * @version		2.0
+ * @date		21. May. 2010
+ * @author		NXP MCU SW Application Team
+ **************************************************************************
+ * Software that is described herein is for illustrative purposes only
+ * which provides customers with programming information regarding the
+ * products. This software is supplied "AS IS" without any warranties.
+ * NXP Semiconductors assumes no responsibility or liability for the
+ * use of the software, conveys no license or title under any patent,
+ * copyright, or mask work right to the product. NXP Semiconductors
+ * reserves the right to make changes in the software without
+ * notification. NXP Semiconductors also make no representation or
+ * warranty that such application will be suitable for the specified
+ * use without further testing or modification.
+ **************************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @defgroup RTC RTC
@@ -241,7 +235,7 @@ typedef struct {
 /** @brief RTC interrupt source */
 typedef enum {
 	RTC_INT_COUNTER_INCREASE = RTC_IRL_RTCCIF, 	/*!<  Counter Increment Interrupt */
-	RTC_INT_ALARM = RTC_IRL_RTCALF 				/*!< The alarm interrupt */
+	RTC_INT_ALARM = RTC_IRL_RTCALF, 				/*!< The alarm interrupt */
 } RTC_INT_OPT;
 
 
@@ -254,7 +248,7 @@ typedef enum {
 	RTC_TIMETYPE_DAYOFMONTH = 4, 	/*!< Day of month */
 	RTC_TIMETYPE_DAYOFYEAR = 5, 	/*!< Day of year */
 	RTC_TIMETYPE_MONTH = 6, 		/*!< Month */
-	RTC_TIMETYPE_YEAR = 7 			/*!< Year */
+	RTC_TIMETYPE_YEAR = 7, 			/*!< Year */
 } RTC_TIMETYPE_Num;
 
 /**

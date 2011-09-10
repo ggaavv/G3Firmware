@@ -1,28 +1,21 @@
-/**********************************************************************
-* $Id$		lpc17xx_gpdma.c				2010-03-21
-*//**
-* @file		lpc17xx_gpdma.c
-* @brief	Contains all functions support for GPDMA firmware
-* 			library on LPC17xx
-* @version	2.0
-* @date		21. May. 2010
-* @author	NXP MCU SW Application Team
-*
-* Copyright(C) 2010, NXP Semiconductor
-* All rights reserved.
-*
-***********************************************************************
-* Software that is described herein is for illustrative purposes only
-* which provides customers with programming information regarding the
-* products. This software is supplied "AS IS" without any warranties.
-* NXP Semiconductors assumes no responsibility or liability for the
-* use of the software, conveys no license or title under any patent,
-* copyright, or mask work right to the product. NXP Semiconductors
-* reserves the right to make changes in the software without
-* notification. NXP Semiconductors also make no representation or
-* warranty that such application will be suitable for the specified
-* use without further testing or modification.
-**********************************************************************/
+/***********************************************************************//**
+ * @file		lpc17xx_gpdma.c
+ * @brief		Contains all functions support for GPDMA firmware library on LPC17xx
+ * @version		2.0
+ * @date		21. May. 2010
+ * @author		NXP MCU SW Application Team
+ **************************************************************************
+ * Software that is described herein is for illustrative purposes only
+ * which provides customers with programming information regarding the
+ * products. This software is supplied "AS IS" without any warranties.
+ * NXP Semiconductors assumes no responsibility or liability for the
+ * use of the software, conveys no license or title under any patent,
+ * copyright, or mask work right to the product. NXP Semiconductors
+ * reserves the right to make changes in the software without
+ * notification. NXP Semiconductors also make no representation or
+ * warranty that such application will be suitable for the specified
+ * use without further testing or modification.
+ **********************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @addtogroup GPDMA
@@ -80,7 +73,7 @@ volatile const void *GPDMA_LUTPerAddr[] = {
 		(&LPC_TIM2->MR0),				// MAT2.0
 		(&LPC_TIM2->MR1),				// MAT2.1
 		(&LPC_TIM3->MR0),				// MAT3.0
-		(&LPC_TIM3->MR1)				// MAT3.1
+		(&LPC_TIM3->MR1),				// MAT3.1
 };
 #else
 const uint32_t GPDMA_LUTPerAddr[] = {
@@ -107,7 +100,7 @@ const uint32_t GPDMA_LUTPerAddr[] = {
 		((uint32_t)&LPC_TIM2->MR0),				// MAT2.0
 		((uint32_t)&LPC_TIM2->MR1),				// MAT2.1
 		((uint32_t)&LPC_TIM3->MR0),				// MAT3.0
-		((uint32_t)&LPC_TIM3->MR1)				// MAT3.1
+		((uint32_t)&LPC_TIM3->MR1),				// MAT3.1
 };
 #endif
 /**
@@ -122,7 +115,7 @@ const LPC_GPDMACH_TypeDef *pGPDMACh[8] = {
 		LPC_GPDMACH4,	// GPDMA Channel 4
 		LPC_GPDMACH5,	// GPDMA Channel 5
 		LPC_GPDMACH6,	// GPDMA Channel 6
-		LPC_GPDMACH7	// GPDMA Channel 7
+		LPC_GPDMACH7,	// GPDMA Channel 7
 };
 /**
  * @brief Optimized Peripheral Source and Destination burst size
@@ -151,7 +144,7 @@ const uint8_t GPDMA_LUTPerBurst[] = {
 		GPDMA_BSIZE_1,				// MAT2.0
 		GPDMA_BSIZE_1,				// MAT2.1
 		GPDMA_BSIZE_1,				// MAT3.0
-		GPDMA_BSIZE_1				// MAT3.1
+		GPDMA_BSIZE_1,				// MAT3.1
 };
 /**
  * @brief Optimized Peripheral Source and Destination transfer width
@@ -180,7 +173,7 @@ const uint8_t GPDMA_LUTPerWid[] = {
 		GPDMA_WIDTH_WORD,				// MAT2.0
 		GPDMA_WIDTH_WORD,				// MAT2.1
 		GPDMA_WIDTH_WORD,				// MAT3.0
-		GPDMA_WIDTH_WORD				// MAT3.1
+		GPDMA_WIDTH_WORD,				// MAT3.1
 };
 
 /**

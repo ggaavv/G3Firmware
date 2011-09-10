@@ -1,27 +1,21 @@
-/**********************************************************************
-* $Id$		lpc17xx_pwm.c				2011-03-31
-*//**
-* @file		lpc17xx_pwm.c
-* @brief	Contains all functions support for PWM firmware library on LPC17xx
-* @version	2.1
-* @date		31. Mar. 2011
-* @author	NXP MCU SW Application Team
-*
-* Copyright(C) 2011, NXP Semiconductor
-* All rights reserved.
-*
-***********************************************************************
-* Software that is described herein is for illustrative purposes only
-* which provides customers with programming information regarding the
-* products. This software is supplied "AS IS" without any warranties.
-* NXP Semiconductors assumes no responsibility or liability for the
-* use of the software, conveys no license or title under any patent,
-* copyright, or mask work right to the product. NXP Semiconductors
-* reserves the right to make changes in the software without
-* notification. NXP Semiconductors also make no representation or
-* warranty that such application will be suitable for the specified
-* use without further testing or modification.
-**********************************************************************/
+/***********************************************************************//**
+ * @file		lpc17xx_pwm.c
+ * @brief		Contains all functions support for PWM firmware library on LPC17xx
+ * @version		2.0
+ * @date		21. May. 2010
+ * @author		NXP MCU SW Application Team
+ **************************************************************************
+ * Software that is described herein is for illustrative purposes only
+ * which provides customers with programming information regarding the
+ * products. This software is supplied "AS IS" without any warranties.
+ * NXP Semiconductors assumes no responsibility or liability for the
+ * use of the software, conveys no license or title under any patent,
+ * copyright, or mask work right to the product. NXP Semiconductors
+ * reserves the right to make changes in the software without
+ * notification. NXP Semiconductors also make no representation or
+ * warranty that such application will be suitable for the specified
+ * use without further testing or modification.
+ **********************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @addtogroup PWM
@@ -471,50 +465,7 @@ void PWM_MatchUpdate(LPC_PWM_TypeDef *PWMx, uint8_t MatchChannel, \
 	}
 }
 
-/********************************************************************//**
- * @brief 		Update value for multi PWM channel with update type option
- * 				at the same time
- * @param[in]	PWMx	PWM peripheral selected, should be LPC_PWM1
- * @param[in]	MatchStruct Structure that contents match value of 7 pwm channels
- * @param[in]	UpdateType Type of Update, should be:
- * 				- PWM_MATCH_UPDATE_NOW: The update value will be updated for
- * 					this channel immediately
- * 				- PWM_MATCH_UPDATE_NEXT_RST: The update value will be updated for
- * 					this channel on next reset by a PWM Match event.
- * @return		None
- *********************************************************************/
-void PWM_MultiMatchUpdate(LPC_PWM_TypeDef *PWMx, PWM_Match_T *MatchStruct , uint8_t UpdateType)
-{
-	uint8_t LatchValue = 0;
-	uint8_t i;
 
-	CHECK_PARAM(PARAM_PWMx(PWMx));
-	CHECK_PARAM(PARAM_PWM_MATCH_UPDATE(UpdateType));
-
-	//Update match value
-	for(i=0;i<7;i++)
-	{
-		if(MatchStruct[i].Status == SET)
-		{
-			if(i<4)
-				*((volatile unsigned int *)(&(PWMx->MR0) + i)) = MatchStruct[i].Matchvalue;
-			else
-			{
-				*((volatile unsigned int *)(&(PWMx->MR4) + (i-4))) = MatchStruct[i].Matchvalue;
-			}
-			LatchValue |=(1<<i);
-		}
-	}
-	//set update for multi-channel at the same time
-	PWMx->LER = LatchValue;
-
-	// In case of update now
-	if (UpdateType == PWM_MATCH_UPDATE_NOW)
-	{
-		PWMx->TCR |= PWM_TCR_COUNTER_RESET;
-		PWMx->TCR &= (~PWM_TCR_COUNTER_RESET) & PWM_TCR_BITMASK;
-	}
-}
 /********************************************************************//**
  * @brief 		Configure Edge mode for each PWM channel
  * @param[in]	PWMx	PWM peripheral selected, should be LPC_PWM1

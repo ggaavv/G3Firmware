@@ -1,28 +1,21 @@
-/**********************************************************************
-* $Id$		lpc17xx_i2s.c				2010-09-23
-*//**
-* @file		lpc17xx_gpio.c
-* @brief	Contains all functions support for I2S firmware
-* 			library on LPC17xx
-* @version	3.1
-* @date		23. Sep. 2010
-* @author	NXP MCU SW Application Team
-*
-* Copyright(C) 2010, NXP Semiconductor
-* All rights reserved.
-*
-***********************************************************************
-* Software that is described herein is for illustrative purposes only
-* which provides customers with programming information regarding the
-* products. This software is supplied "AS IS" without any warranties.
-* NXP Semiconductors assumes no responsibility or liability for the
-* use of the software, conveys no license or title under any patent,
-* copyright, or mask work right to the product. NXP Semiconductors
-* reserves the right to make changes in the software without
-* notification. NXP Semiconductors also make no representation or
-* warranty that such application will be suitable for the specified
-* use without further testing or modification.
-**********************************************************************/
+/***********************************************************************//**
+ * @file		lpc17xx_i2s.c
+ * @brief		Contains all functions support for I2S firmware library on LPC17xx
+ * @version		3.1
+ * @date		23. Sep. 2010
+ * @author		NXP MCU SW Application Team
+ **************************************************************************
+ * Software that is described herein is for illustrative purposes only
+ * which provides customers with programming information regarding the
+ * products. This software is supplied "AS IS" without any warranties.
+ * NXP Semiconductors assumes no responsibility or liability for the
+ * use of the software, conveys no license or title under any patent,
+ * copyright, or mask work right to the product. NXP Semiconductors
+ * reserves the right to make changes in the software without
+ * notification. NXP Semiconductors also make no representation or
+ * warranty that such application will be suitable for the specified
+ * use without further testing or modification.
+ **********************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @addtogroup I2S
@@ -566,9 +559,9 @@ FunctionalState I2S_GetIRQStatus(LPC_I2S_TypeDef *I2Sx,uint8_t TRMode)
 {
 	CHECK_PARAM(PARAM_I2Sx(I2Sx));
 	if(TRMode == I2S_TX_MODE)
-		return ((FunctionalState)((I2Sx->I2SIRQ >> 1)&0x01));
+		return ((I2Sx->I2SIRQ >> 1)&0x01);
 	else
-		return ((FunctionalState)((I2Sx->I2SIRQ)&0x01));
+		return ((I2Sx->I2SIRQ)&0x01);
 }
 
 /********************************************************************//**

@@ -1,28 +1,22 @@
-/**********************************************************************
-* $Id$		lpc17xx_pwm.h				2011-03-31
-*//**
-* @file		lpc17xx_pwm.h
-* @brief	Contains all macro definitions and function prototypes
-* 			support for PWM firmware library on LPC17xx
-* @version	2.1
-* @date		31. Mar. 2011
-* @author	NXP MCU SW Application Team
-*
-* Copyright(C) 2011, NXP Semiconductor
-* All rights reserved.
-*
-***********************************************************************
-* Software that is described herein is for illustrative purposes only
-* which provides customers with programming information regarding the
-* products. This software is supplied "AS IS" without any warranties.
-* NXP Semiconductors assumes no responsibility or liability for the
-* use of the software, conveys no license or title under any patent,
-* copyright, or mask work right to the product. NXP Semiconductors
-* reserves the right to make changes in the software without
-* notification. NXP Semiconductors also make no representation or
-* warranty that such application will be suitable for the specified
-* use without further testing or modification.
-**********************************************************************/
+/***********************************************************************//**
+ * @file		lpc17xx_pwm.h
+ * @brief		Contains all macro definitions and function prototypes
+ * 				support for PWM firmware library on LPC17xx
+ * @version		2.0
+ * @date		21. May. 2010
+ * @author		NXP MCU SW Application Team
+ **************************************************************************
+ * Software that is described herein is for illustrative purposes only
+ * which provides customers with programming information regarding the
+ * products. This software is supplied "AS IS" without any warranties.
+ * NXP Semiconductors assumes no responsibility or liability for the
+ * use of the software, conveys no license or title under any patent,
+ * copyright, or mask work right to the product. NXP Semiconductors
+ * reserves the right to make changes in the software without
+ * notification. NXP Semiconductors also make no representation or
+ * warranty that such application will be suitable for the specified
+ * use without further testing or modification.
+ **************************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @defgroup PWM PWM
@@ -221,7 +215,7 @@ typedef struct {
 /** @brief PMW TC mode select option */
 typedef enum {
 	PWM_MODE_TIMER = 0,		/*!< PWM using Timer mode */
-	PWM_MODE_COUNTER		/*!< PWM using Counter mode */
+	PWM_MODE_COUNTER,		/*!< PWM using Counter mode */
 } PWM_TC_MODE_OPT;
 
 #define PARAM_PWM_TC_MODE(n) ((n==PWM_MODE_TIMER) || (n==PWM_MODE_COUNTER))
@@ -288,15 +282,9 @@ typedef enum
 	PWM_INTSTAT_CAP1 = PWM_IR_PWMCAPn(1),	/**< Interrupt flag for capture input 1 */
 	PWM_INTSTAT_MR4 = PWM_IR_PWMMRn(4),		/**< Interrupt flag for PWM match channel 4 */
 	PWM_INTSTAT_MR6 = PWM_IR_PWMMRn(5),		/**< Interrupt flag for PWM match channel 5 */
-	PWM_INTSTAT_MR5 = PWM_IR_PWMMRn(6)		/**< Interrupt flag for PWM match channel 6 */
+	PWM_INTSTAT_MR5 = PWM_IR_PWMMRn(6),		/**< Interrupt flag for PWM match channel 6 */
 }PWM_INTSTAT_TYPE;
 
-/** @brief Match update structure */
-typedef struct
-{
-	uint32_t Matchvalue;
-	FlagStatus Status;
-}PWM_Match_T;
 
 /**
  * @}

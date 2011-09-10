@@ -1,28 +1,22 @@
-/**********************************************************************
-* $Id$		lpc17xx_i2s.h				2011-06-06
-*//**
-* @file		lpc17xx_i2s.h
-* @brief	Contains all macro definitions and function prototypes
-* 			support for I2S firmware library on LPC17xx
-* @version	3.1
-* @date		06. June. 2011
-* @author	NXP MCU SW Application Team
-*
-* Copyright(C) 2011, NXP Semiconductor
-* All rights reserved.
-*
-***********************************************************************
-* Software that is described herein is for illustrative purposes only
-* which provides customers with programming information regarding the
-* products. This software is supplied "AS IS" without any warranties.
-* NXP Semiconductors assumes no responsibility or liability for the
-* use of the software, conveys no license or title under any patent,
-* copyright, or mask work right to the product. NXP Semiconductors
-* reserves the right to make changes in the software without
-* notification. NXP Semiconductors also make no representation or
-* warranty that such application will be suitable for the specified
-* use without further testing or modification.
-**********************************************************************/
+/***********************************************************************//**
+ * @file		lpc17xx_i2s.h
+ * @brief		Contains all macro definitions and function prototypes
+ * 				support for I2S firmware library on LPC17xx
+ * @version		3.0
+ * @date		18. June. 2010
+ * @author		NXP MCU SW Application Team
+ **************************************************************************
+ * Software that is described herein is for illustrative purposes only
+ * which provides customers with programming information regarding the
+ * products. This software is supplied "AS IS" without any warranties.
+ * NXP Semiconductors assumes no responsibility or liability for the
+ * use of the software, conveys no license or title under any patent,
+ * copyright, or mask work right to the product. NXP Semiconductors
+ * reserves the right to make changes in the software without
+ * notification. NXP Semiconductors also make no representation or
+ * warranty that such application will be suitable for the specified
+ * use without further testing or modification.
+ **************************************************************************/
 
 /* Peripheral group ----------------------------------------------------------- */
 /** @defgroup I2S I2S
@@ -249,13 +243,13 @@ extern "C"
 /* Macro check I2S DMA mode */
 #define PARAM_I2S_DMA(n)		((n==I2S_DMA_1)||(n==I2S_DMA_2))
 /* Macro check I2S DMA depth value */
-#define PARAM_I2S_DMA_DEPTH(n)	(n<=31)
+#define PARAM_I2S_DMA_DEPTH(n)	((n>=0)||(n<=31))
 /* Macro check I2S irq level value */
-#define PARAM_I2S_IRQ_LEVEL(n)	(n<=31)
+#define PARAM_I2S_IRQ_LEVEL(n)	((n>=0)||(n<=31))
 /* Macro check I2S half-period value */
-#define PARAM_I2S_HALFPERIOD(n)	(n<512)
+#define PARAM_I2S_HALFPERIOD(n)	((n>0)&&(n<512))
 /* Macro check I2S bit-rate value */
-#define PARAM_I2S_BITRATE(n)	(n<=63)
+#define PARAM_I2S_BITRATE(n)	((n>=0)&&(n<=63))
 /**
  * @}
  */
