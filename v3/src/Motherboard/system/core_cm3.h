@@ -31,7 +31,8 @@
 #ifndef __CORE_CM3_H_GENERIC
 #define __CORE_CM3_H_GENERIC
 
-/** @addtogroup CMSIS_core_LintCinfiguration CMSIS Core Lint Configuration
+/**  @ingroup  CMSIS
+ @addtogroup CMSIS_core_LintCinfiguration CMSIS Core Lint Configuration
   List of Lint messages which will be suppressed and not shown:
     - not yet checked
   .
@@ -43,7 +44,8 @@
 /*******************************************************************************
  *                 CMSIS definitions
  ******************************************************************************/
-/** @addtogroup CMSIS_core_definitions CMSIS Core Definitions
+/** @ingroup  CMSIS
+ * @addtogroup CMSIS_core_definitions CMSIS Core Definitions
   This file defines all structures and symbols for CMSIS core:
    - CMSIS version number
    - Cortex-M core
@@ -105,7 +107,9 @@
 /*******************************************************************************
  *                 Register Abstraction
  ******************************************************************************/
-/** @addtogroup CMSIS_core_register CMSIS Core Register
+
+/** @ingroup  CMSIS
+ * @addtogroup CMSIS_core_register CMSIS Core Register
   Core Register contain:
   - Core Register
   - Core NVIC Register
@@ -851,7 +855,8 @@ typedef struct
 /*******************************************************************************
  *                Hardware Abstraction Layer
  ******************************************************************************/
-/** \addtogroup CMSIS_Core_FunctionInterface CMSIS Core Function Interface
+/** \ingroup  CMSIS
+  \addtogroup CMSIS_Core_FunctionInterface CMSIS Core Function Interface
   Core Function Interface contains:
   - Core NVIC Functions
   - Core SysTick Functions
