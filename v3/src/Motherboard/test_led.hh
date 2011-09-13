@@ -25,7 +25,6 @@ THE SOFTWARE.
 /***********LED Blinky Example**********************************************************************/
 void test_led(uint8_t number)
 {
-	__disable_irq ();
 //	LPC_GPIO1->FIODIR |= 1 << 29; // P1.29 connected to LED
 	LPC_GPIO1->FIODIR |= 1 << 27; // 1.27 Y_MIN
 	uint8_t number1;
@@ -39,7 +38,6 @@ void test_led(uint8_t number)
 		_delay_ms(10); // wait for approx 400 ms
 	}
 	_delay_ms(500);
-	__enable_irq ();
 }
 
 void test_led2(uint8_t number)

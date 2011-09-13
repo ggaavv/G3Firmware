@@ -47,24 +47,23 @@
 /**
  * @brief Boolean Type definition
  */
-typedef enum {FALSE = 0, TRUE = 1} Bool;
-
+typedef enum {FALSE = 0, TRUE = !FALSE} Bool;
 /**
  * @brief Flag Status and Interrupt Flag Status type definition
  */
-typedef enum {RESET = 0, SET = 1} FlagStatus, IntStatus, SetState;
+typedef enum {RESET = 0, SET = !RESET} FlagStatus, IntStatus, SetState;
 #define PARAM_SETSTATE(State) ((State==RESET) || (State==SET))
 
 /**
  * @brief Functional State Definition
  */
-typedef enum {DISABLE = 0, ENABLE = 1} FunctionalState;
+typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
 #define PARAM_FUNCTIONALSTATE(State) ((State==DISABLE) || (State==ENABLE))
 
 /**
  * @ Status type definition
  */
-typedef enum {ERROR = 0, SUCCESS = 1} Status;
+typedef enum {ERROR = 0, SUCCESS = !ERROR} Status;
 
 
 /**

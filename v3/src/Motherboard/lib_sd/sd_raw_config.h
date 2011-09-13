@@ -13,6 +13,7 @@
 
 #include <stdint.h>
 #include "lpc17xx_gpio.h"
+#include "lpc_types.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -117,7 +118,7 @@ extern "C"
 
 //#define select_card() (SD_SELECT_PIN.setDirection(true), SD_SELECT_PIN.setValue(true));
 #define select_card() (GPIO_SetDir(SD_SELECT_PIN_Port, SD_SELECT_PIN_Pin, 1), GPIO_SetValue(SD_SELECT_PIN_Port, ((GPIO_ReadValue(SD_SELECT_PIN_Port)&SD_SELECT_PIN_Port) & SD_SELECT_PIN_Pin) | (1?SD_SELECT_PIN_Pin:0)));
-//#define unselect_card() (SD_SELECT_PIN.setDirection(false), SD_SELECT_PIN.setValue(false));
+//#define unselect_card() (SD_SELECT_PIN.setDirection(FALSE), SD_SELECT_PIN.setValue(FALSE));
 #define unselect_card() (GPIO_SetDir(SD_SELECT_PIN_Port, SD_SELECT_PIN_Pin, 1), GPIO_SetValue(SD_SELECT_PIN_Port, ((GPIO_ReadValue(SD_SELECT_PIN_Port)&SD_SELECT_PIN_Port) & SD_SELECT_PIN_Pin) | (0?SD_SELECT_PIN_Pin:0)));
 
 
@@ -125,9 +126,9 @@ extern "C"
     #error "no sd/mmc pin mapping available!"
 #endif
 
-//#define configure_pin_available() SD_DETECT_PIN.setDirection(false)
+//#define configure_pin_available() SD_DETECT_PIN.setDirection(FALSE)
 #define configure_pin_available() GPIO_SetDir(SD_DETECT_PIN_Port, SD_DETECT_PIN_Pin, 0)
-//#define configure_pin_locked() SD_WRITE_PIN.setDirection(false)
+//#define configure_pin_locked() SD_WRITE_PIN.setDirection(FALSE)
 #define configure_pin_locked() GPIO_SetDir(SD_WRITE_PIN_Port, SD_WRITE_PIN_Pin, 0)
 
 //#define get_pin_available() SD_DETECT_PIN.getValue()

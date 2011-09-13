@@ -41,6 +41,7 @@ extern "C" {
 #include "test.hh"  // testing
 /********************************/
 #include "test_led.hh"  // testing
+#include "test_u.hh"
 //test_led(1);
 /********************************/
 
@@ -51,11 +52,11 @@ extern "C" {
 void reset(bool hard_reset) {
 	__disable_irq ();
 	Motherboard& board = Motherboard::getBoard();
-	test_led(1);
+	test_led(100);
 	sdcard::reset();
 	steppers::abort();
 	command::reset();
-	eeprom::init();
+//	eeprom::init();
 	board.reset();
 	test_led(10);
 	__enable_irq ();
@@ -80,26 +81,35 @@ void reset(bool hard_reset) {
   MAIN function
  *----------------------------------------------------------------------------*/
 int main (void) {
-//	SystemInit();
-	/* Configure the NVIC Preemption Priority Bits */
-//	NVIC_SetPriorityGrouping(1);
-//	test_uart(); //testing
-//	SystemCoreClockUpdate();
-//	while (SysTick_Config(SystemCoreClock / 1000));   /* Setup SysTick Timer for 1 msec interrupts  */
+	/* NOTE: you will need to call SystemCoreClockUpdate() as the very
+	first line in your main function. This will update the various
+	registers and constants to allow accurate timing. */
+	SystemCoreClockUpdate();
+	SystemInit();									// Initialize clocks
+	//----Initialization of LPC----//
+	test_led3(1);
+	NVIC_SetPriorityGrouping(1);					// Configure the NVIC Preemption Priority Bits
+	//----end of Initialization of LPC----//
+	test_u();
+	test_led3(1);
+	UART_SendByte (LPC_UART2, 0x7);
+	UART_SendByte (LPC_UART2, 0x8);
+	UART_SendByte (LPC_UART2, 0x9);
+	test_led(2);
 	Motherboard& board = Motherboard::getBoard();
 	steppers::init(Motherboard::getBoard());
 	reset(true);
 	while (1) {
-		test_led2(1);
+		test_led2(10);
 		// Toolhead interaction thread.
 		tool::runToolSlice();
-		test_led2(2);
+		test_led2(20);
 		// Host interaction thread.
 		host::runHostSlice();
-		test_led2(3);
+		test_led2(30);
 		// Command handling thread.
 		command::runCommandSlice();
-		test_led2(4);
+		test_led2(40);
 		// Motherboard slice
 		board.runMotherboardSlice();
 		test_led(5);

@@ -16,12 +16,10 @@
  */
 
 #include <stdint.h>
-//#include <avr/interrupt.h>
-//extern "C" {
+extern "C" {
 	#include "lpc17xx_timer.h"
-//}
-//#include <avr/io.h>
-//#include <util/atomic.h>
+	#include "LPC17xx.h"
+}
 #include "Motherboard.hh"
 #include "Configuration.hh"
 #include "Steppers.hh"
@@ -29,7 +27,6 @@
 #include "Interface.hh"
 #include "Tool.hh"
 #include "Commands.hh"
-#include "lpc17xx_libcfg_default.h"
 
 /********************************/
 #include "test_led.hh"  // testing
@@ -89,11 +86,11 @@ void Motherboard::reset() {
 	/* Use channel 1, MR1 */
 	TMR0_Match.MatchChannel = 0;
 	/* Enable interrupt when MR0 matches the value in TC register */
-	TMR0_Match.IntOnMatch = true;
+	TMR0_Match.IntOnMatch = TRUE;
 	/* Enable reset on MR0: TIMER will reset if MR0 matches it */
-	TMR0_Match.ResetOnMatch = true;
+	TMR0_Match.ResetOnMatch = TRUE;
 	/* Don't stop on MR0 if MR0 matches it*/
-	TMR0_Match.StopOnMatch = false;
+	TMR0_Match.StopOnMatch = FALSE;
 	/* Do nothing for external output pin if match (see cmsis help, there are another options) */
 	TMR0_Match.ExtMatchOutputType = TIM_EXTMATCH_NOTHING;
 	/* Set Match value, count value of INTERVAL_IN_MICROSECONDS (64 * 1uS = 64us ) */
@@ -148,15 +145,6 @@ void Motherboard::reset() {
     LPC_TIM0->TCR &= ~(1 << 1); // stop resetting the timer.
     NVIC_EnableIRQ(TIMER0_IRQn); // Enable timer interrupt
     LPC_TIM0->TCR |= 1 << 0; // Start timer
-
-
-	test_led(1000);
-	test_led3(10);
-	test_led(1000);
-	test_led3(10);
-	test_led(1000);
-	test_led3(10);
-
 //	DEBUG_PIN.setDirection(true);
 	// Check if the interface board is attached
 	hasInterfaceBoard = interfaceboard::isConnected();
