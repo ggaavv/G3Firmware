@@ -17,23 +17,24 @@
 
 #include "UART.hh"
 #include <stdint.h>
+//	#include "usbhw.hh"
+//	#include "usbcfg.hh"
+//	#include "cdcuser.hh"
+//	#include "usbcore.hh"
+
 extern "C" {
-	#include "usbhw.h"
-	#include "usbcfg.h"
-	#include "cdcuser.h"
-	#include "usbcore.h"
 	#include "lpc17xx_uart.h"
 	#include "lpc17xx_pinsel.h"
+	#include "LPC17xx.h"
+		#include "usbSerial.h"
 }
 //#include <avr/sfr_defs.h>
 //#include <avr/interrupt.h>
 //#include <avr/io.h>
 //#include <util/delay.h>
-#include "Delay_us.hh"
+#include "Delay.hh"
 
-#define FIFO_Enabled 0
-#define LPC_UART_NO LPC_UART1
-#define LPC_UART_NONO 1
+#define FIFO_Enabled 1
 
 // TODO: There should be a better way to enable this flag?
 #if ASSERT_LINE_FIX
@@ -55,57 +56,10 @@ individual characters to the USB UART, and use putst(const char * s);
 to output a whole string.
 */
 
-// TODO: Move these definitions to the board files, where they belong.
-UART UART::hostUART(0, USB);
-#if HAS_SLAVE_UART
-UART UART::slaveUART(1, RS485);
-#endif
-
-void UART::init_serial() {
-	if (index_ == 0) {
-		// Init USB for UART
-		USB_Init();						// USB Initialization
-		while (!USB_Configuration);		// wait until USB is configured
-	} else if (index_ == 1) {
-		// UART Configuration Structure
-		UART_CFG_Type u_cfg;
-		u_cfg.Baud_rate = 38400;
-		u_cfg.Databits = UART_DATABIT_8;
-		u_cfg.Parity = UART_PARITY_NONE;
-		u_cfg.Stopbits = UART_STOPBIT_1;
-		UART_Init((LPC_UART_TypeDef *)LPC_UART_NO, &u_cfg);
-		// Initialize UART0 pin connect
-		}
-		PINSEL_CFG_Type PinCfg;
-		if (LPC_UART_NONO == 0){
-			PinCfg.Funcnum = 1;
-			PinCfg.OpenDrain = 0;
-			PinCfg.Pinmode = 0;
-			PinCfg.Pinnum = 2;
-			PinCfg.Portnum = 0;
-			PINSEL_ConfigPin(&PinCfg);
-			PinCfg.Pinnum = 3;
-			PINSEL_ConfigPin(&PinCfg);
-		} else if (LPC_UART_NONO == 1){
-			PinCfg.Funcnum = 1;
-			PinCfg.OpenDrain = 0;
-			PinCfg.Pinmode = 0;
-			PinCfg.Pinnum = 15;
-			PinCfg.Portnum = 0;
-			PINSEL_ConfigPin(&PinCfg);
-			PinCfg.Pinnum = 16;
-			PINSEL_ConfigPin(&PinCfg);
-		}
-#ifndef FIFO_Enabled
-		// UART FIFO Configuration Structure
-		UART_FIFO_CFG_Type fifo_cfg;
-		fifo_cfg.FIFO_ResetRxBuf = ENABLE;
-		fifo_cfg.FIFO_ResetTxBuf = ENABLE;
-		fifo_cfg.FIFO_DMAMode = DISABLE;
-		fifo_cfg.FIFO_Level = UART_FIFO_TRGLEV0;
-		UART_FIFOConfig((LPC_UART_TypeDef *)LPC_UART_NO, &fifo_cfg);
-#endif
-}
+UART UART::uart[2] = {
+		UART(0),
+		UART(1)
+};
 
 // Transition to a non-transmitting state. This is only used for RS485 mode.
 inline void listen() {
@@ -117,40 +71,65 @@ inline void speak() {
 	TX_ENABLE_PIN.setValue(true);
 }
 
-UART::UART(uint8_t index, communication_mode mode) :
-	index_(index),
-	mode_(mode),
-	enabled_(false) {
-
-		init_serial();
-
+UART::UART(uint8_t index) : index_(index), enabled_(false) {
+	if (index_ == 0) {
+		// Init USB for UART
+//		USB_Init();						// USB Initialization
+//		USB_Connect(TRUE);
+//		while (!USB_Configuration);		// wait until USB is configured
+		usbSerialInit();
+	} else if (index_ == 1) {
+		// UART Configuration Structure
+		UART_CFG_Type u_cfg;
+		u_cfg.Baud_rate = 38400;
+		u_cfg.Databits = UART_DATABIT_8;
+		u_cfg.Parity = UART_PARITY_NONE;
+		u_cfg.Stopbits = UART_STOPBIT_1;
+		UART_Init((LPC_UART_TypeDef *)LPC_UART1, &u_cfg);
+		// Initialize UART0 pin connect
+		PINSEL_CFG_Type PinCfg;
+		PinCfg.Funcnum = 1;
+		PinCfg.OpenDrain = 0;
+		PinCfg.Pinmode = 0;
+		PinCfg.Pinnum = 0;
+		PinCfg.Portnum = 0;
+		PINSEL_ConfigPin(&PinCfg);
+		PinCfg.Pinnum = 1;
+		PINSEL_ConfigPin(&PinCfg);
+#ifndef FIFO_Enabled
+		// UART FIFO Configuration Structure
+		UART_FIFO_CFG_Type fifo_cfg;
+		fifo_cfg.FIFO_ResetRxBuf = ENABLE;
+		fifo_cfg.FIFO_ResetTxBuf = ENABLE;
+		fifo_cfg.FIFO_DMAMode = DISABLE;
+		fifo_cfg.FIFO_Level = UART_FIFO_TRGLEV0;
+		UART_FIFOConfig((LPC_UART_TypeDef *)LPC_UART1, &fifo_cfg);
+#endif
+		NVIC_EnableIRQ(UART1_IRQn);
+		// UART1 is an RS485 port, and requires additional setup.
+		// Read enable: PD5, active low
+		// Tx enable: PD4, active high
+		TX_ENABLE_PIN.setDirection(true);
+		RX_ENABLE_PIN.setDirection(true);
+		RX_ENABLE_PIN.setValue(false);  // Active low
+		listen();
+	}
 }
 
 /// UART bytes will be triggered by the tx complete interrupt.
 /// USB bytes sent as whole packets
 void UART::beginSend() {
 	if (!enabled_) { return; }
-	uint8_t next_byte = out.getNextByteToSend();
 	if (index_ == 0) {		//uart0 eg usb
-		// get first 2 bytes, second = size
-#ifndef FIFO_Enabled
-		char serBuf[USB_CDC_BUFSIZE];
-		serBuf[0] = next_byte;
-		serBuf[1] = out.getNextByteToSend();
-		// remaining bytes
-		for (uint8_t i = 2; i > (serBuf[1] + 3); i++){
-			serBuf[i] = out.getNextByteToSend();
+		VCOM_putc( out.getNextByteToSend() );
+		while (UART::uart[0].out.isSending()) {
+			VCOM_putc( UART::uart[0].out.getNextByteToSend() );
 		}
-		// send all bytes
-		USB_WriteEP (CDC_DEP_IN, (unsigned char *)&serBuf[0], serBuf[1]);
-#else
-		USB_WriteEP (CDC_DEP_IN, &next_byte, 1);
-#endif
 	} else if (index_ == 1) {
 		speak();
-		Delay_us (10);
+		_delay_us(10);
 		loopback_bytes = 1;
-		UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, next_byte);
+		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, out.getNextByteToSend());
 	}
 }
 
@@ -158,21 +137,19 @@ void UART::enable(bool enabled) {
 	enabled_ = enabled;
 	if (index_ == 0) {
 		if (enabled) {
-			USB_Connect(TRUE);			// USB Connect
+//			USBHwConnect(TRUE);			// USB Connect
 		}
 		else {
-			USB_Connect(FALSE);			// USB Disconnect
+//			USBHwConnect(FALSE);			// USB Disconnect
 		}
 	} else if (index_ == 1) {
-		if (enabled) { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART_NO, ENABLE); }
-		else { UART_TxCmd((LPC_UART_TypeDef *)LPC_UART_NO, DISABLE); }
+		if (enabled){
+			UART_TxCmd((LPC_UART_TypeDef *)LPC_UART1, ENABLE);
+		}
+		else {
+			UART_TxCmd((LPC_UART_TypeDef *)LPC_UART1, DISABLE);
+		}
 	}
-	// UART1 is an RS485 port, and requires additional setup.
-	// Read enable: PD5, active low
-	// Tx enable: PD4, active high
-	TX_ENABLE_PIN.setDirection(true);
-	RX_ENABLE_PIN.setDirection(true);
-	RX_ENABLE_PIN.setValue(false);  // Active low
 }
 
 // Reset the UART to a listening state.  This is important for
@@ -190,12 +167,12 @@ void UART1_IRQHandler(void)
 {
 	uint32_t intsrc, tmp, tmp1;
 	/* Determine the interrupt source */
-	intsrc = UART_GetIntId((LPC_UART_TypeDef *)LPC_UART_NO);
+	intsrc = UART_GetIntId((LPC_UART_TypeDef *)LPC_UART1);
 	tmp = intsrc & UART_IIR_INTID_MASK;
 	// Receive Line Status
 	if (tmp == UART_IIR_INTID_RLS){
 		// Check line status
-		tmp1 = UART_GetLineStatus((LPC_UART_TypeDef *)LPC_UART_NO);
+		tmp1 = UART_GetLineStatus((LPC_UART_TypeDef *)LPC_UART1);
 		// Mask out the Receive Ready and Transmit Holding empty status
 		tmp1 &= (UART_LSR_OE | UART_LSR_PE | UART_LSR_FE | UART_LSR_BI | UART_LSR_RXFE);
 		// If any error exist
@@ -206,7 +183,7 @@ void UART1_IRQHandler(void)
 	// Receive Data Available or Character time-out
 	if ((tmp == UART_IIR_INTID_RDA) || (tmp == UART_IIR_INTID_CTI)) {
 		static uint8_t byte_in;
-		byte_in = UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART_NO);
+		byte_in = UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART1);
 		if (loopback_bytes > 0) {
 			loopback_bytes--;
 		} else {
@@ -218,9 +195,9 @@ void UART1_IRQHandler(void)
 	if (tmp == UART_IIR_INTID_THRE){
 		if (UART::getSlaveUART().out.isSending()) {
 			loopback_bytes++;
-			UART_SendByte((LPC_UART_TypeDef *)LPC_UART_NO, UART::getSlaveUART().out.getNextByteToSend());  // NEED to choose which UART
+			UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::getSlaveUART().out.getNextByteToSend());  // NEED to choose which UART
 		} else {
-			Delay_us (10);
+			_delay_us(10);
 			listen();
 		}
 	}

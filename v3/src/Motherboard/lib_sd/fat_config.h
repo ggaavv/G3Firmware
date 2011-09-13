@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2006-2010 by Roland Riegel <feedback@roland-riegel.de>
+ * Copyright (c) 2006-2011 by Roland Riegel <feedback@roland-riegel.de>
  *
  * This file is free software; you can redistribute it and/or modify
  * it under the terms of either the GNU General Public License version 2
@@ -8,8 +8,8 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef FAT_CONFIG_HH
-#define FAT_CONFIG_HH
+#ifndef FAT_CONFIG_H
+#define FAT_CONFIG_H
 
 #include <stdint.h>
 #include "sd_raw_config.h"
@@ -69,7 +69,7 @@ extern "C"
  * This can boost performance significantly, but may cause data loss
  * if the file is not properly closed.
  */
-#define FAT_DELAY_DIRENTRY_UPDATE 1
+#define FAT_DELAY_DIRENTRY_UPDATE 0
 
 /**
  * \ingroup fat_config

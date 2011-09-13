@@ -68,8 +68,8 @@ void init() {
 	/* Fill buffer with I2C port outputs settings*/
 	/* Slave address | Command | Port0 Data | Port1 Data */
 	Master_Buf[0] = 0x02;  // Command - Output port 0
-	Master_Buf[1] = *(uint32_t*)eeprom::MICROSTEPS_P0;  // Data to Register - all port0 Outputs
-	Master_Buf[2] = *(uint32_t*)eeprom::MICROSTEPS_P1;  // Data to Register - all port1 Outputs
+	Master_Buf[1] = eeprom_address(MICROSTEPS_P0);  // Data to Register - all port0 Outputs
+	Master_Buf[2] = eeprom_address(MICROSTEPS_P1);  // Data to Register - all port1 Outputs
 	/* Send port output to I2C */
 	I2C_MasterTransferData(LPC_I2C1, &transferMCfg, I2C_TRANSFER_POLLING);
 }

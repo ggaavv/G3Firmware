@@ -130,7 +130,7 @@ void USB_Init (void) {
   LPC_PINCON->PINSEL4 &= ~0x000C0000;
   LPC_PINCON->PINSEL4 |= 0x00040000;
 
-#if 0
+#if 1
   // P1.18 -> USB_UP_LED
   // P1.30 -> VBUS
   LPC_PINCON->PINSEL3 &= ~0x30000030;
@@ -381,6 +381,19 @@ void USB_SetStallEP (uint32_t EPNum) {
 
 void USB_ClrStallEP (uint32_t EPNum) {
   WrCmdDat(CMD_SET_EP_STAT(EPAdr(EPNum)), DAT_WR_BYTE(0));
+}
+
+
+/*
+ *  Clear USB Endpoint Buffer
+ *    Parameters:      EPNum: Endpoint Number
+ *                       EPNum.0..3: Address
+ *                       EPNum.7:    Dir
+ *    Return Value:    None
+ */
+
+void USB_ClearEPBuf (uint32_t EPNum) {
+  WrCmdEP(EPNum, CMD_CLR_BUF);
 }
 
 

@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2006-2010 by Roland Riegel <feedback@roland-riegel.de>
+ * Copyright (c) 2006-2011 by Roland Riegel <feedback@roland-riegel.de>
  *
  * This file is free software; you can redistribute it and/or modify
  * it under the terms of either the GNU General Public License version 2
@@ -8,8 +8,8 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef SD_READER_CONFIG_HH
-#define SD_READER_CONFIG_HH
+#ifndef SD_READER_CONFIG_H
+#define SD_READER_CONFIG_H
 
 #ifdef __cplusplus
 extern "C"

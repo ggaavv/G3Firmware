@@ -30,7 +30,6 @@
 #include "UART.hh"
 #include "StepperInterface.hh"
 #include "Types.hh"
-#include "PSU.hh"
 #include "Configuration.hh"
 #include "Timeout.hh"
 
@@ -39,7 +38,6 @@ private:
 	const static int STEPPERS = STEPPER_COUNT;
 
 	StepperInterface stepper[STEPPERS];
-	PSU psu;
 	/// Microseconds since board initialization
 	volatile micros_t micros;
 	/// Private constructor; use the singleton
@@ -74,7 +72,7 @@ public:
 	micros_t getCurrentMicros();
 
 	/// Get the power supply unit interface.
-	PSU& getPSU() { return psu; }
+	// PSU& getPSU() { return psu; }
 
 	/// Write an error code to the debug pin.
 	void indicateError(int errorCode);

@@ -7,7 +7,7 @@
 #include "Tool.hh"
 #include "Host.hh"
 //#include <util/delay.h>
-#include "Delay_ms.hh"
+#include "Delay.hh"
 #include <stdlib.h>
 //#include "pgmspace.h"
 

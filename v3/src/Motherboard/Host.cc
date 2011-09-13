@@ -370,7 +370,7 @@ inline void handleReadEeprom(const InPacket& from_host, OutPacket& to_host) {
 	to_host.append8(RC_OK);
 	for (int i = 0; i < length; i++) {
 //		to_host.append8(data[i]);
-		to_host.append8(*((uint32_t*)eeprom::EEPROM_START_ADDRESS + offset + i));
+		to_host.append8(eeprom_address(EEPROM_START_ADDRESS + offset + i));
 	}
 }
 
@@ -381,7 +381,7 @@ inline void handleWriteEeprom(const InPacket& from_host, OutPacket& to_host) {
 //	eeprom_read_block(data, (const void*) offset, length);    //NEED doing
 	for (int i = 0; i < length; i++) {
 //		data[i] = from_host.read8(i + 4);
-		*((uint32_t*)eeprom::EEPROM_START_ADDRESS + offset + i) = from_host.read8(i + 4);
+		eeprom_address(EEPROM_START_ADDRESS + offset + i) = from_host.read8(i + 4);
 	}
 //	eeprom_write_block(data, (void*) offset, length);		//NEED doing
 	save_to_flash();
@@ -521,7 +521,7 @@ char* getMachineName() {
 	// If the machine name hasn't been loaded, load it
 	if (machineName[0] == 0) {
 		for(uint8_t i = 0; i < MAX_MACHINE_NAME_LEN; i++) {
-			machineName[i] = eeprom::getEeprom8(eeprom::MACHINE_NAME+i, 0);
+			machineName[i] = eeprom::getEeprom8(MACHINE_NAME+i, 0);
 		}
 	}
 

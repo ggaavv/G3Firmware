@@ -2,27 +2,19 @@
 extern "C" {
 	#include "lpc17xx_uart.h"
 	#include "lpc17xx_pinsel.h"
-	#include "debug_frmwrk.h"
 }
 
-#define UART_PORT 0
-
-#if (UART_PORT == 0)
-#define TEST_UART LPC_UART0
-#elif (UART_PORT == 1)
-#define TEST_UART (LPC_UART_TypeDef *)UART1
-#endif
 
 /************************** PRIVATE VARIABLES *************************/
-uint8_t menu1[] = "4567";
-uint8_t menu2[] = "UART";
-uint8_t menu3[] = "UAR!";
+uint8_t menu1[] = "TESTING 123";
+uint8_t menu2[] = "Makerbot LPC1768";
+uint8_t menu3[] = "TESTING 123";
 
 void print_menu(void)
 {
-	UART_Send(TEST_UART, menu1, sizeof(menu2), BLOCKING);
-	UART_Send(TEST_UART, menu2, sizeof(menu2), BLOCKING);
-	UART_Send(TEST_UART, menu3, sizeof(menu3), BLOCKING);
+	UART_Send(LPC_UART0, menu1, sizeof(menu1), BLOCKING);
+	UART_Send(LPC_UART0, menu2, sizeof(menu2), BLOCKING);
+	UART_Send(LPC_UART0, menu3, sizeof(menu3), BLOCKING);
 }
 
 void test_uart(){
@@ -55,7 +47,7 @@ void test_uart(){
 	UART_ConfigStructInit(&UARTConfigStruct);
 
 	// Initialize UART0 peripheral with given to corresponding parameter
-	UART_Init(TEST_UART, &UARTConfigStruct);
+	UART_Init(LPC_UART0, &UARTConfigStruct);
 
 	/* Initialize FIFOConfigStruct to default state:
 	 * 				- FIFO_DMAMode = DISABLE
@@ -67,11 +59,11 @@ void test_uart(){
 	UART_FIFOConfigStructInit(&UARTFIFOConfigStruct);
 
 	// Initialize FIFO for UART0 peripheral
-	UART_FIFOConfig(TEST_UART, &UARTFIFOConfigStruct);
+	UART_FIFOConfig(LPC_UART0, &UARTFIFOConfigStruct);
 
 
 	// Enable UART Transmit
-	UART_TxCmd(TEST_UART, ENABLE);
+	UART_TxCmd(LPC_UART0, ENABLE);
 
 	// print welcome screen
 	print_menu();
@@ -80,10 +72,10 @@ void test_uart(){
 	uint8_t c = 6;
 	uint8_t d = 7;
 
-	UART_SendByte(TEST_UART, a);
-	UART_SendByte(TEST_UART, b);
-	UART_SendByte(TEST_UART, c);
-	UART_SendByte(TEST_UART, d);
+	UART_SendByte(LPC_UART0, a);
+	UART_SendByte(LPC_UART0, b);
+	UART_SendByte(LPC_UART0, c);
+	UART_SendByte(LPC_UART0, d);
 
-	while(1);
+	//while(1);
 }

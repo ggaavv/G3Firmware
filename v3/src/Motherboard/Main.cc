@@ -37,59 +37,72 @@ extern "C" {
 #include "SDCard.hh"
 #include "EepromMap.hh"
 #include "Main.hh"
-#include "Delay_ms.hh"
+#include "Delay.hh"
 #include "test.hh"  // testing
+/********************************/
+#include "test_led.hh"  // testing
+//test_led(1);
+/********************************/
 
 /*----------------------------------------------------------------------------
   reset
  *----------------------------------------------------------------------------*/
 
 void reset(bool hard_reset) {
-//	ATOMIC_BLOCK(ATOMIC_FORCEON) {
 	__disable_irq ();
-	SystemCoreClockUpdate();
-	while (SysTick_Config(SystemCoreClock / 1000));   /* Setup SysTick Timer for 1 msec interrupts  */
 	Motherboard& board = Motherboard::getBoard();
+	test_led(1);
 	sdcard::reset();
 	steppers::abort();
 	command::reset();
 	eeprom::init();
 	board.reset();
-//	__enable_irq ();
+	test_led(10);
+	__enable_irq ();
 	// If we've just come from a hard reset, wait for 2.5 seconds before
 	// trying to ping an extruder.  This gives the extruder time to boot
 	// before we send it a packet.
 	if (hard_reset) {
+		test_led3(4);
 		Timeout t;
-		t.start(1000L*2500L); // wait for 2500 ms
+		t.start(10L); // wait for 2500 ms
+		test_led3(5);
 		while (!t.hasElapsed());
+		test_led3(6);
 	}
 	if (!tool::reset())
 	{
 		// Fail, but let it go; toggling the PSU is dangerous.
 	}
-	__enable_irq ();
-//	}
 }
 
 /*----------------------------------------------------------------------------
   MAIN function
  *----------------------------------------------------------------------------*/
 int main (void) {
-	test_uart(); //testing
+//	SystemInit();
+	/* Configure the NVIC Preemption Priority Bits */
+//	NVIC_SetPriorityGrouping(1);
+//	test_uart(); //testing
+//	SystemCoreClockUpdate();
+//	while (SysTick_Config(SystemCoreClock / 1000));   /* Setup SysTick Timer for 1 msec interrupts  */
 	Motherboard& board = Motherboard::getBoard();
 	steppers::init(Motherboard::getBoard());
 	reset(true);
-	__enable_irq ();
 	while (1) {
+		test_led2(1);
 		// Toolhead interaction thread.
 		tool::runToolSlice();
+		test_led2(2);
 		// Host interaction thread.
 		host::runHostSlice();
+		test_led2(3);
 		// Command handling thread.
 		command::runCommandSlice();
+		test_led2(4);
 		// Motherboard slice
 		board.runMotherboardSlice();
+		test_led(5);
 	}
 	return 0;
 }

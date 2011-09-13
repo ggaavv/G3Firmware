@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2006-2010 by Roland Riegel <feedback@roland-riegel.de>
+ * Copyright (c) 2006-2011 by Roland Riegel <feedback@roland-riegel.de>
  *
  * This file is free software; you can redistribute it and/or modify
  * it under the terms of either the GNU General Public License version 2
@@ -8,8 +8,8 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef BYTEORDERING_HH
-#define BYTEORDERING_HH
+#ifndef BYTEORDERING_H
+#define BYTEORDERING_H
 
 #include <stdint.h>
 
@@ -30,10 +30,28 @@ extern "C"
  * \author Roland Riegel
  */
 
+#define SWAP16(val) ((((uint16_t) (val)) << 8) | \
+                     (((uint16_t) (val)) >> 8)   \
+                    )
+#define SWAP32(val) (((((uint32_t) (val)) & 0x000000ff) << 24) | \
+                     ((((uint32_t) (val)) & 0x0000ff00) <<  8) | \
+                     ((((uint32_t) (val)) & 0x00ff0000) >>  8) | \
+                     ((((uint32_t) (val)) & 0xff000000) >> 24)   \
+                    )
+
+#define LITTLE_ENDIAN 1
+#if LITTLE_ENDIAN || __AVR__
+#define SWAP_NEEDED 0
+#elif BIG_ENDIAN
+#define SWAP_NEEDED 1
+#else
+#error "Endianess undefined! Please define LITTLE_ENDIAN=1 or BIG_ENDIAN=1."
+#endif
+
 /**
  * \def HTOL16(val)
  *
- * Converts a 16-bit integer to little-endian byte order.
+ * Converts a 16-bit integer from host byte order to little-endian byte order.
  *
  * Use this macro for compile time constants only. For variable values
  * use the function htol16() instead. This saves code size.
@@ -44,7 +62,7 @@ extern "C"
 /**
  * \def HTOL32(val)
  *
- * Converts a 32-bit integer to little-endian byte order.
+ * Converts a 32-bit integer from host byte order to little-endian byte order.
  *
  * Use this macro for compile time constants only. For variable values
  * use the function htol32() instead. This saves code size.
@@ -53,35 +71,38 @@ extern "C"
  * \returns The given 32-bit integer converted to little-endian byte order.
  */
 
-#define LITTLE_ENDIAN 1 //LPC1768 is little endian
 
-#if DOXYGEN || LITTLE_ENDIAN || __AVR__
-/*
-uint32_t __REV (uint32_t value)		//Reverse byte order in integer value.
-uint32_t __REV16 (uint16_t value)	//Reverse byte order in unsigned short value.
-sint32_t __REVSH (sint16_t value)	//Reverse byte order in signed short value with sign extension to integer.
-uint32_t __RBIT (uint32_t value)	//Reverse bit order of value
-*/
-#define HTOL16(val) (val)
-#define HTOL32(val) (val)
-#elif BIG_ENDIAN
-#define HTOL16(val) ((((uint16_t) (val)) << 8) | \
-                     (((uint16_t) (val)) >> 8)   \
-                    )
-#define HTOL32(val) (((((uint32_t) (val)) & 0x000000ff) << 24) | \
-                     ((((uint32_t) (val)) & 0x0000ff00) <<  8) | \
-                     ((((uint32_t) (val)) & 0x00ff0000) >>  8) | \
-                     ((((uint32_t) (val)) & 0xff000000) >> 24)   \
-                    )
-#else
-#error "Endianess undefined! Please define LITTLE_ENDIAN=1 or BIG_ENDIAN=1."
-#endif
 
-uint16_t htol16(uint16_t h);
-uint32_t htol32(uint32_t h);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
- * Converts a 16-bit integer to host byte order.
+
+ * \def LTOH16(val)
+ *
+ * Converts a 16-bit integer from little-endian byte order to host byte order.
  *
  * Use this macro for compile time constants only. For variable values
  * use the function ltoh16() instead. This saves code size.
@@ -89,10 +110,12 @@ uint32_t htol32(uint32_t h);
  * \param[in] val A 16-bit integer in little-endian byte order.
  * \returns The given 16-bit integer converted to host byte order.
  */
-#define LTOH16(val) HTOL16(val)
+
 
 /**
- * Converts a 32-bit integer to host byte order.
+ * \def LTOH32(val)
+ *
+ * Converts a 32-bit integer from little-endian byte order to host byte order.
  *
  * Use this macro for compile time constants only. For variable values
  * use the function ltoh32() instead. This saves code size.
@@ -100,10 +123,46 @@ uint32_t htol32(uint32_t h);
  * \param[in] val A 32-bit integer in little-endian byte order.
  * \returns The given 32-bit integer converted to host byte order.
  */
-#define LTOH32(val) HTOL32(val)
+
+
+#if SWAP_NEEDED
+#define HTOL16(val) SWAP16(val)
+#define HTOL32(val) SWAP32(val)
+#define LTOH16(val) SWAP16(val)
+#define LTOH32(val) SWAP32(val)
+#else
+#define HTOL16(val) (val)
+#define HTOL32(val) (val)
+#define LTOH16(val) (val)
+#define LTOH32(val) (val)
+#endif
+
+#if DOXYGEN
 
 /**
- * Converts a 16-bit integer to host byte order.
+ * Converts a 16-bit integer from host byte order to little-endian byte order.
+ *
+ * Use this function on variable values instead of the
+ * macro HTOL16(). This saves code size.
+ *
+ * \param[in] h A 16-bit integer in host byte order.
+ * \returns The given 16-bit integer converted to little-endian byte order.
+ */
+uint16_t htol16(uint16_t h);
+
+/**
+ * Converts a 32-bit integer from host byte order to little-endian byte order.
+ *
+ * Use this function on variable values instead of the
+ * macro HTOL32(). This saves code size.
+ *
+ * \param[in] h A 32-bit integer in host byte order.
+ * \returns The given 32-bit integer converted to little-endian byte order.
+ */
+uint32_t htol32(uint32_t h);
+
+/**
+ * Converts a 16-bit integer from little-endian byte order to host byte order.
  *
  * Use this function on variable values instead of the
  * macro LTOH16(). This saves code size.
@@ -111,14 +170,14 @@ uint32_t htol32(uint32_t h);
  * \param[in] l A 16-bit integer in little-endian byte order.
  * \returns The given 16-bit integer converted to host byte order.
  */
-#if DOXYGEN
+
 uint16_t ltoh16(uint16_t l);
-#else
-#define ltoh16(l) htol16(l)
-#endif
+
+
+
 
 /**
- * Converts a 32-bit integer to host byte order.
+ * Converts a 32-bit integer from little-endian byte order to host byte order.
  *
  * Use this function on variable values instead of the
  * macro LTOH32(). This saves code size.
@@ -126,22 +185,58 @@ uint16_t ltoh16(uint16_t l);
  * \param[in] l A 32-bit integer in little-endian byte order.
  * \returns The given 32-bit integer converted to host byte order.
  */
-#if DOXYGEN
+
 uint32_t ltoh32(uint32_t l);
+
+uint16_t read16(const uint8_t* p);
+uint32_t read32(const uint8_t* p);
+void write16(uint8_t* p, uint16_t i);
+void write32(uint8_t* p, uint32_t i);
+
+#elif SWAP_NEEDED
+
+#define htol16(h) swap16(h)
+#define htol32(h) swap32(h)
+#define ltoh16(l) swap16(l)
+#define ltoh32(l) swap32(l)
+
+uint16_t read16(const uint8_t* p);
+uint32_t read32(const uint8_t* p);
+void write16(uint8_t* p, uint16_t i);
+void write32(uint8_t* p, uint32_t i);
+
 #else
-#define ltoh32(l) htol32(l)
+
+#define htol16(h) (h)
+#define htol32(h) (h)
+#define ltoh16(l) (l)
+#define ltoh32(l) (l)
+
+#if __AVR__
+#define read16(p) (*(const uint16_t*) (p))
+#define read32(p) (*(const uint32_t*) (p))
+#define write16(p, i) { *((uint16_t*) (p)) = i; }
+#define write32(p, i) { *((uint32_t*) (p)) = i; }
+#else
+uint16_t read16(const uint8_t* p);
+uint32_t read32(const uint8_t* p);
+void write16(uint8_t* p, uint16_t i);
+void write32(uint8_t* p, uint32_t i);
+#endif
+
 #endif
 
 /**
  * @}
  */
 
-#if LITTLE_ENDIAN || __AVR__
-#define htol16(h) (h)
-#define htol32(h) (h)
-#else
-uint16_t htol16(uint16_t h);
-uint32_t htol32(uint32_t h);
+
+
+
+
+#if SWAP_NEEDED
+uint16_t swap16(uint16_t i);
+uint32_t swap32(uint32_t i);
 #endif
 
 #ifdef __cplusplus

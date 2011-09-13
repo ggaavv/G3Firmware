@@ -23,20 +23,21 @@
 #include "LPC17xx.h"
 
 void read_all_from_flash (void){
-	__enable_irq ();
-	for (uint32_t i = USER_FLASH_AREA_START; i < USER_FLASH_AREA_SIZE; i++){
-		*((uint32_t*)eeprom::EEPROM_START_ADDRESS + i) = *((uint32_t*)USER_FLASH_AREA_START + i);
-	}
 	__disable_irq ();
+	for (uint32_t i = 0; i < (USER_FLASH_AREA_SIZE); i++) {
+//		*((uint32_t*)eeprom::EEPROM_START_ADDRESS + i) = *((uint32_t*)USER_FLASH_AREA_START + i);
+		eeprom_address(EEPROM_START_ADDRESS+i) = eeprom_address(USER_FLASH_AREA_START + i);
+	}
+	__enable_irq ();
 };
 
 void save_to_flash (void) {
-	__enable_irq ();
+	__disable_irq ();
 	IAP in_ap_prog;
 	int error_code_ret = in_ap_prog.erase(USER_FLASH_AREA_START, USER_FLASH_AREA_START);
 	error_code_ret = in_ap_prog.write((char)0x10000000, (char)USER_FLASH_AREA_START, (int)USER_FLASH_AREA_SIZE );
 	// read all variables back into Ram
-	__disable_irq ();
+	__enable_irq ();
 };
 
 namespace eeprom {
@@ -44,8 +45,8 @@ namespace eeprom {
 void init() {
 	read_all_from_flash();
 	uint8_t version[2];
-	version[0] = *(uint32_t*)eeprom::VERSION_LOW;
-	version[1] = *(uint32_t*)eeprom::VERSION_HIGH;
+	version[0] = eeprom_address(VERSION_LOW);
+	version[1] = eeprom_address(VERSION_HIGH);
 	if ((version[1]*100+version[0]) == firmware_version) return;
 	if (version[1] == 0xff || version[1] < 2) {
 		// Initialize eeprom map
@@ -55,11 +56,11 @@ void init() {
 							//		  bazyx
 		uint8_t endstop_invert = 0b00010111; // all endstops inverted
 							//		  bazyx
-		*(uint32_t*)eeprom::MICROSTEPS_P0 = microsteps::microstep_pinout(0);
-		*(uint32_t*)eeprom::MICROSTEPS_P1 = microsteps::microstep_pinout(1);
-		*(uint32_t*)eeprom::AXIS_INVERSION = axis_invert;
-		*(uint32_t*)eeprom::ENDSTOP_INVERSION = endstop_invert;
-		*(uint32_t*)eeprom::MACHINE_NAME = 0; // name is null
+		eeprom_address(MICROSTEPS_P0) = microsteps::microstep_pinout(0);
+		eeprom_address(MICROSTEPS_P1) = microsteps::microstep_pinout(1);
+		eeprom_address(AXIS_INVERSION) = axis_invert;
+		eeprom_address(ENDSTOP_INVERSION) = endstop_invert;
+		eeprom_address(MACHINE_NAME) = 0; // name is null
 	}
 	// Write version
 	version[0] = firmware_version % 100;

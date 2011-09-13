@@ -20,6 +20,10 @@
 #include "Errors.hh"
 #include "Motherboard.hh"
 #include "Commands.hh"
+/********************************/
+#include "test_led.hh"  // testing
+//test_led(1);
+/********************************/
 
 #define RETRIES 5
 
@@ -230,14 +234,20 @@ bool isTransactionDone() {
 }
 
 void runToolSlice() {
+	test_led3(1);
 		UART& uart = UART::getSlaveUART();
+		test_led3(2);
 	if (transaction_active) {
+		test_led3(3);
 		if (uart.in.isFinished())
 		{
+			test_led3(4);
 			transaction_active = false;
 		} else if (uart.in.hasError()) {
+			test_led3(5);
 		  if (uart.in.getErrorCode() == PacketError::NOISE_BYTE) {
 			  	  noise_byte_count++;
+			  	test_led3(5);
 			  uart.in.reset();
 		  } else
 			if (retries) {
@@ -269,6 +279,8 @@ void runToolSlice() {
 				transaction_active = false;
 					Motherboard::getBoard().indicateError(ERR_SLAVE_PACKET_TIMEOUT);
 			}
+
+			test_led3(11);
 		}
 	}
 }

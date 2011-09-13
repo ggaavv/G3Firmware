@@ -11,6 +11,10 @@ bool isConnected() {
 	// then measure it. If low, then we probably have an interface board.
 	// If high, we probably don't.
 
+	////DISABLED
+	return false;
+
+
 //	MCUCR = MCUCR & ~(1<<4);
 	INTERFACE_FOO_PIN.setValue(true);
 	INTERFACE_FOO_PIN.setDirection(false);

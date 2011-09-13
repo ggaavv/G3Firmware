@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2006-2010 by Roland Riegel <feedback@roland-riegel.de>
+ * Copyright (c) 2006-2011 by Roland Riegel <feedback@roland-riegel.de>
  *
  * This file is free software; you can redistribute it and/or modify
  * it under the terms of either the GNU General Public License version 2
@@ -8,8 +8,8 @@
  * published by the Free Software Foundation.
  */
 
-#ifndef SD_RAW_HH
-#define SD_RAW_HH
+#ifndef SD_RAW_H
+#define SD_RAW_H
 
 #include <stdint.h>
 #include "sd_raw_config.h"

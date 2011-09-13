@@ -75,11 +75,11 @@ else:
 	print "LPC1768: Gen 5 motherboard"
 	exit()
 
-srcs = Glob('system/*.c') + Glob('system/*.S') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('lib_sd/*.c')  + Glob('IAP_internal_flash_write/*.cc') + Glob('USBCDC/*.c') + Glob('#src/shared/*.cc') + Glob('*.cc')
+srcs = Glob('system/*.c') + Glob('system/*.S') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('lib_sd/*.c')  + Glob('IAP_internal_flash_write/*.cc') + Glob('VCOM_GV/*.c') + Glob('#src/shared/*.cc') + Glob('*.cc')
 
 
-include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'lib_sd', 'system', 'USBCDC', 'IAP_internal_flash_write', '#/src/Motherboard']
-search_paths = '-I#/src/shared -I/lib/include -I/lib/source -I/lib_sd -I/system -I/USBCDC -I#/src/Motherboard'
+include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'lib_sd', 'system', 'VCOM_GV', 'IAP_internal_flash_write', '#/src/Motherboard']
+search_paths = '-I#/src/shared -I/lib/include -I/lib/source -I/lib_sd -I/system -I/VCOM_GV -I#/src/Motherboard'
 
 
 if (os.environ.has_key('BUILD_NAME')):
@@ -93,7 +93,7 @@ codesourcery_path = 'C:/PROGRA~2/CodeSourcery/SOURCE~1/bin'
 
 OBJECTS = 'startup_LPC17xx.o core_cm3.o system_LPC17xx.o main_LPC17xx.o'
 LSCRIPT = '/src/Motherboard/system/ldscript_rom_gnu.ld'
-optimization='3'
+optimization='0'
 DEBUG = '-g0'
 #LISTING = -ahls
 
