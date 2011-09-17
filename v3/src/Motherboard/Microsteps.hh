@@ -25,13 +25,12 @@
 #include "Configuration.hh"
 
 namespace microsteps {
+uint32_t I2CDEV_S_ADDR = 0x20;
+uint32_t pin_port_map;
 
-	uint32_t I2CDEV_S_ADDR = 0x20;
-	uint32_t pin_port_map;
-
-#define BUFFER_SIZE			0x2
-	uint8_t Port0_I2C = 0;
-	uint8_t Port1_I2C = 0;
+#define BUFFER_SIZE	0x2
+uint8_t Port0_I2C = 0;
+uint8_t Port1_I2C = 0;
 
 enum step_dev {
 	Full_step,
@@ -65,7 +64,8 @@ bool B_MS1 = 1;
 bool B_MS2 = 1;
 bool B_MS3 = 1;
 
-uint8_t microstep_port_array [STEPPER_COUNT][3][3] = {
+//				[STEPPER_COUNT][MSx][port, no, MSx]
+uint8_t microstep_port_array [5][3][3] = {
 			//	port no MS1		port no MS2		port no MS3
 	/* X */	{	{0,  7, X_MS1},	{0,  6, X_MS2},	{0,  5, X_MS3}	},	/* X */
 	/* Y */	{	{0,  3, Y_MS1},	{0,  2, Y_MS2},	{0,  1, Y_MS3}	},	/* Y */
@@ -74,6 +74,7 @@ uint8_t microstep_port_array [STEPPER_COUNT][3][3] = {
 	/* B */	{	{1,  3, B_MS1},	{1,  2, B_MS2},	{1,  1, B_MS3}	}	/* B */
 };
 
+void init();
 uint8_t microstep_pinout(bool port_no);
 }
 

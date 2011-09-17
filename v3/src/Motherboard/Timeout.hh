@@ -32,10 +32,12 @@ private:
 	bool elapsed;
 	micros_t start_stamp_micros;
 	micros_t duration_micros;
+	micros_t delta;
 public:
 	Timeout();
 	void start(micros_t duration_micros);
 	bool hasElapsed();
+	micros_t hasLeft();
 	bool isActive() const { return active; }
 	void abort();
 };

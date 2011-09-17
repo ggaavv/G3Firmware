@@ -107,30 +107,30 @@ void Motherboard::reset() {
 //	OCR1A = INTERVAL_IN_MICROSECONDS * 16;
 //	TIMSK1 = 0x02; // turn on OCR1A match interrupt
 	// Reset and configure timer 2, the debug LED flasher timer.
-	TIM_TIMERCFG_Type TMR2_Cfg;
-	TIM_MATCHCFG_Type TMR2_Match;
+	TIM_TIMERCFG_Type TMR1_Cfg;
+	TIM_MATCHCFG_Type TMR1_Match;
 	/* On reset, Timer0/1 are enabled (PCTIM0/1 = 1), and Timer2/3 are disabled (PCTIM2/3 = 0).*/
 	/* Initialize timer 2, prescale count time of 100uS */
-	TMR2_Cfg.PrescaleOption = TIM_PRESCALE_USVAL;
-	TMR2_Cfg.PrescaleValue = 10000000;  //reset to 10000
+	TMR1_Cfg.PrescaleOption = TIM_PRESCALE_USVAL;
+	TMR1_Cfg.PrescaleValue = 10000;  //reset to 10000
 	/* Use channel 1, MR1 */
-	TMR2_Match.MatchChannel = 0;
+	TMR1_Match.MatchChannel = 0;
 	/* Enable interrupt when MR0 matches the value in TC register */
-	TMR2_Match.IntOnMatch = ENABLE;
+	TMR1_Match.IntOnMatch = ENABLE;
 	/* Enable reset on MR0: TIMER will reset if MR0 matches it */
-	TMR2_Match.ResetOnMatch = TRUE;
+	TMR1_Match.ResetOnMatch = TRUE;
 	/* Don't stop on MR0 if MR0 matches it*/
-	TMR2_Match.StopOnMatch = FALSE;
+	TMR1_Match.StopOnMatch = FALSE;
 	/* Do nothing for external output pin if match (see cmsis help, there are another options) */
-	TMR2_Match.ExtMatchOutputType = TIM_EXTMATCH_NOTHING;
+	TMR1_Match.ExtMatchOutputType = TIM_EXTMATCH_NOTHING;
 	/* Set Match value, count value of 100 (10 * 10000uS = 100000us = 1s --> 10 Hz) */
-	TMR2_Match.MatchValue = 100;
+	TMR1_Match.MatchValue = 100;
 	/* Set configuration for Tim_config and Tim_MatchConfig */
-//	TIM_Init(LPC_TIM2, TIM_TIMER_MODE, &TMR2_Cfg);
-//	TIM_ConfigMatch(LPC_TIM2, &TMR2_Match);/* preemption = 1, sub-priority = 1 */
-//	NVIC_SetPriority(TIMER2_IRQn, ((0x01<<3)|0x01));
-//	NVIC_EnableIRQ(TIMER2_IRQn);
-//	TIM_Cmd(LPC_TIM2,ENABLE);
+	TIM_Init(LPC_TIM1, TIM_TIMER_MODE, &TMR1_Cfg);
+	TIM_ConfigMatch(LPC_TIM1, &TMR1_Match);/* preemption = 1, sub-priority = 1 */
+	NVIC_SetPriority(TIMER1_IRQn, ((0x01<<3)|0x01));
+	NVIC_EnableIRQ(TIMER1_IRQn);
+	TIM_Cmd(LPC_TIM1,ENABLE);
 //	TCCR2A = 0x00;
 //	TCCR2B = 0x07; // prescaler at 1/1024
 //	TIMSK2 = 0x01; // OVF flag on
@@ -190,14 +190,12 @@ void Motherboard::runMotherboardSlice() {
 
 
 /// Timer one comparator match interrupt
-
-//ISR(TIMER1_COMPA_vect) {
 void TIMER0_IRQHandler (void){
 	if((LPC_TIM0->IR & 0x01) == 0x01) {// if MR0 interrupt
 	LPC_TIM0->IR |= 1 << 0; // Clear MR0 interrupt flag
-	LPC_GPIO1->FIOPIN = 0 << 23; // Toggle P1.23
+//	LPC_GPIO1->FIOPIN = 0 << 23; // Toggle P1.23
+	Motherboard::getBoard().doInterrupt();
 	}
-//	Motherboard::getBoard().doInterrupt();
 //	TIM_ClearIntPending(LPC_TIM1,TIM_MR1_INT);
 }
 
@@ -242,31 +240,33 @@ int blink_ovfs_remaining = 0;
 int blinked_so_far = 0;
 
 /// Timer 2 overflow interrupt
-//ISR(TIMER2_OVF_vect) {
-void TIMER2_IRQHandler (){
-	if (blink_ovfs_remaining > 0) {
-		blink_ovfs_remaining--;
-	} else {
-		if (blink_state == BLINK_ON) {
-			blinked_so_far++;
-			blink_state = BLINK_OFF;
-			blink_ovfs_remaining = OVFS_OFF;
-//			DEBUG_PIN.setValue(false);
-		} else if (blink_state == BLINK_OFF) {
-			if (blinked_so_far >= blink_count) {
-				blink_state = BLINK_PAUSE;
-				blink_ovfs_remaining = OVFS_PAUSE;
-			} else {
+void TIMER1_IRQHandler (){
+	if((LPC_TIM1->IR & 0x01) == 0x01) {// if MR0 interrupt
+	LPC_TIM1->IR |= 1 << 0; // Clear MR0 interrupt flag
+		if (blink_ovfs_remaining > 0) {
+			blink_ovfs_remaining--;
+		} else {
+			if (blink_state == BLINK_ON) {
+				blinked_so_far++;
+				blink_state = BLINK_OFF;
+				blink_ovfs_remaining = OVFS_OFF;
+	//			DEBUG_PIN.setValue(false);
+			} else if (blink_state == BLINK_OFF) {
+				if (blinked_so_far >= blink_count) {
+					blink_state = BLINK_PAUSE;
+					blink_ovfs_remaining = OVFS_PAUSE;
+				} else {
+					blink_state = BLINK_ON;
+					blink_ovfs_remaining = OVFS_ON;
+	//				DEBUG_PIN.setValue(true);
+				}
+			} else if (blink_state == BLINK_PAUSE) {
+				blinked_so_far = 0;
 				blink_state = BLINK_ON;
 				blink_ovfs_remaining = OVFS_ON;
-//				DEBUG_PIN.setValue(true);
+	//			DEBUG_PIN.setValue(true);
 			}
-		} else if (blink_state == BLINK_PAUSE) {
-			blinked_so_far = 0;
-			blink_state = BLINK_ON;
-			blink_ovfs_remaining = OVFS_ON;
-//			DEBUG_PIN.setValue(true);
 		}
+		TIM_ClearIntPending(LPC_TIM2,TIM_MR2_INT);
 	}
-	TIM_ClearIntPending(LPC_TIM2,TIM_MR2_INT);
 }

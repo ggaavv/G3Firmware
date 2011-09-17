@@ -38,6 +38,13 @@ bool Timeout::hasElapsed() {
 	return elapsed;
 }
 
+micros_t Timeout::hasLeft() {
+	micros_t delta = Motherboard::getBoard().getCurrentMicros() - start_stamp_micros;
+	return delta;
+}
+
 void Timeout::abort() {
 	active = false;
 }
+
+

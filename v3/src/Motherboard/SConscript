@@ -75,7 +75,7 @@ else:
 	print "LPC1768: Gen 5 motherboard"
 	exit()
 
-srcs = Glob('system/*.c') + Glob('system/*.S') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('lib_sd/*.c')  + Glob('IAP_internal_flash_write/*.cc') + Glob('VCOM_GV/*.c') + Glob('#src/shared/*.cc') + Glob('*.cc')
+srcs = Glob('system/*.c') + Glob('system/*.cc') + Glob('system/*.S') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('lib_sd/*.c')  + Glob('IAP_internal_flash_write/*.cc') + Glob('VCOM_GV/*.c') + Glob('#src/shared/*.cc') + Glob('*.cc')
 
 
 include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'lib_sd', 'system', 'VCOM_GV', 'IAP_internal_flash_write', '#/src/Motherboard']
@@ -117,7 +117,7 @@ env=Environment(tools=['mingw'],
 	#  Compiler Options
 	CCFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
 	CXXFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
-	LDFLAGS = '-mcpu='+mcu+' --gc-sections -mthumb -O'+optimization+' -nostartfiles -Wl,-Map='+target_name+'.map,--cref -Wl,-T '+LD_PATH+' -Wl,--allow-multiple-definition',
+	LDFLAGS = '-mcpu='+mcu+' --gc-sections -mthumb -O'+optimization+' -Wl,-Map='+target_name+'.map,--cref -Wl,-T '+LD_PATH+' -Wl,--allow-multiple-definition',
 	ASFLAGS = '-mcpu='+mcu+' --defsym RAM_MODE=0',
 	CPPPATH=include_paths)
 

@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BOARDS_MB24_MOTHERBOARD_HH_
-#define BOARDS_MB24_MOTHERBOARD_HH_
+#ifndef MOTHERBOARD_HH_
+#define MOTHERBOARD_HH_
 
 //
 // This file describes the Motherboard object, which provides interfaces for
@@ -86,4 +86,4 @@ public:
 	void doInterrupt();
 };
 
-#endif // BOARDS_MB24_MOTHERBOARD_HH_
+#endif // MOTHERBOARD_HH_

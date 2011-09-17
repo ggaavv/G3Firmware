@@ -12,9 +12,9 @@ uint8_t menu3[] = "TESTING 123";
 
 void print_menu(void)
 {
-	UART_Send(LPC_UART0, menu1, sizeof(menu1), BLOCKING);
-	UART_Send(LPC_UART0, menu2, sizeof(menu2), BLOCKING);
-	UART_Send(LPC_UART0, menu3, sizeof(menu3), BLOCKING);
+	UART_Send((LPC_UART_TypeDef *)LPC_UART0, menu1, sizeof(menu1), BLOCKING);
+	UART_Send((LPC_UART_TypeDef *)LPC_UART0, menu2, sizeof(menu2), BLOCKING);
+	UART_Send((LPC_UART_TypeDef *)LPC_UART0, menu3, sizeof(menu3), BLOCKING);
 }
 
 void test_uart(){
@@ -47,7 +47,7 @@ void test_uart(){
 	UART_ConfigStructInit(&UARTConfigStruct);
 
 	// Initialize UART0 peripheral with given to corresponding parameter
-	UART_Init(LPC_UART0, &UARTConfigStruct);
+	UART_Init((LPC_UART_TypeDef *)LPC_UART0, &UARTConfigStruct);
 
 	/* Initialize FIFOConfigStruct to default state:
 	 * 				- FIFO_DMAMode = DISABLE
@@ -59,11 +59,11 @@ void test_uart(){
 	UART_FIFOConfigStructInit(&UARTFIFOConfigStruct);
 
 	// Initialize FIFO for UART0 peripheral
-	UART_FIFOConfig(LPC_UART0, &UARTFIFOConfigStruct);
+	UART_FIFOConfig((LPC_UART_TypeDef *)LPC_UART0, &UARTFIFOConfigStruct);
 
 
 	// Enable UART Transmit
-	UART_TxCmd(LPC_UART0, ENABLE);
+	UART_TxCmd((LPC_UART_TypeDef *)LPC_UART0, ENABLE);
 
 	// print welcome screen
 	print_menu();
@@ -72,10 +72,10 @@ void test_uart(){
 	uint8_t c = 6;
 	uint8_t d = 7;
 
-	UART_SendByte(LPC_UART0, a);
-	UART_SendByte(LPC_UART0, b);
-	UART_SendByte(LPC_UART0, c);
-	UART_SendByte(LPC_UART0, d);
+	UART_SendByte((LPC_UART_TypeDef *)LPC_UART0, a);
+	UART_SendByte((LPC_UART_TypeDef *)LPC_UART0, b);
+	UART_SendByte((LPC_UART_TypeDef *)LPC_UART0, c);
+	UART_SendByte((LPC_UART_TypeDef *)LPC_UART0, d);
 
 	//while(1);
 }
