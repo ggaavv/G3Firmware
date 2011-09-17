@@ -21,14 +21,16 @@
 
 #include <stdint.h>
 
+
 void read_all_from_flash (void);
 void save_to_flash (void);
+uint8_t microstep_pinout(uint8_t port_no);
 
 #define eeprom_address(x)   (*(volatile unsigned long *)(x))
 
 //uint32_t EEPROM_START_ADDRESS		= (uint32_t*)0x10001000;
 //uint32_t EEPROM_START_ADDRESS		= 0x10001000;
-#define FLASH_BASE					(0x10001000UL)
+#define FLASH_BASE					(0x10007F00UL)
 #define EEPROM_START_ADDRESS		(FLASH_BASE + 0x00000)
 
 
@@ -77,6 +79,48 @@ void save_to_flash (void);
 //uint32_t *AXIS_HOME_POSITIONS		= (uint32_t*)0x10000800;
 //uint32_t AXIS_HOME_POSITIONS		= EEPROM_START_ADDRESS + 0x0800;
 #define AXIS_HOME_POSITIONS		(FLASH_BASE + 0x00800)
+
+enum step_dev {
+	Full_step,
+	Half_step,
+	Quarter_step,
+	Eighth_step,
+	Sixteenth_step
+};
+
+// Microstepping
+	/*	MS1 	MS2 	MS3 	Microstep Resolution
+		Low 	Low 	Low 	Full step
+		High 	Low 	Low 	Half step
+		Low 	High 	Low 	Quarter step
+		High 	High 	Low 	Eighth step
+		High 	High 	High 	Sixteenth step	*/
+
+bool X_MS1 = 1;
+bool X_MS2 = 1;
+bool X_MS3 = 1;
+bool Y_MS1 = 1;
+bool Y_MS2 = 1;
+bool Y_MS3 = 1;
+bool Z_MS1 = 1;
+bool Z_MS2 = 1;
+bool Z_MS3 = 1;
+bool A_MS1 = 1;
+bool A_MS2 = 1;
+bool A_MS3 = 1;
+bool B_MS1 = 1;
+bool B_MS2 = 1;
+bool B_MS3 = 1;
+
+			//				[STEPPER_COUNT][MSx][port, no, MSx]
+uint8_t microstep_port_array [5][3][3] = {
+			//	port no MS1		port no MS2		port no MS3
+	/* X */	{	{0,  7, X_MS1},	{0,  6, X_MS2},	{0,  5, X_MS3}	},	/* X */
+	/* Y */	{	{0,  3, Y_MS1},	{0,  2, Y_MS2},	{0,  1, Y_MS3}	},	/* Y */
+	/* Z */	{	{0,  1, Z_MS1},	{1,  0, Z_MS2},	{1,  7, Z_MS3}	},	/* Z */
+	/* A */	{	{1,  6, A_MS1},	{1,  5, A_MS2},	{1,  4, A_MS3}	},	/* A */
+	/* B */	{	{1,  3, B_MS1},	{1,  2, B_MS2},	{1,  1, B_MS3}	}	/* B */
+};
 
 namespace eeprom {
 

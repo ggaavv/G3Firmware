@@ -15,12 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-
-
-#include "Microsteps.hh"
-#include "lpc17xx_i2c.h"
-#include "LPC17xx.h"
+extern "C" {
+	#include "lpc17xx_pinsel.h"
+	#include "LPC17xx.h"
+	#include "lpc17xx_i2c.h"
+}
 #include "EepromMap.hh"
+#include "Microsteps.hh"
 
 namespace microsteps {
 
@@ -72,19 +73,6 @@ void init() {
 	Master_Buf[2] = eeprom_address(MICROSTEPS_P1);  // Data to Register - all port1 Outputs
 	/* Send port output to I2C */
 	I2C_MasterTransferData(LPC_I2C1, &transferMCfg, I2C_TRANSFER_POLLING);
-}
-
-uint8_t microstep_pinout(bool port_no) {
-	uint8_t microsteping_port;
-	for (uint8_t ii = 0; ii < STEPPER_COUNT; ii++){
-		for (uint8_t iii = 0; ii < 3; iii++){
-			uint8_t port_bit = 0x1 << microstep_port_array [ii][iii][1];
-			if (microstep_port_array [ii][iii][0] == port_no) {
-				microsteping_port += (microstep_port_array [ii][iii][2] << port_bit);
-			}
-		}
-	}
-	return microsteping_port;
 }
 
 }

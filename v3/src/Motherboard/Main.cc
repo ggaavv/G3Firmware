@@ -38,14 +38,15 @@ extern "C" {
 #include "EepromMap.hh"
 #include "Main.hh"
 #include "Delay.hh"
-#include "test.hh"  // testing
 /********************************/
+#include "test.hh"  // testing
 #include "test_led.hh"  // testing
 #include "test_u.hh"
 #include "Uart32.c"
-	#include "lpc17xx_timer.h"
-	#include "LPC17xx.h"
-	#include "lpc17xx_clkpwr.h"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
 //test_led(1);
 /********************************/
 
@@ -54,7 +55,7 @@ extern "C" {
  *----------------------------------------------------------------------------*/
 
 void reset(bool hard_reset) {
-	__disable_irq ();
+//	__disable_irq ();
 	Motherboard& board = Motherboard::getBoard();
 	uint8_t menu2[] = "get board\r";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu2, sizeof(menu2), BLOCKING);
@@ -85,20 +86,21 @@ void reset(bool hard_reset) {
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu8, sizeof(menu8), BLOCKING);
 		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, t.hasLeft());
 		uint8_t menu9[] = "3\r";
+//		_delay_us(2000);
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
 		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, t.hasLeft());
 		uint8_t menu10[] = "4\r";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu10, sizeof(menu10), BLOCKING);
 		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, t.hasLeft());
 
-		uint64_t getPClockkk = CLKPWR_GetPCLK (CLKPWR_PCLKSEL_TIMER1);
+//		uint64_t getPClockkk = CLKPWR_GetPCLK (CLKPWR_PCLKSEL_TIMER1);
 
-		uint64_t clkdlycnttt = (getPClockkk * 100000) / 1000000;
+//		uint64_t clkdlycnttt = (getPClockkk * 100000) / 1000000;
 
 
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, TIM_GetIntStatus(LPC_TIM0, TIM_MR0_INT));
-		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, (uint32_t)getPClockkk);
-
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, TIM_GetIntStatus(LPC_TIM0, TIM_MR0_INT));
+//		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, (uint32_t)clkdlycnttt);
+		test_led3(1);
 		while (!t.hasElapsed());
 	}
 	if (!tool::reset())
@@ -123,7 +125,8 @@ int main (void) {
 //	UART_SendByte ((LPC_UART_TypeDef *)LPC_UART2, 4);
 	uint8_t menu1[] = "\rStart\r";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu1, sizeof(menu1), BLOCKING);
-	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, SystemCoreClock);
+	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, SCB->VTOR);
+	test_led3(1);
 	Motherboard& board = Motherboard::getBoard();
 	steppers::init(Motherboard::getBoard());
 	reset(true);
@@ -136,6 +139,7 @@ int main (void) {
 		command::runCommandSlice();
 		// Motherboard slice
 		board.runMotherboardSlice();
+		test_led3(1);
 	}
 	return 0;
 }

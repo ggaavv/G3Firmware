@@ -17,17 +17,31 @@
 
 
 #include "EepromMap.hh"
-#include "Microsteps.hh"
+//#include "Microsteps.hh"
 #include "Version.hh"
 #include "IAP.hh"
 #include "LPC17xx.h"
+/********************************/
+#include "test.hh"  // testing
+#include "test_led.hh"  // testing
+#include "test_u.hh"
+#include "Uart32.c"
+#include "Delay.hh"
+	#include "lpc17xx_timer.h"
+	#include "LPC17xx.h"
+	#include "lpc17xx_clkpwr.h"
+//test_led(1);
+/********************************/
 
 void read_all_from_flash (void){
-	__disable_irq ();
+//	__disable_irq ();
 	for (uint32_t i = USER_FLASH_AREA_START; i < (USER_FLASH_AREA_START + USER_FLASH_AREA_SIZE); i++) {
-		eeprom_address(EEPROM_START_ADDRESS+i) = eeprom_address(USER_FLASH_AREA_START + i);
+		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, i);
+		uint8_t menu22[] = "\r";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu22, sizeof(menu22), BLOCKING);
+//		eeprom_address(EEPROM_START_ADDRESS+i) = eeprom_address(USER_FLASH_AREA_START + i);
 	}
-	__enable_irq ();
+//	__enable_irq ();
 };
 
 void save_to_flash (void) {
@@ -38,6 +52,19 @@ void save_to_flash (void) {
 	// read all variables back into Ram
 	__enable_irq ();
 };
+
+uint8_t microstep_pinout(uint8_t port_no) {
+	uint8_t microsteping_port;
+	for (uint8_t ii = 0; ii < 5; ii++){   //Counts through STEPPER_COUNT
+		for (uint8_t iii = 0; ii < 3; iii++){
+			uint8_t port_bit = 0x1 << microstep_port_array [ii][iii][1];
+			if (microstep_port_array [ii][iii][0] == port_no) {
+				microsteping_port += (microstep_port_array [ii][iii][2] << port_bit);
+			}
+		}
+	}
+	return microsteping_port;
+}
 
 namespace eeprom {
 
@@ -55,8 +82,8 @@ void init() {
 							//		  bazyx
 		uint8_t endstop_invert = 0b00010111; // all endstops inverted
 							//		  bazyx
-		eeprom_address(MICROSTEPS_P0) = microsteps::microstep_pinout(0);
-		eeprom_address(MICROSTEPS_P1) = microsteps::microstep_pinout(1);
+		eeprom_address(MICROSTEPS_P0) = microstep_pinout(0);
+		eeprom_address(MICROSTEPS_P1) = microstep_pinout(1);
 		eeprom_address(AXIS_INVERSION) = axis_invert;
 		eeprom_address(ENDSTOP_INVERSION) = endstop_invert;
 		eeprom_address(MACHINE_NAME) = 0; // name is null
@@ -64,7 +91,7 @@ void init() {
 	// Write version
 	version[0] = firmware_version % 100;
 	version[1] = firmware_version / 100;
-	save_to_flash();
+//	save_to_flash();
 }
 
 uint8_t getEeprom8(uint32_t location, const uint8_t default_value) {

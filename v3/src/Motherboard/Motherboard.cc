@@ -19,6 +19,7 @@
 extern "C" {
 	#include "lpc17xx_timer.h"
 	#include "LPC17xx.h"
+	#include "lpc17xx_nvic.h"
 }
 #include "Motherboard.hh"
 #include "Configuration.hh"
@@ -33,6 +34,90 @@ extern "C" {
 //test_led(1);
 /********************************/
 
+/// Number of times to blink the debug LED on each cycle
+volatile uint8_t blink_count = 0;
+
+/// The current state of the debug LED
+enum debugled{
+	BLINK_NONE,
+	BLINK_ON,
+	BLINK_OFF,
+	BLINK_PAUSE
+} blink_state = BLINK_NONE;
+
+/// Write an error code to the debug pin.
+void Motherboard::indicateError(int error_code) {
+	if (error_code == 0) {
+		blink_state = BLINK_NONE;
+		DEBUG_PIN.setValue(false);
+	}
+	else if (blink_count != error_code) {
+		blink_state = BLINK_OFF;
+	}
+	blink_count = error_code;
+}
+
+/// Get the current error code.
+uint8_t Motherboard::getCurrentError() {
+	return blink_count;
+}
+
+/// Timer2 overflow cycles that the LED remains on while blinking
+#define OVFS_ON 18
+/// Timer2 overflow cycles that the LED remains off while blinking
+#define OVFS_OFF 18
+/// Timer2 overflow cycles between flash cycles
+#define OVFS_PAUSE 80
+
+/// Number of overflows remaining on the current blink cycle
+int blink_ovfs_remaining = 0;
+/// Number of blinks performed in the current cycle
+int blinked_so_far = 0;
+
+
+/// Timer one comparator match interrupt
+extern "C" void TIMER0_IRQHandler (void){
+//	test_led3(1);
+	if((LPC_TIM0->IR & 0x01) == 0x01) {// if MR0 interrupt
+	LPC_TIM0->IR |= 1 << 0; // Clear MR0 interrupt flag
+	LPC_GPIO1->FIOPIN = 0 << 23; // Toggle P1.23
+	LPC_TIM0->IR = 1;			/* clear interrupt flag */
+	Motherboard::getBoard().doInterrupt();
+	}
+	TIM_ClearIntPending(LPC_TIM1,TIM_MR1_INT);
+}
+
+/// Timer 2 overflow interrupt
+extern "C" void TIMER1_IRQHandler (){
+	if((LPC_TIM1->IR & 0x01) == 0x01) {// if MR0 interrupt
+	LPC_TIM1->IR |= 1 << 0; // Clear MR0 interrupt flag
+		if (blink_ovfs_remaining > 0) {
+			blink_ovfs_remaining--;
+		} else {
+			if (blink_state == BLINK_ON) {
+				blinked_so_far++;
+				blink_state = BLINK_OFF;
+				blink_ovfs_remaining = OVFS_OFF;
+	//			DEBUG_PIN.setValue(false);
+			} else if (blink_state == BLINK_OFF) {
+				if (blinked_so_far >= blink_count) {
+					blink_state = BLINK_PAUSE;
+					blink_ovfs_remaining = OVFS_PAUSE;
+				} else {
+					blink_state = BLINK_ON;
+					blink_ovfs_remaining = OVFS_ON;
+	//				DEBUG_PIN.setValue(true);
+				}
+			} else if (blink_state == BLINK_PAUSE) {
+				blinked_so_far = 0;
+				blink_state = BLINK_ON;
+				blink_ovfs_remaining = OVFS_ON;
+	//			DEBUG_PIN.setValue(true);
+			}
+		}
+		TIM_ClearIntPending(LPC_TIM2,TIM_MR2_INT);
+	}
+}
 
 /// Instantiate static motherboard instance
 Motherboard Motherboard::motherboard;
@@ -76,31 +161,33 @@ void Motherboard::reset() {
 	UART::getSlaveUART().in.reset();
 	// Reset and configure timer 1, the microsecond and stepper
 	// interrupt timer.
+//	NVIC_SetVector(TIMER0_IRQn,uint32_t(TIMER0_IRQHandler));
 
 	TIM_TIMERCFG_Type TMR0_Cfg;
 	TIM_MATCHCFG_Type TMR0_Match;
-	/* On reset, Timer0/1 are enabled (PCTIM0/1 = 1), and Timer2/3 are disabled (PCTIM2/3 = 0).*/
-	/* Initialize timer 1, prescale count time of 100uS */
+	// On reset, Timer0/1 are enabled (PCTIM0/1 = 1), and Timer2/3 are disabled (PCTIM2/3 = 0).
+	// Initialize timer 1, prescale count time of 100uS
 	TMR0_Cfg.PrescaleOption = TIM_PRESCALE_USVAL;
 	TMR0_Cfg.PrescaleValue = 1; // reset to 1 - 1uS
-	/* Use channel 1, MR1 */
+	// Use channel 1, MR1
 	TMR0_Match.MatchChannel = 0;
-	/* Enable interrupt when MR0 matches the value in TC register */
+	// Enable interrupt when MR0 matches the value in TC register
 	TMR0_Match.IntOnMatch = TRUE;
-	/* Enable reset on MR0: TIMER will reset if MR0 matches it */
+	// Enable reset on MR0: TIMER will reset if MR0 matches it
 	TMR0_Match.ResetOnMatch = TRUE;
-	/* Don't stop on MR0 if MR0 matches it*/
+	// Don't stop on MR0 if MR0 matches it
 	TMR0_Match.StopOnMatch = FALSE;
-	/* Do nothing for external output pin if match (see cmsis help, there are another options) */
+	// Do nothing for external output pin if match (see cmsis help, there are another options)
 	TMR0_Match.ExtMatchOutputType = TIM_EXTMATCH_NOTHING;
-	/* Set Match value, count value of INTERVAL_IN_MICROSECONDS (64 * 1uS = 64us ) */
+	// Set Match value, count value of INTERVAL_IN_MICROSECONDS (64 * 1uS = 64us )
 	TMR0_Match.MatchValue = INTERVAL_IN_MICROSECONDS;
-	/* Set configuration for Tim_config and Tim_MatchConfig */
-	TIM_Init(LPC_TIM1, TIM_TIMER_MODE, &TMR0_Cfg);
-	TIM_ConfigMatch(LPC_TIM1, &TMR0_Match);/* preemption = 1, sub-priority = 1 */
+	// Set configuration for Tim_config and Tim_MatchConfig
+	TIM_Init(LPC_TIM0, TIM_TIMER_MODE, &TMR0_Cfg);
+	TIM_ConfigMatch(LPC_TIM0, &TMR0_Match);	// preemption = 1, sub-priority = 1
 //	NVIC_SetPriority(TIMER0_IRQn, ((0x01<<3)|0x01));
-//	NVIC_EnableIRQ(TIMER0_IRQn);
-//	TIM_Cmd(LPC_TIM0,ENABLE);
+	NVIC_EnableIRQ(TIMER0_IRQn);
+	TIM_Cmd(LPC_TIM0,ENABLE);
+
 //	TCCR1A = 0x00;
 //	TCCR1B = 0x09;
 //	TCCR1C = 0x00;
@@ -135,16 +222,6 @@ void Motherboard::reset() {
 //	TCCR2B = 0x07; // prescaler at 1/1024
 //	TIMSK2 = 0x01; // OVF flag on
 	// Configure the debug pin.
-
-    LPC_SC->PCONP |= 1 << 1; //Power up Timer 0
-    LPC_SC->PCLKSEL0 |= 1 << 2; // Clock for timer = CCLK
-    LPC_TIM0->MR0 = 1 << 25; // Give a value suitable for the LED blinking frequency based on the clock frequency
-    LPC_TIM0->MCR |= 1 << 0; // Interrupt on Match0 compare
-    LPC_TIM0->MCR |= 1 << 1; // Reset timer on Match 0.
-    LPC_TIM0->TCR |= 1 << 1; // Manually Reset Timer0 ( forced )
-    LPC_TIM0->TCR &= ~(1 << 1); // stop resetting the timer.
-    NVIC_EnableIRQ(TIMER0_IRQn); // Enable timer interrupt
-    LPC_TIM0->TCR |= 1 << 0; // Start timer
 //	DEBUG_PIN.setDirection(true);
 	// Check if the interface board is attached
 	hasInterfaceBoard = interfaceboard::isConnected();
@@ -189,84 +266,3 @@ void Motherboard::runMotherboardSlice() {
 }
 
 
-/// Timer one comparator match interrupt
-void TIMER0_IRQHandler (void){
-	if((LPC_TIM0->IR & 0x01) == 0x01) {// if MR0 interrupt
-	LPC_TIM0->IR |= 1 << 0; // Clear MR0 interrupt flag
-//	LPC_GPIO1->FIOPIN = 0 << 23; // Toggle P1.23
-	Motherboard::getBoard().doInterrupt();
-	}
-//	TIM_ClearIntPending(LPC_TIM1,TIM_MR1_INT);
-}
-
-/// Number of times to blink the debug LED on each cycle
-volatile uint8_t blink_count = 0;
-
-/// The current state of the debug LED
-enum debugled{
-	BLINK_NONE,
-	BLINK_ON,
-	BLINK_OFF,
-	BLINK_PAUSE
-} blink_state = BLINK_NONE;
-
-/// Write an error code to the debug pin.
-void Motherboard::indicateError(int error_code) {
-	if (error_code == 0) {
-		blink_state = BLINK_NONE;
-		DEBUG_PIN.setValue(false);
-	}
-	else if (blink_count != error_code) {
-		blink_state = BLINK_OFF;
-	}
-	blink_count = error_code;
-}
-
-/// Get the current error code.
-uint8_t Motherboard::getCurrentError() {
-	return blink_count;
-}
-
-/// Timer2 overflow cycles that the LED remains on while blinking
-#define OVFS_ON 18
-/// Timer2 overflow cycles that the LED remains off while blinking
-#define OVFS_OFF 18
-/// Timer2 overflow cycles between flash cycles
-#define OVFS_PAUSE 80
-
-/// Number of overflows remaining on the current blink cycle
-int blink_ovfs_remaining = 0;
-/// Number of blinks performed in the current cycle
-int blinked_so_far = 0;
-
-/// Timer 2 overflow interrupt
-void TIMER1_IRQHandler (){
-	if((LPC_TIM1->IR & 0x01) == 0x01) {// if MR0 interrupt
-	LPC_TIM1->IR |= 1 << 0; // Clear MR0 interrupt flag
-		if (blink_ovfs_remaining > 0) {
-			blink_ovfs_remaining--;
-		} else {
-			if (blink_state == BLINK_ON) {
-				blinked_so_far++;
-				blink_state = BLINK_OFF;
-				blink_ovfs_remaining = OVFS_OFF;
-	//			DEBUG_PIN.setValue(false);
-			} else if (blink_state == BLINK_OFF) {
-				if (blinked_so_far >= blink_count) {
-					blink_state = BLINK_PAUSE;
-					blink_ovfs_remaining = OVFS_PAUSE;
-				} else {
-					blink_state = BLINK_ON;
-					blink_ovfs_remaining = OVFS_ON;
-	//				DEBUG_PIN.setValue(true);
-				}
-			} else if (blink_state == BLINK_PAUSE) {
-				blinked_so_far = 0;
-				blink_state = BLINK_ON;
-				blink_ovfs_remaining = OVFS_ON;
-	//			DEBUG_PIN.setValue(true);
-			}
-		}
-		TIM_ClearIntPending(LPC_TIM2,TIM_MR2_INT);
-	}
-}

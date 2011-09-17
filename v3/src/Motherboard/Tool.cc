@@ -21,7 +21,14 @@
 #include "Motherboard.hh"
 #include "Commands.hh"
 /********************************/
+#include "test.hh"  // testing
 #include "test_led.hh"  // testing
+#include "test_u.hh"
+#include "Uart32.c"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
 //test_led(1);
 /********************************/
 
@@ -184,6 +191,12 @@ bool reset() {
     packet_retry_count = 0;
     noise_byte_count = 0;
 
+
+	uint8_t menu20[] = "start of tool reset\r";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu20, sizeof(menu20), BLOCKING);
+//	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, t.hasLeft());
+
+
     // Now, test comms by pinging the extruder controller relentlessly.
 	// TODO: handle cases where a toolhead is not attached?
 	uint8_t i = 0;
@@ -197,7 +210,13 @@ bool reset() {
         setToolIndicatorLED();
     }
 
-    return UART::getSlaveUART().in.isFinished();
+	uint8_t menu21[] = "end of tool reset\r";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu21, sizeof(menu21), BLOCKING);
+
+	return UART::getSlaveUART().in.isFinished();
+
+	uint8_t menu22[] = "2end of tool reset\r";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu22, sizeof(menu22), BLOCKING);
 }
 
 /// The tool is considered locked if a transaction is in progress or

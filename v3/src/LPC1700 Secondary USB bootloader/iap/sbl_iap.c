@@ -169,11 +169,34 @@ __asm void boot_jump( uint32_t address ){
 
 void execute_user_code(void)
 {
+
+/****************************************************/
+//			EITHER OR
 	/* Change the Vector Table to the USER_FLASH_START 
 	in case the user application uses interrupts */
 	SCB->VTOR = USER_FLASH_START & 0x1FFFFF80;
 
 	boot_jump(USER_FLASH_START);
+/****************************************************/
+
+/****************************************************/
+	//			EITHER OR
+ //   void (*user_code_entry)(void);
+
+    // Change the Vector Table to the USER_FLASH_START
+    // in case the user application uses interrupts
+
+//    volatile const DWORD *stack_adr = 0x00002000;
+//    volatile const DWORD *start_adr = 0x00002004;
+
+//    __MSR_MSP(*stack_adr);
+
+//    NVIC_SetVectorTable(NVIC_VectTab_FLASH, USER_FLASH_START);
+
+//    user_code_entry = (void (*)(void))(*start_adr);
+//    user_code_entry();
+/****************************************************/
+
 }
 
 uint32_t user_code_present(void)

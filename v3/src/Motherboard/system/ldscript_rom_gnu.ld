@@ -1,26 +1,26 @@
-/*Copyright (C) 2011 by Sagar G V, Thejasvi M V
+/* Linker script for Cortex-M3
+ *
+ * Version:CodeSourcery Sourcery G++ Lite 2007q3-53
+ * BugURL:https://support.codesourcery.com/GNUToolchain/
+ *
+ *  Copyright 2007 CodeSourcery.
+ *
+ * The authors hereby grant permission to use, copy, modify, distribute,
+ * and license this software and its documentation for any purpose, provided
+ * that existing copyright notices are retained in all copies and that this
+ * notice is included verbatim in any distributions. No written agreement,
+ * license, or royalty fee is required for any of the authorized uses.
+ * Modifications to this software may be copyrighted by their authors
+ * and need not follow the licensing terms described here, provided that
+ * the new terms are clearly indicated on the first page of each file where
+ * they apply. */
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.*/
-
-OUTPUT_FORMAT ("elf32-littlearm")
-ENTRY(Reset_Handler)
+OUTPUT_FORMAT ("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
+/*STARTUP(startup_LPC17xx.o)*/
+/*ENTRY(_start)*/
 SEARCH_DIR(.)
+/*GROUP(-lc)*/
+/*GROUP(-lgcc -lc -lcs3 -lcs3hosted -lcs3arm)*/
 
 MEMORY
 {
@@ -32,194 +32,197 @@ MEMORY
 	/* executable region (x) */
 
 	/* Main ROM region - 512k for LPC1768 */
-	IROM (rx) : ORIGIN = 0x00002000, LENGTH = 504k
 
-        /* local static RAM - 32k for LPC1768 */
-        IRAM0 (rwx) : ORIGIN = 0x10000000, LENGTH = 32k
-
-        /* AHB SRAM - 16k for LPC1768 - often used for USB */
-        IRAM1 (rwx) : ORIGIN = 0x2007C000, LENGTH = 16k
-		IRAM2 (rwx) : ORIGIN = 0x20080000, LENGTH = 16k
+	/* Starting at 0x00003000, bootloader 0x00000000-2000 eeprom replacement at 0x00003000 */
+    rom (rx)  : ORIGIN = 0x00003000, LENGTH = 500K       /* 512K - 8K(bootloader) - 4K(eeprom) = 500K */
+/*  rom (rx)  : ORIGIN = 0x00003000, LENGTH = 244K */    /* 256K - 8K(bootloader) - 4K(eeprom) = 244K */
+/*  rom (rx)  : ORIGIN = 0x00003000, LENGTH = 116K */    /* 128K - 8K(bootloader) - 4K(eeprom) = 116K */
+  
+    /* local static RAM - 32k for LPC1768 */
+    /* Using 0x10000000 to 0x10001000 for temp storage for IAP */
+/*  ram (rwx) : ORIGIN = 0x10001000, LENGTH =  28K     32K - 4K(eeprom) = 28K */
+    ram (rwx) : ORIGIN = 0x10001000, LENGTH =  28K   /*  32K - 4K(eeprom) = 28K */
+  
+    /* AHB SRAM - 16k for LPC1768 - often used for USB */
+  ram1(rwx) : ORIGIN = 0x2007C000, LENGTH = 16k
+  ram2(rwx) : ORIGIN = 0x20080000, LENGTH = 16k
 }
 
-/* SECTION command : Define mapping of input sections */
-/* into output sections. */
+/* These force the linker to search for particular symbols from
+ * the start of the link process and thus ensure the user's
+ * overrides are picked up
+ */
+EXTERN(__cs3_reset_cortex_m)
+EXTERN(__cs3_interrupt_vector_cortex_m)
+EXTERN(__cs3_start_c main __cs3_stack __cs3_stack_size __cs3_heap_end)
+
+PROVIDE(__cs3_stack = __cs3_region_start_ram + __cs3_region_size_ram);
+PROVIDE(__cs3_stack_size = __cs3_region_start_ram + __cs3_region_size_ram - _end);
+PROVIDE(__cs3_heap_start = _end);
+PROVIDE(__cs3_heap_end = __cs3_region_start_ram + __cs3_region_size_ram);
 
 SECTIONS
 {
-	/******************************************/
-	/* code section */
+  .text :
+  {
+    CREATE_OBJECT_SYMBOLS
+    __cs3_region_start_rom = .;
+    *(.cs3.region-head.rom)
+    __cs3_interrupt_vector = __cs3_interrupt_vector_cortex_m;
+    *(.cs3.interrupt_vector)
+    /* Make sure we pulled in an interrupt vector.  */
+    ASSERT (. != __cs3_interrupt_vector_cortex_m, "No interrupt vector");
+    *(.rom)
+    *(.rom.b)
 
-        /* "normal" code */
-	
-	.text :
-	{
-		KEEP(*(.isr_vector .isr_vector.*))
-		*(.text .text.*)
-		*(.gnu.linkonce.t.*)
-		*(.glue_7)
-		*(.glue_7t)
-		*(.gcc_except_table)
-		*(.rodata .rodata*)
-		*(.gnu.linkonce.r.*)
-		. = ALIGN(4);
-		KEEP(*(.init))
-		
-		. = ALIGN(4);
-		__preinit_array_start = .;
-		KEEP (*(.preinit_array))
-		__preinit_array_end = .;
-		
-		. = ALIGN(4);
-		__init_array_start = .;
-		KEEP (*(SORT(.init_array.*)))
-		KEEP (*(.init_array))
-		__init_array_end = .;
-		
-		. = ALIGN(0x4);
-		KEEP (*crtbegin.o(.ctors))
-		KEEP (*(EXCLUDE_FILE (*crtend.o) .ctors))
-		KEEP (*(SORT(.ctors.*)))
-		KEEP (*crtend.o(.ctors))
-		
-		. = ALIGN(4);
-		KEEP(*(.fini))
-		
-		. = ALIGN(4);
-		__fini_array_start = .;
-		KEEP (*(.fini_array))
-		KEEP (*(SORT(.fini_array.*)))
-		__fini_array_end = .;
-		
+    __cs3_reset = __cs3_reset_cortex_m;
+    *(.cs3.reset)
+    /* Make sure we pulled in some reset code.  */
+    ASSERT (. != __cs3_reset, "No reset code");
 
-		. = ALIGN(0x4);
-		KEEP (*crtbegin.o(.dtors))
-		KEEP (*(EXCLUDE_FILE (*crtend.o) .dtors))
-		KEEP (*(SORT(.dtors.*)))
-		KEEP (*crtend.o(.dtors))
-		
-		/* End Of .text section */
-		_etext = .;
-                _sifastcode = .;
-				
-	} >IROM
+    *(.text .text.* .gnu.linkonce.t.*)
+    *(.plt)
+    *(.gnu.warning)
+    *(.glue_7t) *(.glue_7) *(.vfp11_veneer)
 
-	
-	__exidx_start = .;
-	.ARM.exidx :
-	{
-		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
-	} >IROM
-	__exidx_end = .;
-	
-        /**************************************************/
-        /* fastcode - copied at startup & executed in RAM */
+    *(.rodata .rodata.* .gnu.linkonce.r.*)
 
-        .fastcode :
-        {
-          . = ALIGN (4);
-          _sfastcode = . ;
+    *(.ARM.extab* .gnu.linkonce.armextab.*)
+    *(.gcc_except_table)
+    *(.eh_frame_hdr)
+    *(.eh_frame)
 
-          *(.glue_7t) *(.glue_7)
-          *(.fastcode)
-          
-          /* add other modules here ... */
+    . = ALIGN(4);
+    KEEP(*(.init))
 
-          . = ALIGN (4);
-          _efastcode = . ;
-          _sidata = .;
-        } >IRAM0 AT>IROM
+    . = ALIGN(4);
+    __preinit_array_start = .;
+    KEEP (*(.preinit_array))
+    __preinit_array_end = .;
 
-	/******************************************/
-	/* This used for USB RAM section */
+    . = ALIGN(4);
+    __init_array_start = .;
+    KEEP (*(SORT(.init_array.*)))
+    KEEP (*(.init_array))
+    __init_array_end = .;
+
+    . = ALIGN(0x4);
+    KEEP (*crtbegin.o(.ctors))
+    KEEP (*(EXCLUDE_FILE (*crtend.o) .ctors))
+    KEEP (*(SORT(.ctors.*)))
+    KEEP (*crtend.o(.ctors))
+
+    . = ALIGN(4);
+    KEEP(*(.fini))
+
+    . = ALIGN(4);
+    __fini_array_start = .;
+    KEEP (*(.fini_array))
+    KEEP (*(SORT(.fini_array.*)))
+    __fini_array_end = .;
+
+    KEEP (*crtbegin.o(.dtors))
+    KEEP (*(EXCLUDE_FILE (*crtend.o) .dtors))
+    KEEP (*(SORT(.dtors.*)))
+    KEEP (*crtend.o(.dtors))
+
+    . = ALIGN(4);
+    __cs3_regions = .;
+    LONG (0)
+    LONG (__cs3_region_init_ram)
+    LONG (__cs3_region_start_ram)
+    LONG (__cs3_region_init_size_ram)
+    LONG (__cs3_region_zero_size_ram)
+  }
+
+  /* .ARM.exidx is sorted, so has to go in its own output section.  */
+  __exidx_start = .;
+  .ARM.exidx :
+  {
+    *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+  } >rom
+  __exidx_end = .;
+  .text.align :
+  {
+    . = ALIGN(8);
+    _etext = .;
+  } >rom
+  __cs3_region_size_rom = LENGTH(rom);
+  __cs3_region_num = 1;
+
+  .data :
+  {
+    __cs3_region_start_ram = .;
+    *(.cs3.region-head.ram)
+    KEEP(*(.jcr))
+    *(.got.plt) *(.got)
+    *(.shdata)
+    *(.data .data.* .gnu.linkonce.d.*)
+    *(.ram)
+    . = ALIGN (8);
+    _edata = .;
+  } >ram AT>rom
+  .bss :
+  {
+    *(.shbss)
+    *(.bss .bss.* .gnu.linkonce.b.*)
+    *(COMMON)
+    *(.ram.b)
+    . = ALIGN (8);
+    _end = .;
+    __end = .;
+  } >ram AT>rom
+  /* This used for USB RAM section */
 	.usb_ram (NOLOAD):
 	{
 		*.o (USB_RAM)
-	} > IRAM1
+	} > ram2
+  .heap (NOLOAD) :
+  {
+    *(.heap)
+  } >ram
+  .stack (__cs3_stack - __cs3_stack_size) (NOLOAD):
+  {
+    *(.stack)
+    _estack = .;
+    PROVIDE(estack = .);
+  } >ram
 
-        /******************************************/
-	/* data section */
-	.data :
-  	{
-        	_sidata = LOADADDR (.data);
-  		. = ALIGN(4);
-		_sdata = .;
+  __cs3_region_init_ram = LOADADDR (.data);
+  __cs3_region_init_size_ram = _edata - __cs3_region_start_ram;
+  __cs3_region_zero_size_ram = _end - _edata;
+  __cs3_region_size_ram = LENGTH(ram);
+  __cs3_region_num = 1;
 
-		*(vtable vtable.*)
-		*(.data .data.*)
-		*(.gnu.linkonce.d*)
+  .stab 0 (NOLOAD) : { *(.stab) }
+  .stabstr 0 (NOLOAD) : { *(.stabstr) }
+  /* DWARF debug sections.
+   * Symbols in the DWARF debugging sections are relative to the beginning
+   * of the section so we begin them at 0.  */
+  /* DWARF 1 */
+  .debug          0 : { *(.debug) }
+  .line           0 : { *(.line) }
+  /* GNU DWARF 1 extensions */
+  .debug_srcinfo  0 : { *(.debug_srcinfo) }
+  .debug_sfnames  0 : { *(.debug_sfnames) }
+  /* DWARF 1.1 and DWARF 2 */
+  .debug_aranges  0 : { *(.debug_aranges) }
+  .debug_pubnames 0 : { *(.debug_pubnames) }
+  /* DWARF 2 */
+  .debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
+  .debug_abbrev   0 : { *(.debug_abbrev) }
+  .debug_line     0 : { *(.debug_line) }
+  .debug_frame    0 : { *(.debug_frame) }
+  .debug_str      0 : { *(.debug_str) }
+  .debug_loc      0 : { *(.debug_loc) }
+  .debug_macinfo  0 : { *(.debug_macinfo) }
+  /* SGI/MIPS DWARF 2 extensions */
+  .debug_weaknames 0 : { *(.debug_weaknames) }
+  .debug_funcnames 0 : { *(.debug_funcnames) }
+  .debug_typenames 0 : { *(.debug_typenames) }
+  .debug_varnames  0 : { *(.debug_varnames) }
 
-		. = ALIGN(4);
-		_edata = . ;
-	} >IRAM0 AT>IROM
-
-	/******************************************/
-	/* For no-init variables section */
-	.bss (NOLOAD) :
-	{
-		. = ALIGN(4);
-		_sbss = . ;
-
-		*(.bss .bss.*)
-		*(.gnu.linkonce.b*)
-		*(COMMON)
-
-		. = ALIGN(4);
-		_ebss = . ;
-	} >IRAM0
-
-	/******************************************/
-	/* For stack section */
-  	.stackarea (NOLOAD) :
-  	{
-	    . = ALIGN(8);
-	    _sstack = .;
-
-		*(.stackarea .stackarea.*)
-
-		. = ALIGN(8);
-		_estack = .;
-
-		. = ALIGN(4);
-		_end = . ;
-		PROVIDE (end = .);
-
-  	} > IRAM0
-	_stack = ORIGIN(IRAM0) + LENGTH(IRAM0);
-
-
-	/******************************************/
-	/* Stabs debugging sections.  */
-	.stab          0 : { *(.stab) }
-	.stabstr       0 : { *(.stabstr) }
-	.stab.excl     0 : { *(.stab.excl) }
-	.stab.exclstr  0 : { *(.stab.exclstr) }
-	.stab.index    0 : { *(.stab.index) }
-	.stab.indexstr 0 : { *(.stab.indexstr) }
-	/* .comment       0 : { *(.comment) } */
-	/* DWARF debug sections.
-	 Symbols in the DWARF debugging sections are relative to the beginning
-	 of the section so we begin them at 0.  */
-	/* DWARF 1 */
-	.debug          0 : { *(.debug) }
-	.line           0 : { *(.line) }
-	/* GNU DWARF 1 extensions */
-	.debug_srcinfo  0 : { *(.debug_srcinfo) }
-	.debug_sfnames  0 : { *(.debug_sfnames) }
-	/* DWARF 1.1 and DWARF 2 */
-	.debug_aranges  0 : { *(.debug_aranges) }
-	.debug_pubnames 0 : { *(.debug_pubnames) }
-	/* DWARF 2 */
-	.debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
-	.debug_abbrev   0 : { *(.debug_abbrev) }
-	.debug_line     0 : { *(.debug_line) }
-	.debug_frame    0 : { *(.debug_frame) }
-	.debug_str      0 : { *(.debug_str) }
-	.debug_loc      0 : { *(.debug_loc) }
-	.debug_macinfo  0 : { *(.debug_macinfo) }
-	/* SGI/MIPS DWARF 2 extensions */
-	.debug_weaknames 0 : { *(.debug_weaknames) }
-	.debug_funcnames 0 : { *(.debug_funcnames) }
-	.debug_typenames 0 : { *(.debug_typenames) }
-	.debug_varnames  0 : { *(.debug_varnames) }
+  .note.gnu.arm.ident 0 : { KEEP (*(.note.gnu.arm.ident)) }
+  .ARM.attributes 0 : { KEEP (*(.ARM.attributes)) }
+  /DISCARD/ : { *(.note.GNU-stack) }
 }

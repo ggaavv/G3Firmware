@@ -338,14 +338,15 @@ int VCOM_getchar(void)
 
 /**
 	Interrupt handler
-	
+
 	Simply calls the USB ISR
  */
 //void USBIntHandler(void)
-void USB_IRQHandler(void)
-{
-	USBHwISR();
-}
+
+//void USB_IRQHandler(void)
+//{
+//	USBHwISR();
+//}
 
 
 static void USBFrameHandler(U16 wFrame)

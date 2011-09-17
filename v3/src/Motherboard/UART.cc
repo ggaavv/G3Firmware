@@ -26,13 +26,25 @@ extern "C" {
 	#include "lpc17xx_uart.h"
 	#include "lpc17xx_pinsel.h"
 	#include "LPC17xx.h"
-		#include "usbSerial.h"
+	#include "usbSerial.h"
 }
 //#include <avr/sfr_defs.h>
 //#include <avr/interrupt.h>
 //#include <avr/io.h>
 //#include <util/delay.h>
 #include "Delay.hh"
+
+/**
+	Interrupt handler
+
+	Simply calls the USB ISR
+ */
+//void USBIntHandler(void)
+
+extern "C" void USB_IRQHandler(void)
+{
+	USBHwISR();
+}
 
 #define FIFO_Enabled 1
 
