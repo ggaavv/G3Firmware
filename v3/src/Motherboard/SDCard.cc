@@ -16,7 +16,6 @@
  */
 
 #include "SDCard.hh"
-#include "lpc_types.h"
 
 //#include <avr/io.h>
 #include <string.h>
@@ -190,9 +189,9 @@ bool createFile(char *name)
   return fat_create_file(dd, name, &fileEntry) != 0;
 }
 
-bool capturing;
-bool playing;
-uint32_t capturedBytes;
+bool capturing = false;
+bool playing = false;
+uint32_t capturedBytes = 0L;
 
 bool isPlaying() {
 	return playing;

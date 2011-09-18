@@ -90,15 +90,15 @@ if (os.environ.has_key('BUILD_NAME')):
 #else:
 #	codesourcery_path = dirname(os.popen('/C:/Program Files (x86)/CodeSourcery/Sourcery G++ Lite/bin avr-gcc').readlines()[0])
 ########### Uncomment top for 64bit win7 #########################
-#codesourcery_path = 'C:/PROGRA~2/CodeSourcery/SOURCE~1/bin'
+codesourcery_path = 'C:/PROGRA~2/CodeSourcery/SOURCE~1/bin'
 ########### Uncomment top for 32bit xp #########################
-codesourcery_path = 'C:/PROGRA~1/CodeSourcery/SOURCE~1/bin'
+#codesourcery_path = 'C:/PROGRA~1/CodeSourcery/SOURCE~1/bin'
 
 OBJECTS = 'startup_LPC17xx.o core_cm3.o system_LPC17xx.o main_LPC17xx.o'
 ########### Uncomment top for 64bit win7 #########################
-#LSCRIPT = '/src/Motherboard/system/ldscript_rom_gnu.ld'
+LSCRIPT = '/src/Motherboard/system/ldscript_rom_gnu.ld'
 ########### Uncomment top for 32bit xp #########################
-LSCRIPT = 'D:/DOCUME~1/113007~1/git/G3Firmware/v3/src/Mother~1/system/ldscript_rom_gnu.ld'
+#LSCRIPT = 'D:/DOCUME~1/113007~1/git/G3Firmware/v3/src/Mother~1/system/ldscript_rom_gnu.ld'
 #LSCRIPT = '/src/Motherboard/system/LPC17xx_For_NXP_USB_Bootloader.ld'
 optimization='0'
 DEBUG = '-g0'
@@ -106,9 +106,9 @@ DEBUG = '-g0'
 
 print Dir('.').abspath
 ########### Uncomment top for 64bit win7 #########################
-#LD_PATH = Dir('#').abspath + LSCRIPT
+LD_PATH = Dir('#').abspath + LSCRIPT
 ########### Uncomment top for 32bit xp #########################
-LD_PATH = LSCRIPT
+#LD_PATH = LSCRIPT
 print LD_PATH
 
 hex_name = target_name + '.hex'

@@ -34,14 +34,20 @@
 /********************************/
 
 void read_all_from_flash (void){
-//	__disable_irq ();
-	for (uint32_t i = USER_FLASH_AREA_START; i < (USER_FLASH_AREA_START + USER_FLASH_AREA_SIZE); i++) {
-		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, i);
-		uint8_t menu22[] = "\r";
+	__disable_irq ();
+	for (uint32_t i = USER_FLASH_AREA_START; i < (USER_FLASH_AREA_START + USER_FLASH_AREA_SIZE); i++, i++, i++, i++) {
+		eeprom_address(EEPROM_START_ADDRESS+i) = eeprom_address(USER_FLASH_AREA_START + i);
+/*		uint8_t menu22[] = "\ni value : ";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu22, sizeof(menu22), BLOCKING);
-//		eeprom_address(EEPROM_START_ADDRESS+i) = eeprom_address(USER_FLASH_AREA_START + i);
-	}
-//	__enable_irq ();
+		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, i);
+		uint8_t menu222[] = " from flash address : ";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu222, sizeof(menu222), BLOCKING);
+		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, eeprom_address(USER_FLASH_AREA_START + i));
+		uint8_t menu223[] = " eeprom address : ";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu223, sizeof(menu223), BLOCKING);
+		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, eeprom_address(EEPROM_START_ADDRESS + i));
+*/		}
+	__enable_irq ();
 };
 
 void save_to_flash (void) {
@@ -86,12 +92,14 @@ void init() {
 		eeprom_address(MICROSTEPS_P1) = microstep_pinout(1);
 		eeprom_address(AXIS_INVERSION) = axis_invert;
 		eeprom_address(ENDSTOP_INVERSION) = endstop_invert;
-		eeprom_address(MACHINE_NAME) = 0; // name is null
+		for (uint32_t i = MACHINE_NAME; i < (MACHINE_NAME + (32*4)); i++, i++, i++, i++) {
+			eeprom_address(MACHINE_NAME+i) = 0x00000000; // name is null
+		}
 	}
 	// Write version
 	version[0] = firmware_version % 100;
 	version[1] = firmware_version / 100;
-//	save_to_flash();
+	save_to_flash();
 }
 
 uint8_t getEeprom8(uint32_t location, const uint8_t default_value) {

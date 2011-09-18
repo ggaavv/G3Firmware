@@ -1,5 +1,3 @@
-//#define POLLED_USBSERIAL TRUE
-
 
 /*
 	LPCUSB, an USB device driver for LPC microcontrollers	
@@ -406,7 +404,6 @@ int usbSerialInit()
 
 #ifndef POLLED_USBSERIAL
 	//enable_USB_interrupts();
-	NVIC_EnableIRQ(USB_IRQn); 
 	
 #endif
 		

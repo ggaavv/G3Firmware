@@ -96,7 +96,7 @@ bool getToolVersion() {
 		uint8_t menu232[] = "not locked\r";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu232, sizeof(menu232), BLOCKING);
 
-	//		if (acquire_lock_timeout.hasElapsed()) {
+			if (acquire_lock_timeout.hasElapsed()) {
                     locked = true; // grant ourselves the lock
                     transaction_active = false; // abort transaction!
 
@@ -105,7 +105,7 @@ bool getToolVersion() {
 
                 	Motherboard::getBoard().indicateError(ERR_SLAVE_LOCK_TIMEOUT);
                     break;
-      //      }
+            }
     }
 
 	uint8_t menu23[] = "get tool version after getlock\r";
@@ -214,12 +214,6 @@ bool reset() {
     packet_retry_count = 0;
     noise_byte_count = 0;
 
-
-	uint8_t menu20[] = "start of tool reset\r";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu20, sizeof(menu20), BLOCKING);
-//	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, t.hasLeft());
-
-
     // Now, test comms by pinging the extruder controller relentlessly.
 	// TODO: handle cases where a toolhead is not attached?
 	uint8_t i = 0;
@@ -232,14 +226,7 @@ bool reset() {
     if (packet_retry_count <= 0) {
         setToolIndicatorLED();
     }
-
-	uint8_t menu21[] = "end of tool reset\r";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu21, sizeof(menu21), BLOCKING);
-
 	return UART::getSlaveUART().in.isFinished();
-
-	uint8_t menu22[] = "2end of tool reset\r";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu22, sizeof(menu22), BLOCKING);
 }
 
 /// The tool is considered locked if a transaction is in progress or
@@ -276,20 +263,14 @@ bool isTransactionDone() {
 }
 
 void runToolSlice() {
-	test_led3(1);
 		UART& uart = UART::getSlaveUART();
-		test_led3(2);
 	if (transaction_active) {
-		test_led3(3);
 		if (uart.in.isFinished())
 		{
-			test_led3(4);
 			transaction_active = false;
 		} else if (uart.in.hasError()) {
-			test_led3(5);
 		  if (uart.in.getErrorCode() == PacketError::NOISE_BYTE) {
 			  	  noise_byte_count++;
-			  	test_led3(5);
 			  uart.in.reset();
 		  } else
 			if (retries) {
@@ -321,8 +302,6 @@ void runToolSlice() {
 				transaction_active = false;
 					Motherboard::getBoard().indicateError(ERR_SLAVE_PACKET_TIMEOUT);
 			}
-
-			test_led3(11);
 		}
 	}
 }

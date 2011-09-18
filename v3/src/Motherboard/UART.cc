@@ -74,10 +74,12 @@ inline void speak() {
 UART::UART(uint8_t index) : index_(index), enabled_(false) {
 	if (index_ == 0) {
 		// Init USB for UART
+		usbSerialInit();
+		int c = 21;
+		VCOM_putchar(c);
 //		USB_Init();						// USB Initialization
 //		USB_Connect(TRUE);
 //		while (!USB_Configuration);		// wait until USB is configured
-//		usbSerialInit();
 	} else if (index_ == 1) {
 		// UART Configuration Structure
 		UART_CFG_Type u_cfg;
@@ -169,7 +171,7 @@ void UART::reset() {
 //void USBIntHandler(void)
 extern "C" void USB_IRQHandler(void)
 {
-//	USBHwISR();
+	USBHwISR();
 }
 
 volatile uint8_t byte_in;

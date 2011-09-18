@@ -30,7 +30,14 @@ extern "C" {
 #include "Commands.hh"
 
 /********************************/
+#include "test.hh"  // testing
 #include "test_led.hh"  // testing
+#include "test_u.hh"
+#include "Uart32.c"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
 //test_led(1);
 /********************************/
 
@@ -77,23 +84,33 @@ int blinked_so_far = 0;
 
 /// Timer one comparator match interrupt
 extern "C" void TIMER0_IRQHandler (void){
-//	if((LPC_TIM0->IR & 0x01) == 0x01) {// if MR0 interrupt
+//	uint8_t menu110[] = "\r IRQ0 ";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu110, sizeof(menu110), BLOCKING);
+//	uint8_t menu111[] = " ";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu111, sizeof(menu111), BLOCKING);
+//	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, Motherboard::getBoard().getCurrentMicros());
+	if((LPC_TIM0->IR & 0x01) == 0x01) {// if MR0 interrupt
 	Motherboard::getBoard().doInterrupt();
-//	}
+	}
 	TIM_ClearIntPending(LPC_TIM0,TIM_MR0_INT);
 }
 
 /// Timer 2 overflow interrupt
-extern "C" void TIMER1_IRQHandler (){
-//	if((LPC_TIM1->IR & 0x01) == 0x01) {// if MR0 interrupt
-/*		if (blink_ovfs_remaining > 0) {
+extern "C" void TIMER1_IRQHandler (void){
+//	uint8_t menu10[] = "\r IRQ1 ";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu10, sizeof(menu10), BLOCKING);
+//	uint8_t menu11[] = " ";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu11, sizeof(menu11), BLOCKING);
+//	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, Motherboard::getBoard().getCurrentMicros());
+	if((LPC_TIM1->IR & 0x01) == 0x01) {// if MR0 interrupt
+		if (blink_ovfs_remaining > 0) {
 			blink_ovfs_remaining--;
 		} else {
 			if (blink_state == BLINK_ON) {
 				blinked_so_far++;
 				blink_state = BLINK_OFF;
 				blink_ovfs_remaining = OVFS_OFF;
-	//			DEBUG_PIN.setValue(false);
+				DEBUG_PIN.setValue(false);
 			} else if (blink_state == BLINK_OFF) {
 				if (blinked_so_far >= blink_count) {
 					blink_state = BLINK_PAUSE;
@@ -101,17 +118,17 @@ extern "C" void TIMER1_IRQHandler (){
 				} else {
 					blink_state = BLINK_ON;
 					blink_ovfs_remaining = OVFS_ON;
-	//				DEBUG_PIN.setValue(true);
+					DEBUG_PIN.setValue(true);
 				}
 			} else if (blink_state == BLINK_PAUSE) {
 				blinked_so_far = 0;
 				blink_state = BLINK_ON;
 				blink_ovfs_remaining = OVFS_ON;
-	//			DEBUG_PIN.setValue(true);
+				DEBUG_PIN.setValue(true);
 			}
 		}
-*/		TIM_ClearIntPending(LPC_TIM1,TIM_MR1_INT);
-//	}
+	}
+	TIM_ClearIntPending(LPC_TIM1,TIM_MR1_INT);
 }
 
 /// Instantiate static motherboard instance
@@ -146,19 +163,17 @@ void Motherboard::reset() {
 //	indicateError(0); // turn off blinker
 	// Init steppers
 	// NB: for now, we are turning on Z hold for these boards!
-	steppers::setHoldZ(true);
-	for (int i = 0; i < STEPPER_COUNT; i++) {
-		stepper[i].init(5);
-	}
+//	steppers::setHoldZ(true);
+//	for (int i = 0; i < STEPPER_COUNT; i++) {
+//		stepper[i].init(5);
+//	}
 	// Initialize the host and slave UARTs
-//	UART::getHostUART().enable(true);
-//	UART::getHostUART().in.reset();
-//	UART::getSlaveUART().enable(true);
-//	UART::getSlaveUART().in.reset();
+	UART::getHostUART().enable(true);
+	UART::getHostUART().in.reset();
+	UART::getSlaveUART().enable(true);
+	UART::getSlaveUART().in.reset();
 	// Reset and configure timer 1, the microsecond and stepper
 	// interrupt timer.
-//	NVIC_SetVector(TIMER0_IRQn,uint32_t(TIMER0_IRQHandler));
-
 	TIM_TIMERCFG_Type TMR0_Cfg;
 	TIM_MATCHCFG_Type TMR0_Match;
 	// On reset, Timer0/1 are enabled (PCTIM0/1 = 1), and Timer2/3 are disabled (PCTIM2/3 = 0).
@@ -179,16 +194,12 @@ void Motherboard::reset() {
 	TMR0_Match.MatchValue = INTERVAL_IN_MICROSECONDS;
 	// Set configuration for Tim_config and Tim_MatchConfig
 	TIM_Init(LPC_TIM0, TIM_TIMER_MODE, &TMR0_Cfg);
-	TIM_ConfigMatch(LPC_TIM0, &TMR0_Match);	// preemption = 1, sub-priority = 1
-//	NVIC_SetPriority(TIMER0_IRQn, ((0x01<<3)|0x01));
+	TIM_ConfigMatch(LPC_TIM0, &TMR0_Match);
+	// 0 top priority 32 lowest
+	NVIC_SetPriority(TIMER0_IRQn, 0);
 	NVIC_EnableIRQ(TIMER0_IRQn);
 	TIM_Cmd(LPC_TIM0,ENABLE);
 
-//	TCCR1A = 0x00;
-//	TCCR1B = 0x09;
-//	TCCR1C = 0x00;
-//	OCR1A = INTERVAL_IN_MICROSECONDS * 16;
-//	TIMSK1 = 0x02; // turn on OCR1A match interrupt
 	// Reset and configure timer 2, the debug LED flasher timer.
 	TIM_TIMERCFG_Type TMR1_Cfg;
 	TIM_MATCHCFG_Type TMR1_Match;
@@ -197,7 +208,7 @@ void Motherboard::reset() {
 	TMR1_Cfg.PrescaleOption = TIM_PRESCALE_USVAL;
 	TMR1_Cfg.PrescaleValue = 10000;  //reset to 10000
 	/* Use channel 1, MR1 */
-	TMR1_Match.MatchChannel = 0;
+	TMR1_Match.MatchChannel = 1;
 	/* Enable interrupt when MR0 matches the value in TC register */
 	TMR1_Match.IntOnMatch = ENABLE;
 	/* Enable reset on MR0: TIMER will reset if MR0 matches it */
@@ -210,15 +221,13 @@ void Motherboard::reset() {
 	TMR1_Match.MatchValue = 100;
 	/* Set configuration for Tim_config and Tim_MatchConfig */
 	TIM_Init(LPC_TIM1, TIM_TIMER_MODE, &TMR1_Cfg);
-	TIM_ConfigMatch(LPC_TIM1, &TMR1_Match);/* preemption = 1, sub-priority = 1 */
-	NVIC_SetPriority(TIMER1_IRQn, ((0x01<<3)|0x01));
+	TIM_ConfigMatch(LPC_TIM1, &TMR1_Match);
+	// 0 top priority 32 lowest
+	NVIC_SetPriority(TIMER1_IRQn, 10);
 	NVIC_EnableIRQ(TIMER1_IRQn);
 	TIM_Cmd(LPC_TIM1,ENABLE);
-//	TCCR2A = 0x00;
-//	TCCR2B = 0x07; // prescaler at 1/1024
-//	TIMSK2 = 0x01; // OVF flag on
 	// Configure the debug pin.
-//	DEBUG_PIN.setDirection(true);
+	DEBUG_PIN.setDirection(true);
 	// Check if the interface board is attached
 	hasInterfaceBoard = interfaceboard::isConnected();
 	if (hasInterfaceBoard) {
@@ -227,7 +236,7 @@ void Motherboard::reset() {
 		interface_update_timeout.start(interfaceboard::getUpdateRate());
 	}
     // Blindly try to reset the toolhead with index 0.
-//        resetToolhead();
+//	resetToolhead();
 }
 
 /// Get the number of microseconds that have passed since
