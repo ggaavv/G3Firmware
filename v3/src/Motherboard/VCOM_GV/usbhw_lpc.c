@@ -462,7 +462,7 @@ void USBHwISR(void)
 	U16	wFrame;
 
 	// LED9 monitors total time in interrupt routine
-	DEBUG_LED_ON(6);
+//	DEBUG_LED_ON(6);
 
 	// handle device interrupts
 	dwStatus = LPC_USB->USBDevIntSt;
@@ -493,9 +493,9 @@ void USBHwISR(void)
 					((bDevStat & RST) ? DEV_STATUS_RESET : 0);
 			// call handler
 			if (_pfnDevIntHandler != NULL) {
-				DEBUG_LED_ON(5);		
+				DEBUG_LED_ON(5);
 				_pfnDevIntHandler(bStat);
-				DEBUG_LED_OFF(5);		
+				DEBUG_LED_OFF(5);
 			}
 		}
 	}
@@ -520,7 +520,7 @@ void USBHwISR(void)
 						((bEPStat & EPSTAT_PO) ? EP_STATUS_ERROR : 0);
 				// call handler
 				if (_apfnEPIntHandlers[i / 2] != NULL) {
-					DEBUG_LED_ON(7);		
+					DEBUG_LED_ON(7);
 					_apfnEPIntHandlers[i / 2](IDX2EP(i), bStat);
 					DEBUG_LED_OFF(7);
 				}
@@ -528,7 +528,7 @@ void USBHwISR(void)
 		}
 	}
 	
-	DEBUG_LED_OFF(6);		
+	DEBUG_LED_OFF(6);
 }
 
 

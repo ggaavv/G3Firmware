@@ -134,10 +134,16 @@ int main (void) {
 		// Toolhead interaction thread.
 		tool::runToolSlice();
 		// Host interaction thread.
+		uint8_t menu111[] = "tool slice run\r";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu111, sizeof(menu111), BLOCKING);
 		host::runHostSlice();
 		// Command handling thread.
+		uint8_t menu112[] = "host slice run\r";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu112, sizeof(menu112), BLOCKING);
 		command::runCommandSlice();
 		// Motherboard slice
+		uint8_t menu113[] = "command slice run\r";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu113, sizeof(menu113), BLOCKING);
 		board.runMotherboardSlice();
 		test_led3(1);
 	}

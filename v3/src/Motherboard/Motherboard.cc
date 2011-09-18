@@ -77,21 +77,16 @@ int blinked_so_far = 0;
 
 /// Timer one comparator match interrupt
 extern "C" void TIMER0_IRQHandler (void){
-//	test_led3(1);
-	if((LPC_TIM0->IR & 0x01) == 0x01) {// if MR0 interrupt
-	LPC_TIM0->IR |= 1 << 0; // Clear MR0 interrupt flag
-	LPC_GPIO1->FIOPIN = 0 << 23; // Toggle P1.23
-	LPC_TIM0->IR = 1;			/* clear interrupt flag */
+//	if((LPC_TIM0->IR & 0x01) == 0x01) {// if MR0 interrupt
 	Motherboard::getBoard().doInterrupt();
-	}
-	TIM_ClearIntPending(LPC_TIM1,TIM_MR1_INT);
+//	}
+	TIM_ClearIntPending(LPC_TIM0,TIM_MR0_INT);
 }
 
 /// Timer 2 overflow interrupt
 extern "C" void TIMER1_IRQHandler (){
-	if((LPC_TIM1->IR & 0x01) == 0x01) {// if MR0 interrupt
-	LPC_TIM1->IR |= 1 << 0; // Clear MR0 interrupt flag
-		if (blink_ovfs_remaining > 0) {
+//	if((LPC_TIM1->IR & 0x01) == 0x01) {// if MR0 interrupt
+/*		if (blink_ovfs_remaining > 0) {
 			blink_ovfs_remaining--;
 		} else {
 			if (blink_state == BLINK_ON) {
@@ -115,8 +110,8 @@ extern "C" void TIMER1_IRQHandler (){
 	//			DEBUG_PIN.setValue(true);
 			}
 		}
-		TIM_ClearIntPending(LPC_TIM2,TIM_MR2_INT);
-	}
+*/		TIM_ClearIntPending(LPC_TIM1,TIM_MR1_INT);
+//	}
 }
 
 /// Instantiate static motherboard instance
@@ -147,6 +142,7 @@ Motherboard::Motherboard()
 /// This only resets the board, and does not send a reset
 /// to any attached toolheads.
 void Motherboard::reset() {
+	micros = 0;	/// Microseconds since board initialization set to 0
 //	indicateError(0); // turn off blinker
 	// Init steppers
 	// NB: for now, we are turning on Z hold for these boards!
@@ -155,10 +151,10 @@ void Motherboard::reset() {
 		stepper[i].init(5);
 	}
 	// Initialize the host and slave UARTs
-	UART::getHostUART().enable(true);
-	UART::getHostUART().in.reset();
-	UART::getSlaveUART().enable(true);
-	UART::getSlaveUART().in.reset();
+//	UART::getHostUART().enable(true);
+//	UART::getHostUART().in.reset();
+//	UART::getSlaveUART().enable(true);
+//	UART::getSlaveUART().in.reset();
 	// Reset and configure timer 1, the microsecond and stepper
 	// interrupt timer.
 //	NVIC_SetVector(TIMER0_IRQn,uint32_t(TIMER0_IRQHandler));

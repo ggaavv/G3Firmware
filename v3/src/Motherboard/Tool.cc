@@ -88,23 +88,46 @@ bool getToolVersion() {
     // We don't give up if we fail to get a lock; we force it instead.
     Timeout acquire_lock_timeout;
     acquire_lock_timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
-    while (!tool::getLock()) {
-            if (acquire_lock_timeout.hasElapsed()) {
+
+    uint8_t menu231[] = "in getlockV\r";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu231, sizeof(menu231), BLOCKING);
+
+	while (!tool::getLock()) {
+		uint8_t menu232[] = "not locked\r";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu232, sizeof(menu232), BLOCKING);
+
+	//		if (acquire_lock_timeout.hasElapsed()) {
                     locked = true; // grant ourselves the lock
                     transaction_active = false; // abort transaction!
-                    Motherboard::getBoard().indicateError(ERR_SLAVE_LOCK_TIMEOUT);
+
+                    uint8_t menu233[] = "aquire lock timeout\r";
+                	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu233, sizeof(menu233), BLOCKING);
+
+                	Motherboard::getBoard().indicateError(ERR_SLAVE_LOCK_TIMEOUT);
                     break;
-            }
+      //      }
     }
 
-    OutPacket& out = getOutPacket();
+	uint8_t menu23[] = "get tool version after getlock\r";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu23, sizeof(menu23), BLOCKING);
+
+	OutPacket& out = getOutPacket();
     InPacket& in = getInPacket();
+
+
+	uint8_t menu24[] = "2get tool version after packet in.out\r";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu24, sizeof(menu24), BLOCKING);
+
 
     out.reset();
     out.append8(0); // Index o
     out.append8(SLAVE_CMD_VERSION);
     out.append8(0);  // Technically, we should report our version here, however
     out.append8(0);  // it doesn't actually matter.
+
+	uint8_t menu25[] = "2end of tool reset\r";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu25, sizeof(menu25), BLOCKING);
+
 
     startTransaction();
     // override standard timeout
@@ -135,7 +158,7 @@ void setToolIndicatorLED() {
     // We don't give up if we fail to get a lock; we force it instead.
     Timeout acquire_lock_timeout;
     acquire_lock_timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
-    while (!tool::getLock()) {
+    while (!getLock()) {
             if (acquire_lock_timeout.hasElapsed()) {
                     locked = true; // grant ourselves the lock
                     transaction_active = false; // abort transaction!

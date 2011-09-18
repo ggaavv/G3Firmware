@@ -34,18 +34,6 @@ extern "C" {
 //#include <util/delay.h>
 #include "Delay.hh"
 
-/**
-	Interrupt handler
-
-	Simply calls the USB ISR
- */
-//void USBIntHandler(void)
-
-extern "C" void USB_IRQHandler(void)
-{
-	USBHwISR();
-}
-
 #define FIFO_Enabled 1
 
 // TODO: There should be a better way to enable this flag?
@@ -89,7 +77,7 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 //		USB_Init();						// USB Initialization
 //		USB_Connect(TRUE);
 //		while (!USB_Configuration);		// wait until USB is configured
-		usbSerialInit();
+//		usbSerialInit();
 	} else if (index_ == 1) {
 		// UART Configuration Structure
 		UART_CFG_Type u_cfg;
@@ -97,7 +85,7 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 		u_cfg.Databits = UART_DATABIT_8;
 		u_cfg.Parity = UART_PARITY_NONE;
 		u_cfg.Stopbits = UART_STOPBIT_1;
-		UART_Init((LPC_UART_TypeDef *)LPC_UART1, &u_cfg);
+//		UART_Init((LPC_UART_TypeDef *)LPC_UART1, &u_cfg);
 		// Initialize UART0 pin connect
 		PINSEL_CFG_Type PinCfg;
 		PinCfg.Funcnum = 1;
@@ -117,7 +105,7 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 		fifo_cfg.FIFO_Level = UART_FIFO_TRGLEV0;
 		UART_FIFOConfig((LPC_UART_TypeDef *)LPC_UART1, &fifo_cfg);
 #endif
-		NVIC_EnableIRQ(UART1_IRQn);
+//		NVIC_EnableIRQ(UART1_IRQn);
 		// UART1 is an RS485 port, and requires additional setup.
 		// Read enable: PD5, active low
 		// Tx enable: PD4, active high
@@ -173,12 +161,23 @@ void UART::reset() {
 	}
 }
 
+/**
+	Interrupt handler
+
+	Simply calls the USB ISR
+ */
+//void USBIntHandler(void)
+extern "C" void USB_IRQHandler(void)
+{
+//	USBHwISR();
+}
+
 volatile uint8_t byte_in;
 
-void UART1_IRQHandler(void)
+extern "C" void UART1_IRQHandler(void)
 {
 	uint32_t intsrc, tmp, tmp1;
-	/* Determine the interrupt source */
+	// Determine the interrupt source
 	intsrc = UART_GetIntId((LPC_UART_TypeDef *)LPC_UART1);
 	tmp = intsrc & UART_IIR_INTID_MASK;
 	// Receive Line Status
@@ -214,3 +213,4 @@ void UART1_IRQHandler(void)
 		}
 	}
 }
+

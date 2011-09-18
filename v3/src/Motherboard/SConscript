@@ -89,17 +89,26 @@ if (os.environ.has_key('BUILD_NAME')):
 #	codesourcery_path = os.environ['CodeSourcery_PATH']
 #else:
 #	codesourcery_path = dirname(os.popen('/C:/Program Files (x86)/CodeSourcery/Sourcery G++ Lite/bin avr-gcc').readlines()[0])
-codesourcery_path = 'C:/PROGRA~2/CodeSourcery/SOURCE~1/bin'
+########### Uncomment top for 64bit win7 #########################
+#codesourcery_path = 'C:/PROGRA~2/CodeSourcery/SOURCE~1/bin'
+########### Uncomment top for 32bit xp #########################
+codesourcery_path = 'C:/PROGRA~1/CodeSourcery/SOURCE~1/bin'
 
 OBJECTS = 'startup_LPC17xx.o core_cm3.o system_LPC17xx.o main_LPC17xx.o'
-LSCRIPT = '/src/Motherboard/system/ldscript_rom_gnu.ld'
+########### Uncomment top for 64bit win7 #########################
+#LSCRIPT = '/src/Motherboard/system/ldscript_rom_gnu.ld'
+########### Uncomment top for 32bit xp #########################
+LSCRIPT = 'D:/DOCUME~1/113007~1/git/G3Firmware/v3/src/Mother~1/system/ldscript_rom_gnu.ld'
 #LSCRIPT = '/src/Motherboard/system/LPC17xx_For_NXP_USB_Bootloader.ld'
 optimization='0'
 DEBUG = '-g0'
 #LISTING = -ahls
 
 print Dir('.').abspath
-LD_PATH = Dir('#').abspath + LSCRIPT
+########### Uncomment top for 64bit win7 #########################
+#LD_PATH = Dir('#').abspath + LSCRIPT
+########### Uncomment top for 32bit xp #########################
+LD_PATH = LSCRIPT
 print LD_PATH
 
 hex_name = target_name + '.hex'
@@ -116,8 +125,8 @@ env=Environment(tools=['mingw'],
 	OBJCOPY=codesourcery_path+'/arm-none-eabi-objcopy',
 	SIZE=codesourcery_path+'/arm-none-eabi-size',
 	#  Compiler Options
-	CCFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
-	CXXFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
+	CCFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=1 -DVERSION='+str(version),
+	CXXFLAGS = '-Wall -fno-common -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=1 -DVERSION='+str(version),
 	LDFLAGS = '-mcpu='+mcu+' --gc-sections -mthumb -O'+optimization+' -Wl,-Map='+target_name+'.map,--cref -Wl,-T '+LD_PATH+' -Wl,--allow-multiple-definition',
 	ASFLAGS = '-mcpu='+mcu+' --defsym RAM_MODE=0',
 	CPPPATH=include_paths)
