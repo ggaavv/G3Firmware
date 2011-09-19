@@ -15,18 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+//#include "usbhw.hh"
+//#include "usbcfg.hh"
+//#include "cdcuser.hh"
+//#include "usbcore.hh"
 #include "UART.hh"
 #include <stdint.h>
-//	#include "usbhw.hh"
-//	#include "usbcfg.hh"
-//	#include "cdcuser.hh"
-//	#include "usbcore.hh"
 
 extern "C" {
 	#include "lpc17xx_uart.h"
 	#include "lpc17xx_pinsel.h"
 	#include "LPC17xx.h"
-	#include "usbSerial.h"
+//	#include "usbSerial.h"
+//	#include "usb.h"
+//	#include "serial.h"
+
+	#include "usbhw.h"
+	#include "usbcfg.h"
+	#include "cdcuser.h"
+	#include "usbcore.h"
 }
 //#include <avr/sfr_defs.h>
 //#include <avr/interrupt.h>
@@ -74,12 +81,13 @@ inline void speak() {
 UART::UART(uint8_t index) : index_(index), enabled_(false) {
 	if (index_ == 0) {
 		// Init USB for UART
-		usbSerialInit();
-		int c = 21;
-		VCOM_putchar(c);
+//		usbSerialInit();
+//		int c = 21;
+//		VCOM_putchar(c);
+//		VCOM_Init();					// VCOM Initialization
 //		USB_Init();						// USB Initialization
 //		USB_Connect(TRUE);
-//		while (!USB_Configuration);		// wait until USB is configured
+		while (!USB_Configuration);		// wait until USB is configured
 	} else if (index_ == 1) {
 		// UART Configuration Structure
 		UART_CFG_Type u_cfg;
@@ -123,9 +131,22 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 void UART::beginSend() {
 	if (!enabled_) { return; }
 	if (index_ == 0) {		//uart0 eg usb
-		VCOM_putc( out.getNextByteToSend() );
+//		VCOM_putc( out.getNextByteToSend() );
+		char serBuf[USB_CDC_BUFSIZE];
 		while (UART::uart[0].out.isSending()) {
-			VCOM_putc( UART::uart[0].out.getNextByteToSend() );
+//			uint8_t next_byte = out.getNextByteToSend();
+			// get first 2 bytes, second = size
+//			serBuf[0] = next_byte;
+//			serBuf[1] = out.getNextByteToSend();
+			// remaining bytes
+			uint8_t i;
+			for (i = 0; i > USB_CDC_BUFSIZE; i++){
+				serBuf[i] = out.getNextByteToSend();
+				if (!(UART::uart[0].out.isSending()))
+				break;
+			}
+			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&serBuf[0], i);
+//			VCOM_putc( UART::uart[0].out.getNextByteToSend() );
 		}
 	} else if (index_ == 1) {
 		speak();
@@ -139,9 +160,11 @@ void UART::enable(bool enabled) {
 	enabled_ = enabled;
 	if (index_ == 0) {
 		if (enabled) {
+			USB_Connect(TRUE);      // USB Connect
 //			USBHwConnect(TRUE);			// USB Connect
 		}
 		else {
+			USB_Connect(FALSE);      // USB Disconnect
 //			USBHwConnect(FALSE);			// USB Disconnect
 		}
 	} else if (index_ == 1) {
@@ -169,10 +192,10 @@ void UART::reset() {
 	Simply calls the USB ISR
  */
 //void USBIntHandler(void)
-extern "C" void USB_IRQHandler(void)
-{
-	USBHwISR();
-}
+//extern "C" void USB_IRQHandler(void)
+//{
+//	USBHwISR();
+//}
 
 volatile uint8_t byte_in;
 

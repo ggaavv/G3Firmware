@@ -23,12 +23,12 @@
  *----------------------------------------------------------------------------*/
 #include "lpc_types.h"
 
-#include "usb.hh"
-#include "usbcfg.hh"
-#include "usbhw.hh"
-#include "usbcore.hh"
-#include "usbdesc.hh"
-#include "usbuser.hh"
+#include "usb.h"
+#include "usbcfg.h"
+#include "usbhw.h"
+#include "usbcore.h"
+#include "usbdesc.h"
+#include "usbuser.h"
 
 #if (USB_CLASS)
 
@@ -49,8 +49,8 @@ extern MSC_CSW CSW;
 #endif
 
 #if (USB_CDC)
-#include "cdc.hh"
-#include "cdcuser.hh"
+#include "cdc.h"
+#include "cdcuser.h"
 #endif
 
 #endif

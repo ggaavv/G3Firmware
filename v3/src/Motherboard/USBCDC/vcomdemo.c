@@ -24,7 +24,7 @@
 #include "cdc.h"
 #include "cdcuser.h"
 #include "serial.h"
-#include "vcomdemo.h"
+//#include "vcomdemo.h"
 
 /* Example group ----------------------------------------------------------- */
 /** @defgroup USBDEV_USBCDC	USBCDC
@@ -36,14 +36,13 @@
  Initialises the VCOM port.
  Call this function before using VCOM_putchar or VCOM_getchar
  *---------------------------------------------------------------------------*/
-void VCOM_Init(void) {
+ void VCOM_Init(void) {
 #if PORT_NUM
   CDC_Init (1);
 #else
   CDC_Init (0);
 #endif
 }
-
 
 /*----------------------------------------------------------------------------
   Reads character from serial port buffer and writes to USB buffer
@@ -102,20 +101,21 @@ void VCOM_CheckSerialState (void) {
 /*----------------------------------------------------------------------------
   Main Program
  *---------------------------------------------------------------------------*/
-int start_test(void) {
+int VCOM_Start(void) {
 
   VCOM_Init();                              // VCOM Initialization
 
   USB_Init();                               // USB Initialization
   USB_Connect(TRUE);                        // USB Connect
 
-  while (!USB_Configuration) ;              // wait until USB is configured
+//  while (!USB_Configuration) ;              // wait until USB is configured
 
-  while (1) {                               // Loop forever
+/*  while (1) {                               // Loop forever
     VCOM_Serial2Usb();                      // read serial port and initiate USB event
     VCOM_CheckSerialState();
 	VCOM_Usb2Serial();
   } // end while
+*/
 } // end main ()
 
 /*

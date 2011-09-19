@@ -20,12 +20,12 @@
  *          V1.00 Initial Version
  *----------------------------------------------------------------------------*/
 #include "LPC17xx.h"                        /* LPC17xx definitions */
-#include "usb.hh"
-#include "usbcfg.hh"
-#include "usbreg.hh"
-#include "usbhw.hh"
-#include "usbcore.hh"
-#include "usbuser.hh"
+#include "usb.h"
+#include "usbcfg.h"
+#include "usbreg.h"
+#include "usbhw.h"
+#include "usbcore.h"
+#include "usbuser.h"
 
 #if defined (  __CC_ARM__  )
 #pragma diag_suppress 1441

@@ -20,10 +20,10 @@
  *          V1.00 Initial Version
  *---------------------------------------------------------------------------*/
 #include "lpc_types.h"
-#include "usb.hh"
-#include "cdc.hh"
-#include "usbcfg.hh"
-#include "usbdesc.hh"
+#include "usb.h"
+#include "cdc.h"
+#include "usbcfg.h"
+#include "usbdesc.h"
 
 
 /* USB Standard Device Descriptor */

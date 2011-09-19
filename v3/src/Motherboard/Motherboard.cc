@@ -160,13 +160,13 @@ Motherboard::Motherboard()
 /// to any attached toolheads.
 void Motherboard::reset() {
 	micros = 0;	/// Microseconds since board initialization set to 0
-//	indicateError(0); // turn off blinker
+	indicateError(0); // turn off blinker
 	// Init steppers
 	// NB: for now, we are turning on Z hold for these boards!
-//	steppers::setHoldZ(true);
-//	for (int i = 0; i < STEPPER_COUNT; i++) {
-//		stepper[i].init(5);
-//	}
+	steppers::setHoldZ(true);
+	for (int i = 0; i < STEPPER_COUNT; i++) {
+		stepper[i].init(5);
+	}
 	// Initialize the host and slave UARTs
 	UART::getHostUART().enable(true);
 	UART::getHostUART().in.reset();

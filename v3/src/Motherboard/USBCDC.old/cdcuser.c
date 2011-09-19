@@ -17,16 +17,17 @@
  *---------------------------------------------------------------------------*/
 
 #include "lpc_types.h"
+#include "LPC17xx.h"
 
-#include "UART.hh"
+//#include "UART.hh"
 
-#include "usb.hh"
-#include "usbhw.hh"
-#include "usbcfg.hh"
-#include "usbcore.hh"
-#include "cdc.hh"
-#include "cdcuser.hh"
-#include "serial.hh"
+#include "usb.h"
+#include "usbhw.h"
+#include "usbcfg.h"
+#include "usbcore.h"
+#include "cdc.h"
+#include "cdcuser.h"
+#include "serial.h"
 
 
 unsigned char BulkBufIn  [USB_CDC_BUFSIZE];            // Buffer to store USB IN  packet
@@ -329,15 +330,17 @@ void CDC_BulkOut(void) {
 
   // get data from USB into intermediate buffer
   numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
-  uint8_t i;
-  for (i = 0; i < numBytesRead; i++){
-	  UART::uart[0].in.processByte( BulkBufOut[i] );
-  }
+  //  numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
+//  uint8_t i;
+//  for (i = 0; i < numBytesRead; i++){
+//	  NVIC_SetPendingIRQ(ENET_IRQn); // Software interrupt
+//	  UART::uart[0].in.processByte( BulkBufOut[i] );
+//  }
 
   // ... add code to check for overwrite
 
   // store data in a buffer to transmit it over serial interface
-  //CDC_WrOutBuf ((char *)&BulkBufOut[0], &numBytesRead);
+  CDC_WrOutBuf ((char *)&BulkBufOut[0], &numBytesRead);
 
 }
 

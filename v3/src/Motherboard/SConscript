@@ -75,11 +75,11 @@ else:
 	print "LPC1768: Gen 5 motherboard"
 	exit()
 
-srcs = Glob('system/*.c') + Glob('system/*.cc') + Glob('system/*.S') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('lib_sd/*.c')  + Glob('IAP_internal_flash_write/*.cc') + Glob('VCOM_GV/*.c') + Glob('#src/shared/*.cc') + Glob('*.cc')
+srcs = Glob('system/*.c') + Glob('system/*.cc') + Glob('system/*.S') + Glob('lib/include/*.c') + Glob('lib/source/*.c') + Glob('lib_sd/*.c')  + Glob('IAP_internal_flash_write/*.cc') + Glob('USBCDC/*.c') + Glob('#src/shared/*.cc') + Glob('*.cc')
 
 
-include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'lib_sd', 'system', 'VCOM_GV', 'IAP_internal_flash_write', '#/src/Motherboard']
-search_paths = '-I#/src/shared -I/lib/include -I/lib/source -I/lib_sd -I/system -I/VCOM_GV -I#/src/Motherboard'
+include_paths = ['#/src/shared', 'lib/include', 'lib/source', 'lib_sd', 'system', 'USBCDC', 'IAP_internal_flash_write', '#/src/Motherboard']
+search_paths = '-I#/src/shared -I/lib/include -I/lib/source -I/lib_sd -I/system -I/USBCDC -I#/src/Motherboard'
 
 
 if (os.environ.has_key('BUILD_NAME')):

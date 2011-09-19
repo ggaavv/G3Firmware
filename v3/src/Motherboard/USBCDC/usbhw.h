@@ -23,6 +23,7 @@
 #ifndef __USBHW_H__
 #define __USBHW_H__
 #include "lpc_types.h"
+#include "usb.h"
 
 /* USB RAM Definitions */
 #define USB_RAM_ADR     0x20080000  /* USB RAM Start Address */
