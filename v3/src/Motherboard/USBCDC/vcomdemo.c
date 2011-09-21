@@ -47,7 +47,8 @@
 /*----------------------------------------------------------------------------
   Reads character from serial port buffer and writes to USB buffer
  *---------------------------------------------------------------------------*/
-void VCOM_Serial2Usb(void) {
+/*
+ void VCOM_Serial2Usb(void) {
   static char serBuf [USB_CDC_BUFSIZE];
          int  numBytesRead, numAvailByte;
 
@@ -62,6 +63,7 @@ void VCOM_Serial2Usb(void) {
   }
 
 }
+*/
 
 /*----------------------------------------------------------------------------
   Reads character from USB buffer and writes to serial port buffer
@@ -101,7 +103,7 @@ void VCOM_CheckSerialState (void) {
 /*----------------------------------------------------------------------------
   Main Program
  *---------------------------------------------------------------------------*/
-int VCOM_Start(void) {
+void VCOM_Start(void) {
 
   VCOM_Init();                              // VCOM Initialization
 

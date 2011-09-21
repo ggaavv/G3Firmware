@@ -297,7 +297,7 @@ void LiquidCrystal::writeString(char message[]) {
 
 void LiquidCrystal::writeFromPgmspace(const char message[]) {
 	char letter;
-	while (letter = pgm_read_byte(message++)) {
+	while ((letter = pgm_read_byte(message++))) {
 		write(letter);
 	}
 }

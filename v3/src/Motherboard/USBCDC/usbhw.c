@@ -155,36 +155,39 @@ uint32_t RdCmdDat (uint32_t cmd) {
  */
 
 void USB_Init (void) {
-	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, 0x01010101);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x01010101);
 
   LPC_PINCON->PINSEL1 &= ~((3<<26)|(3<<28));   /* P0.29 D+, P0.30 D- */
   LPC_PINCON->PINSEL1 |=  ((1<<26)|(1<<28));   /* PINSEL1 26.27, 28.29  = 01 */
-	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, 0x02020202);
+//  UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x02020202);
 
   LPC_PINCON->PINSEL3 &= ~((3<< 4)|(3<<28));   /* P1.18 GoodLink, P1.30 VBUS */
   LPC_PINCON->PINSEL3 |=  ((1<< 4)|(2<<28));   /* PINSEL3 4.5 = 01, 28.29 = 10 */
-	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, 0x03030303);
+//  UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x03030303);
 
   LPC_PINCON->PINSEL4 &= ~((3<<18)        );   /* P2.9 SoftConnect */
   LPC_PINCON->PINSEL4 |=  ((1<<18)        );   /* PINSEL4 18.19 = 01 */
-	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, 0x04040404);
+//  UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x04040404);
 
   // P1.18 -> USB_UP_LED
   // P1.30 -> VBUS
   LPC_PINCON->PINSEL3 &= ~0x30000030;
   LPC_PINCON->PINSEL3 |= 0x20000010;
-	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, 0x05050505);
+//  UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x05050505);
 
   LPC_SC->PCONP |= (1UL<<31);                /* USB PCLK -> enable USB Per.       */
-	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, 0x06060606);
+//  UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x06060606);
 
   LPC_USB->USBClkCtrl = 0x1A;                /* Dev, PortSel, AHB clock enable */
-	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, 0x07070707);
+//  UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x07070707);
   while ((LPC_USB->USBClkSt & 0x1A) != 0x1A);
-	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, 0x08080808);
+//  UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x08080808);
 
-  NVIC_SetPriority(USB_IRQn, 1);
+  NVIC_SetPriority(USB_IRQn, 2);
   NVIC_EnableIRQ(USB_IRQn);               /* enable USB interrupt */
+
+  NVIC_SetPriority(CANActivity_IRQn, 4);
+  NVIC_EnableIRQ(CANActivity_IRQn);
 
   USB_Reset();
   USB_SetAddress(0);
@@ -682,7 +685,8 @@ uint32_t USB_GetFrame (void) {
  */
 
 extern void USB_IRQHandler (void) {
-UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, 0x45864564);
+	uint8_t menu710[] = "\rUSB IRQ ";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu710, sizeof(menu710), BLOCKING);
 
   uint32_t disr, val, n, m;
   uint32_t episr, episrCur;

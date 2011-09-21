@@ -47,45 +47,47 @@ SER_BUF_T              ser_in;
 /*----------------------------------------------------------------------------
   open the serial port
  *---------------------------------------------------------------------------*/
-void ser_OpenPort (char portNum) {
 
+void ser_OpenPort (char portNum) {
+/*
   if ( portNum == 0 )
   {
-	/* Port 0 */
+	// Port 0
 	NVIC_DisableIRQ(UART0_IRQn);
 	LPC_PINCON->PINSEL0 &= ~0x000000F0;
-	LPC_PINCON->PINSEL0 |= 0x00000050;     /* RxD0 is P0.3 and TxD0 is P0.2 */
+	LPC_PINCON->PINSEL0 |= 0x00000050;     // RxD0 is P0.3 and TxD0 is P0.2
   }
   else
   {
-	/* Port 1 */
+	// Port 1
 	NVIC_DisableIRQ(UART1_IRQn);
 	LPC_PINCON->PINSEL4 &= ~0x0000000F;
-	LPC_PINCON->PINSEL4 |= 0x0000000A;    /* Enable RxD1 P2.1, TxD1 P2.0 */
-  }
+	LPC_PINCON->PINSEL4 |= 0x0000000A;    // Enable RxD1 P2.1, TxD1 P2.0
+  }*/
   return;
 }
+
 
 /*----------------------------------------------------------------------------
   close the serial port
  *---------------------------------------------------------------------------*/
 void ser_ClosePort (char portNum ) {
-  if ( portNum == 0 )
+/*  if ( portNum == 0 )
   {
-	/* POrt 0 */
+	// POrt 0
 	LPC_PINCON->PINSEL0 &= ~0x000000F0;
-	/* Disable the interrupt in the VIC and UART controllers */
+	// Disable the interrupt in the VIC and UART controllers
 	LPC_UART0->IER = 0;
 	NVIC_DisableIRQ(UART0_IRQn);
   }
   else
   {
-	/* Port 1 */
+	// Port 1
 	LPC_PINCON->PINSEL4 &= ~0x0000000F;
-	/* Disable the interrupt in the VIC and UART controllers */
+	// Disable the interrupt in the VIC and UART controllers
 	LPC_UART1->IER = 0;
 	NVIC_DisableIRQ(UART1_IRQn);
-  }
+  }*/
   return;
 }
 
@@ -94,7 +96,7 @@ void ser_ClosePort (char portNum ) {
  *---------------------------------------------------------------------------*/
 void ser_InitPort0 (unsigned long baudrate, unsigned int  databits,
                   unsigned int  parity,   unsigned int  stopbits) {
-
+/*
   unsigned char lcr_p, lcr_s, lcr_d;
   unsigned int dll;
   unsigned int pclkdiv, pclk;
@@ -144,12 +146,12 @@ void ser_InitPort0 (unsigned long baudrate, unsigned int  databits,
       lcr_p = 0x00;
     break;
   }
-
+*/
   SER_BUF_RESET(ser_out);                              // reset out buffer
   SER_BUF_RESET(ser_in);                               // reset in buffer
-
-  /* Bit 6~7 is for UART0 */
-  pclkdiv = (LPC_SC->PCLKSEL0 >> 6) & 0x03;
+/*
+  // Bit 6~7 is for UART0
+//  pclkdiv = (LPC_SC->PCLKSEL0 >> 6) & 0x03;
 
   switch ( pclkdiv )
   {
@@ -168,7 +170,7 @@ void ser_InitPort0 (unsigned long baudrate, unsigned int  databits,
 	  break;
   }
 
-  dll = (pclk/16)/baudrate ;	/*baud rate */
+  dll = (pclk/16)/baudrate ;	//baud rate
   LPC_UART0->FDR = 0;                             // Fractional divider not used
   LPC_UART0->LCR = 0x80 | lcr_d | lcr_p | lcr_s;  // Data bits, Parity,   Stop bit
   LPC_UART0->DLL = dll;                           // Baud Rate depending on PCLK
@@ -176,17 +178,17 @@ void ser_InitPort0 (unsigned long baudrate, unsigned int  databits,
   LPC_UART0->LCR = 0x00 | lcr_d | lcr_p | lcr_s;  // DLAB = 0
   LPC_UART0->IER = 0x03;                          // Enable TX/RX interrupts
 
-  LPC_UART0->FCR = 0x07;				/* Enable and reset TX and RX FIFO. */
+  LPC_UART0->FCR = 0x07;*/				// Enable and reset TX and RX FIFO.
   ser_txRestart = 1;                                   // TX fifo is empty
-
-  /* Enable the UART Interrupt */
-  NVIC_EnableIRQ(UART0_IRQn);
+  // Enable the UART Interrupt
+//  NVIC_EnableIRQ(UART0_IRQn);
   return;
 }
 
 /*----------------------------------------------------------------------------
   initialize the serial port
  *---------------------------------------------------------------------------*/
+/*
 void ser_InitPort1 (unsigned long baudrate, unsigned int  databits,
                   unsigned int  parity,   unsigned int  stopbits) {
 
@@ -240,11 +242,11 @@ void ser_InitPort1 (unsigned long baudrate, unsigned int  databits,
     break;
   }
 
-  SER_BUF_RESET(ser_out);                              // reset out buffer
-  SER_BUF_RESET(ser_in);                               // reset in buffer
+//  SER_BUF_RESET(ser_out);                              // reset out buffer
+//  SER_BUF_RESET(ser_in);                               // reset in buffer
 
-  /* Bit 8,9 are for UART1 */
-  pclkdiv = (LPC_SC->PCLKSEL0 >> 8) & 0x03;
+  // Bit 8,9 are for UART1
+//  pclkdiv = (LPC_SC->PCLKSEL0 >> 8) & 0x03;
 
   switch ( pclkdiv )
   {
@@ -263,7 +265,7 @@ void ser_InitPort1 (unsigned long baudrate, unsigned int  databits,
 	  break;
   }
 
-  dll = (pclk/16)/baudrate ;	/*baud rate */
+  dll = (pclk/16)/baudrate ;	//baud rate
   LPC_UART1->FDR = 0;                             // Fractional divider not used
   LPC_UART1->LCR = 0x80 | lcr_d | lcr_p | lcr_s;  // Data bits, Parity,   Stop bit
   LPC_UART1->DLL = dll;                           // Baud Rate depending on PCLK
@@ -271,13 +273,14 @@ void ser_InitPort1 (unsigned long baudrate, unsigned int  databits,
   LPC_UART1->LCR = 0x00 | lcr_d | lcr_p | lcr_s;  // DLAB = 0
   LPC_UART1->IER = 0x03;                          // Enable TX/RX interrupts
 
-  LPC_UART1->FCR = 0x07;				/* Enable and reset TX and RX FIFO. */
+  LPC_UART1->FCR = 0x07;				// Enable and reset TX and RX FIFO.
   ser_txRestart = 1;                                   // TX fifo is empty
 
-  /* Enable the UART Interrupt */
+  // Enable the UART Interrupt
   NVIC_EnableIRQ(UART1_IRQn);
   return;
 }
+*/
 
 /*----------------------------------------------------------------------------
   read data from serial port
@@ -350,6 +353,7 @@ void ser_LineState (unsigned short *lineState) {
 /*----------------------------------------------------------------------------
   serial port 0 interrupt
  *---------------------------------------------------------------------------*/
+/*
 void UART0_IRQHandler(void)
 {
   volatile unsigned long iir;
@@ -373,10 +377,12 @@ void UART0_IRQHandler(void)
   ser_lineState = LPC_UART0->LSR & 0x1E;            // update linestate
   return;
 }
+*/
 
 /*----------------------------------------------------------------------------
   serial port 1 interrupt
  *---------------------------------------------------------------------------*/
+/*
 void UART1_IRQHandler(void)
 {
   volatile unsigned long iir;
@@ -400,5 +406,5 @@ void UART1_IRQHandler(void)
   ser_lineState = ((LPC_UART1->MSR<<8)|LPC_UART1->LSR) & 0xE01E;    // update linestate
   return;
 }
-
+*/
 

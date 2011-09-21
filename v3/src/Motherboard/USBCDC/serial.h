@@ -22,9 +22,15 @@
 extern void  ser_OpenPort  (char portNum);
 extern void  ser_ClosePort (char portNum);
 extern void  ser_InitPort0  (unsigned long baudrate, unsigned int databits, unsigned int parity, unsigned int stopbits);
-extern void  ser_InitPort1  (unsigned long baudrate, unsigned int databits, unsigned int parity, unsigned int stopbits);
+//extern void  ser_InitPort1  (unsigned long baudrate, unsigned int databits, unsigned int parity, unsigned int stopbits);
 extern void  ser_AvailChar (int *availChar);
 extern int   ser_Write     (char portNum, const char *buffer, int *length);
 extern int   ser_Read      (char *buffer, const int *length);
 extern void  ser_LineState (unsigned short *lineState);
 
+uint8_t FDR_0;                             // Fractional divider not used
+uint8_t LCR_0;  // Data bits, Parity,   Stop bit
+uint8_t DLL_0;                           // Baud Rate depending on PCLK
+uint8_t DLM_0;                    // High divisor latch
+uint8_t IER_0;                          // Enable TX/RX interrupts
+uint8_t FCR_0;

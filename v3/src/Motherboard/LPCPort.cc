@@ -18,6 +18,7 @@
 
 #include "LPCPort.hh"
 
+Port Port0(0x00);
 Port Port1(0x01);
 Port Port2(0x02);
 Port Port3(0x04);

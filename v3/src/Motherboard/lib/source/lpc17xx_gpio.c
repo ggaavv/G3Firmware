@@ -32,6 +32,18 @@
 /* Includes ------------------------------------------------------------------- */
 #include "lpc17xx_gpio.h"
 
+/********************************/
+//#include "test.hh"  // testing
+//#include "test_led.hh"  // testing
+//#include "test_u.hh"
+#include "Uart32.c"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//test_led(1);
+/********************************/
+
 /* If this source file built with example, the LPC17xx FW library configuration
  * file in each example directory ("lpc17xx_libcfg.h") must be included,
  * otherwise the default FW library configuration file must be included instead
@@ -176,6 +188,15 @@ static GPIO_Byte_TypeDef *FIO_ByteGetPointer(uint8_t portNum)
  **********************************************************************/
 void GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir)
 {
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xff);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x55);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xaa);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xfe);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, bitValue);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xfd);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, dir);
+
 	LPC_GPIO_TypeDef *pGPIO = GPIO_GetPointer(portNum);
 
 	if (pGPIO != NULL) {
@@ -207,6 +228,13 @@ void GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir)
  **********************************************************************/
 void GPIO_SetValue(uint8_t portNum, uint32_t bitValue)
 {
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xbb);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xcc);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xdd);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xfe);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, bitValue);
+
 	LPC_GPIO_TypeDef *pGPIO = GPIO_GetPointer(portNum);
 
 	if (pGPIO != NULL) {
@@ -247,6 +275,11 @@ void GPIO_ClearValue(uint8_t portNum, uint32_t bitValue)
  **********************************************************************/
 uint32_t GPIO_ReadValue(uint8_t portNum)
 {
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x99);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x88);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x55);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
+
 	LPC_GPIO_TypeDef *pGPIO = GPIO_GetPointer(portNum);
 
 	if (pGPIO != NULL) {

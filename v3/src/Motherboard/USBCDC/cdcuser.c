@@ -17,6 +17,7 @@
  *---------------------------------------------------------------------------*/
 
 #include "lpc_types.h"
+#include "LPC17xx.h"
 
 #include "usb.h"
 #include "usbhw.h"
@@ -227,7 +228,7 @@ uint32_t CDC_SetLineCoding (void) {
   CDC_LineCoding.bCharFormat =  EP0Buf[4];
   CDC_LineCoding.bParityType =  EP0Buf[5];
   CDC_LineCoding.bDataBits   =  EP0Buf[6];
-
+/*
 #if PORT_NUM
   ser_ClosePort(1);
   ser_OpenPort (1);
@@ -242,7 +243,8 @@ uint32_t CDC_SetLineCoding (void) {
                 CDC_LineCoding.bDataBits,
                 CDC_LineCoding.bParityType,
                 CDC_LineCoding.bCharFormat);
-#endif
+#endif*/
+
   return (TRUE);
 }
 
@@ -325,15 +327,16 @@ void CDC_BulkIn(void) {
   Return Value: none
  *---------------------------------------------------------------------------*/
 void CDC_BulkOut(void) {
-  int numBytesRead;
+//  int numBytesRead;
 
   // get data from USB into intermediate buffer
-  numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
+//  numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
 
   // ... add code to check for overwrite
 
   // store data in a buffer to transmit it over serial interface
-  CDC_WrOutBuf ((char *)&BulkBufOut[0], &numBytesRead);
+//  CDC_WrOutBuf ((char *)&BulkBufOut[0], &numBytesRead);
+	NVIC_SetPendingIRQ(CANActivity_IRQn); // Software interrupt
 
 }
 

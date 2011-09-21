@@ -283,7 +283,7 @@ void runCommandSlice() {
 					// then record it to the eeprom.
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
-							eeprom_address(AXIS_HOME_POSITIONS + i) = steppers::getPosition()[i];
+							eeprom_address(AXIS_HOME_POSITIONS + (i*4)) = steppers::getPosition()[i];
 						}
 						save_to_flash();
 					}
@@ -298,7 +298,7 @@ void runCommandSlice() {
 
 					for (uint8_t i = 0; i < STEPPER_COUNT; i++) {
 						if ( axes & (1 << i) ) {
-							newPoint[i] = eeprom_address(AXIS_HOME_POSITIONS + i);
+							newPoint[i] = eeprom_address(AXIS_HOME_POSITIONS + (i*4));
 						}
 					}
 					steppers::definePosition(newPoint);

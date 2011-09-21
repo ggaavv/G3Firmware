@@ -306,10 +306,10 @@ void reset() {
 	playing = false;
 	capturedBytes = 0L;
 	if (playing) {
-		finishPlayback();
+//		finishPlayback();
 	}
 	if (capturing){
-		finishCapture();
+//		finishCapture();
 	}
 	if (dd != 0) {
 //		fat_close_dir(dd);

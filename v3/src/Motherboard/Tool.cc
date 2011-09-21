@@ -95,6 +95,7 @@ bool getToolVersion() {
 	while (!tool::getLock()) {
 		uint8_t menu232[] = "not locked\r";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu232, sizeof(menu232), BLOCKING);
+		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, acquire_lock_timeout.hasLeft());
 
 			if (acquire_lock_timeout.hasElapsed()) {
                     locked = true; // grant ourselves the lock

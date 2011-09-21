@@ -41,7 +41,19 @@ extern "C" {
 //#include <util/delay.h>
 #include "Delay.hh"
 
-#define FIFO_Enabled 1
+/********************************/
+#include "test.hh"  // testing
+#include "test_led.hh"  // testing
+#include "test_u.hh"
+#include "Uart32.c"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//test_led(1);
+/********************************/
+
+//#define FIFO_Enabled 1
 
 // TODO: There should be a better way to enable this flag?
 #if ASSERT_LINE_FIX
@@ -87,7 +99,11 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 //		VCOM_Init();					// VCOM Initialization
 //		USB_Init();						// USB Initialization
 //		USB_Connect(TRUE);
+			uint8_t menu322[] = "b4 USB config\r";
+			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu322, sizeof(menu322), BLOCKING);
 		while (!USB_Configuration);		// wait until USB is configured
+			uint8_t menu332[] = "after USB config\r";
+			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu332, sizeof(menu332), BLOCKING);
 	} else if (index_ == 1) {
 		// UART Configuration Structure
 		UART_CFG_Type u_cfg;
@@ -95,7 +111,7 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 		u_cfg.Databits = UART_DATABIT_8;
 		u_cfg.Parity = UART_PARITY_NONE;
 		u_cfg.Stopbits = UART_STOPBIT_1;
-//		UART_Init((LPC_UART_TypeDef *)LPC_UART1, &u_cfg);
+		UART_Init((LPC_UART_TypeDef *)LPC_UART1, &u_cfg);
 		// Initialize UART0 pin connect
 		PINSEL_CFG_Type PinCfg;
 		PinCfg.Funcnum = 1;
@@ -106,16 +122,8 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 		PINSEL_ConfigPin(&PinCfg);
 		PinCfg.Pinnum = 1;
 		PINSEL_ConfigPin(&PinCfg);
-#ifndef FIFO_Enabled
-		// UART FIFO Configuration Structure
-		UART_FIFO_CFG_Type fifo_cfg;
-		fifo_cfg.FIFO_ResetRxBuf = ENABLE;
-		fifo_cfg.FIFO_ResetTxBuf = ENABLE;
-		fifo_cfg.FIFO_DMAMode = DISABLE;
-		fifo_cfg.FIFO_Level = UART_FIFO_TRGLEV0;
-		UART_FIFOConfig((LPC_UART_TypeDef *)LPC_UART1, &fifo_cfg);
-#endif
-//		NVIC_EnableIRQ(UART1_IRQn);
+		NVIC_SetPriority(UART1_IRQn, 8);
+		NVIC_EnableIRQ(UART1_IRQn);
 		// UART1 is an RS485 port, and requires additional setup.
 		// Read enable: PD5, active low
 		// Tx enable: PD4, active high
@@ -131,22 +139,15 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 void UART::beginSend() {
 	if (!enabled_) { return; }
 	if (index_ == 0) {		//uart0 eg usb
-//		VCOM_putc( out.getNextByteToSend() );
 		char serBuf[USB_CDC_BUFSIZE];
 		while (UART::uart[0].out.isSending()) {
-//			uint8_t next_byte = out.getNextByteToSend();
-			// get first 2 bytes, second = size
-//			serBuf[0] = next_byte;
-//			serBuf[1] = out.getNextByteToSend();
-			// remaining bytes
-			uint8_t i;
+			uint32_t i;
 			for (i = 0; i > USB_CDC_BUFSIZE; i++){
 				serBuf[i] = out.getNextByteToSend();
 				if (!(UART::uart[0].out.isSending()))
 				break;
 			}
 			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&serBuf[0], i);
-//			VCOM_putc( UART::uart[0].out.getNextByteToSend() );
 		}
 	} else if (index_ == 1) {
 		speak();
@@ -186,21 +187,12 @@ void UART::reset() {
 	}
 }
 
-/**
-	Interrupt handler
-
-	Simply calls the USB ISR
- */
-//void USBIntHandler(void)
-//extern "C" void USB_IRQHandler(void)
-//{
-//	USBHwISR();
-//}
-
 volatile uint8_t byte_in;
 
-extern "C" void UART1_IRQHandler(void)
-{
+extern "C" void UART1_IRQHandler(void){
+	uint8_t menu910[] = "\r UIRQ1 ";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
+
 	uint32_t intsrc, tmp, tmp1;
 	// Determine the interrupt source
 	intsrc = UART_GetIntId((LPC_UART_TypeDef *)LPC_UART1);
@@ -239,3 +231,24 @@ extern "C" void UART1_IRQHandler(void)
 	}
 }
 
+unsigned char BulkBufOut  [USB_CDC_BUFSIZE];
+
+extern "C" void CANActivity_IRQHandler(void){
+	uint8_t menu910[] = "\rCANIRQ";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
+	int numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
+	for (int i = 0; i < numBytesRead; i++){
+		UART::uart[0].in.processByte( BulkBufOut[i] );
+	}
+}
+
+
+//  int numBytesRead;
+
+  // get data from USB into intermediate buffer
+//  numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
+
+  // ... add code to check for overwrite
+
+  // store data in a buffer to transmit it over serial interface
+//  CDC_WrOutBuf ((char *)&BulkBufOut[0], &numBytesRead);

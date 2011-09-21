@@ -178,6 +178,8 @@ void JogMode::jog(InterfaceBoardDefinitions::ButtonName direction) {
 	case InterfaceBoardDefinitions::ZPLUS:
 		position[2] += steps;
 		break;
+	default:/* do nothing */
+		break;
 	}
 
 	steppers::setTarget(position, interval);
@@ -326,6 +328,8 @@ void SnakeMode::notifyButtonPressed(InterfaceBoardDefinitions::ButtonName button
 		break;
 	case InterfaceBoardDefinitions::CANCEL:
 		interfaceboard::popScreen();
+		break;
+	default:/* do nothing */
 		break;
 	}
 }

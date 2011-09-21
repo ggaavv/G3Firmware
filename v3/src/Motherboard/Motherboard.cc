@@ -84,11 +84,8 @@ int blinked_so_far = 0;
 
 /// Timer one comparator match interrupt
 extern "C" void TIMER0_IRQHandler (void){
-//	uint8_t menu110[] = "\r IRQ0 ";
+//	uint8_t menu110[] = "\rQ0";
 //	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu110, sizeof(menu110), BLOCKING);
-//	uint8_t menu111[] = " ";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu111, sizeof(menu111), BLOCKING);
-//	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, Motherboard::getBoard().getCurrentMicros());
 	if((LPC_TIM0->IR & 0x01) == 0x01) {// if MR0 interrupt
 	Motherboard::getBoard().doInterrupt();
 	}
@@ -97,11 +94,8 @@ extern "C" void TIMER0_IRQHandler (void){
 
 /// Timer 2 overflow interrupt
 extern "C" void TIMER1_IRQHandler (void){
-//	uint8_t menu10[] = "\r IRQ1 ";
+//	uint8_t menu10[] = "\rQ1";
 //	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu10, sizeof(menu10), BLOCKING);
-//	uint8_t menu11[] = " ";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu11, sizeof(menu11), BLOCKING);
-//	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, Motherboard::getBoard().getCurrentMicros());
 	if((LPC_TIM1->IR & 0x01) == 0x01) {// if MR0 interrupt
 		if (blink_ovfs_remaining > 0) {
 			blink_ovfs_remaining--;
@@ -160,18 +154,36 @@ Motherboard::Motherboard()
 /// to any attached toolheads.
 void Motherboard::reset() {
 	micros = 0;	/// Microseconds since board initialization set to 0
+	// Configure the debug pin.
+	DEBUG_PIN.setDirection(true);
 	indicateError(0); // turn off blinker
 	// Init steppers
 	// NB: for now, we are turning on Z hold for these boards!
 	steppers::setHoldZ(true);
+
+	uint8_t menu1161[] = "\rsetHoldZ true";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu1161, sizeof(menu1161), BLOCKING);
+
 	for (int i = 0; i < STEPPER_COUNT; i++) {
 		stepper[i].init(5);
 	}
 	// Initialize the host and slave UARTs
+
+	uint8_t menu161[] = "\rb4 uarts up";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu161, sizeof(menu161), BLOCKING);
+
 	UART::getHostUART().enable(true);
 	UART::getHostUART().in.reset();
+
+	uint8_t menu261[] = "\rbetween uarts";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu261, sizeof(menu261), BLOCKING);
+
 	UART::getSlaveUART().enable(true);
 	UART::getSlaveUART().in.reset();
+
+	uint8_t menu191[] = "\rafter uarts up";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu191, sizeof(menu191), BLOCKING);
+
 	// Reset and configure timer 1, the microsecond and stepper
 	// interrupt timer.
 	TIM_TIMERCFG_Type TMR0_Cfg;
@@ -223,14 +235,17 @@ void Motherboard::reset() {
 	TIM_Init(LPC_TIM1, TIM_TIMER_MODE, &TMR1_Cfg);
 	TIM_ConfigMatch(LPC_TIM1, &TMR1_Match);
 	// 0 top priority 32 lowest
-	NVIC_SetPriority(TIMER1_IRQn, 10);
+	NVIC_SetPriority(TIMER1_IRQn, 17);
 	NVIC_EnableIRQ(TIMER1_IRQn);
 	TIM_Cmd(LPC_TIM1,ENABLE);
-	// Configure the debug pin.
-	DEBUG_PIN.setDirection(true);
+
+	uint8_t menu171[] = "\rtimers configured";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu171, sizeof(menu171), BLOCKING);
+
 	// Check if the interface board is attached
 	hasInterfaceBoard = interfaceboard::isConnected();
-	if (hasInterfaceBoard) {
+//	if (hasInterfaceBoard) {
+	if (0) {
 		// Make sure our interface board is initialized
 		interfaceboard::init();
 		interface_update_timeout.start(interfaceboard::getUpdateRate());

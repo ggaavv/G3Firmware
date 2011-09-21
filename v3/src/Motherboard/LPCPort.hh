@@ -56,25 +56,25 @@ public:
 	Port(port_base_t port_base_in) : port_base(port_base_in) {}
 	bool isNull() { return port_base == NULL_PORT; }
 	void setPinDirection(uint8_t pin_index, bool out) {
-		GPIO_SetDir(port_base, pin_index, out);
+		GPIO_SetDir(port_base, 1 << pin_index, out);
 	}
 	bool getPin(uint8_t pin_index) {
-		return ((GPIO_ReadValue(port_base)&pin_index) != 0);
+		return (((uint32_t)GPIO_ReadValue(port_base) & (1 << pin_index)) != 0);
 	}
 	void setPin(uint8_t pin_index, bool on) {
-		GPIO_SetValue(port_base, ((GPIO_ReadValue(port_base)&pin_index) & pin_index) | (on?pin_index:0));
+		GPIO_SetValue(port_base, ((GPIO_ReadValue(port_base)&(1 << pin_index)) & (1 << pin_index)) | (on?(1 << pin_index):0));
 	}
 };
 
-extern Port Port1, Port2, Port3, Port4;
+extern Port Port0, Port1, Port2, Port3, Port4;
 
 class Pin {
 private:
 	Port port;
-	uint8_t pin_index : 4;
+	uint8_t pin_index : 8; // Bit Field
 public:
 	Pin() : port(Port()), pin_index(0) {}
-	Pin(Port& port_in, uint8_t pin_index_in) : port(port_in), pin_index(pin_index_in) {}
+	Pin(Port port_in, uint8_t pin_index_in) : port(port), pin_index(pin_index_in) {}
 	bool isNull() { return port.isNull(); }
 	void setDirection(bool out) { port.setPinDirection(pin_index,out); }
 	bool getValue() { return port.getPin(pin_index); }

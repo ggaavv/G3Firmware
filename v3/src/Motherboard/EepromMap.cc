@@ -34,7 +34,7 @@
 /********************************/
 
 void read_all_from_flash (void){
-//	__disable_irq ();
+	__disable_irq ();
 	uint32_t i;
 	for (i = 0x00000000; i < EEPROM_SIZE; i++,i++,i++,i++) {
 		eeprom_address(EEPROM_START_ADDRESS+i) = eeprom_address(EEPROM_FLASH_AREA_START + i);
@@ -48,16 +48,16 @@ void read_all_from_flash (void){
 		uint8_t menu223[] = " eeprom address : ";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu223, sizeof(menu223), BLOCKING);
 		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, EEPROM_START_ADDRESS + i);
-//	__enable_irq ();
+	__enable_irq ();
 };
 
 void save_to_flash (void) {
-//	__disable_irq ();
+	__disable_irq ();
 	IAP in_ap_prog;
 	int error_code_ret = in_ap_prog.erase(USER_FLASH_AREA_START, USER_FLASH_AREA_START);
 	error_code_ret = in_ap_prog.write((char)0x10000000, (char)USER_FLASH_AREA_START, (int)USER_FLASH_AREA_SIZE );
 	// read all variables back into Ram
-//	__enable_irq ();
+	__enable_irq ();
 };
 
 uint8_t microstep_pinout(uint8_t port_no) {
