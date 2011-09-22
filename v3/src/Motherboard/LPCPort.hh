@@ -66,15 +66,28 @@ public:
 	}
 };
 
-extern Port Port0, Port1, Port2, Port3, Port4;
+Port Port0 = 0x00;
+Port Port1 = 0x01;
+Port Port2 = 0x02;
+Port Port3 = 0x03;
+Port Port4 = 0x04;
+
+//extern Port Port0, Port1, Port2, Port3, Port4;
+/*
+port_base_t Port0 = 0x00;
+port_base_t Port1 = 0x01;
+port_base_t Port2 = 0x02;
+port_base_t Port3 = 0x03;
+port_base_t Port4 = 0x04;
+*/
 
 class Pin {
 private:
 	Port port;
 	uint8_t pin_index : 8; // Bit Field
 public:
-	Pin() : port(Port()), pin_index(0) {}
-	Pin(Port port_in, uint8_t pin_index_in) : port(port), pin_index(pin_index_in) {}
+	Pin() : port(Port(0)), pin_index(0) {}
+	Pin(Port port_in, uint8_t pin_index_in) : port(port_in), pin_index(pin_index_in) {}
 	bool isNull() { return port.isNull(); }
 	void setDirection(bool out) { port.setPinDirection(pin_index,out); }
 	bool getValue() { return port.getPin(pin_index); }

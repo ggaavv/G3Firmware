@@ -15,11 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-
+/*
 #include "LPCPort.hh"
+Port Port0 = 0x00;
+Port Port1 = 0x01;
+Port Port2 = 0x02;
+Port Port3 = 0x03;
+Port Port4 = 0x04;
 
 Port Port0(0x00);
 Port Port1(0x01);
 Port Port2(0x02);
-Port Port3(0x04);
-Port Port4(0x08);
+Port Port3(0x03);
+Port Port4(0x04);
+
+port_base_t Port0 = 0x00;
+port_base_t Port1 = 0x01;
+port_base_t Port2 = 0x02;
+port_base_t Port3 = 0x03;
+port_base_t Port4 = 0x04;
+*/
