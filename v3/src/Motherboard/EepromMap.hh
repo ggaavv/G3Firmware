@@ -33,7 +33,7 @@ uint8_t microstep_pinout(uint8_t port_no);
 
 #define EEPROM_FLASH_AREA_START		USER_FLASH_AREA_START
 
-#define EEPROM_START_ADDRESS		(0x10001000)
+#define EEPROM_START_ADDRESS		(0x10000000)
 
 //uint32_t EEPROM_SIZE				= 0x00001000;
 //uint32_t EEPROM_SIZE				= 0x00001000;

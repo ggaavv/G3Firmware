@@ -15,8 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+/********************************/
+//#include "test.hh"  // testing
+//#include "test_led.hh"  // testing
+#include "test_u.hh"
+#include "Uart32.c"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//test_led(1);
+/********************************/
+
 /*
 #include "LPCPort.hh"
+
 Port Port0 = 0x00;
 Port Port1 = 0x01;
 Port Port2 = 0x02;

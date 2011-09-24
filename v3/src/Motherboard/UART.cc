@@ -99,10 +99,10 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 //		VCOM_Init();					// VCOM Initialization
 //		USB_Init();						// USB Initialization
 //		USB_Connect(TRUE);
-			uint8_t menu322[] = "b4 USB config\r";
+			uint8_t menu322[] = "b4 USB config\n";
 			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu322, sizeof(menu322), BLOCKING);
 		while (!USB_Configuration);		// wait until USB is configured
-			uint8_t menu332[] = "after USB config\r";
+			uint8_t menu332[] = "after USB config\n";
 			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu332, sizeof(menu332), BLOCKING);
 	} else if (index_ == 1) {
 		// UART Configuration Structure
@@ -190,7 +190,7 @@ void UART::reset() {
 volatile uint8_t byte_in;
 
 extern "C" void UART1_IRQHandler(void){
-	uint8_t menu910[] = "\r UIRQ1 ";
+	uint8_t menu910[] = "\n UIRQ1 ";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
 
 	uint32_t intsrc, tmp, tmp1;
@@ -234,10 +234,11 @@ extern "C" void UART1_IRQHandler(void){
 unsigned char BulkBufOut  [USB_CDC_BUFSIZE];
 
 extern "C" void CANActivity_IRQHandler(void){
-	uint8_t menu910[] = "\rCANIRQ";
+	uint8_t menu910[] = "\nCQ";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
 	int numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
 	for (int i = 0; i < numBytesRead; i++){
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, BulkBufOut[i]);
 		UART::uart[0].in.processByte( BulkBufOut[i] );
 	}
 }

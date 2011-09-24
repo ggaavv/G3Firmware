@@ -43,7 +43,7 @@ extern "C" {
 #include "test.hh"  // testing
 #include "test_led.hh"  // testing
 #include "test_u.hh"
-#include "Uart32.c"
+//#include "Uart32.c"
 //#include "Delay.hh"
 //	#include "lpc17xx_nvic.h"
 //	#include "lpc17xx_timer.h"
@@ -56,48 +56,39 @@ extern "C" {
  *----------------------------------------------------------------------------*/
 
 void reset(bool hard_reset) {
-	__disable_irq ();
+//	__disable_irq ();
 	Motherboard& board = Motherboard::getBoard();
-	uint8_t menu2[] = "get board\r";
+	uint8_t menu2[] = "get board\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu2, sizeof(menu2), BLOCKING);
 	sdcard::reset();
-	uint8_t menu3[] = "sdcard reset\r";
+	uint8_t menu3[] = "sdcard reset\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu3, sizeof(menu3), BLOCKING);
 	steppers::abort();
-	uint8_t menu4[] = "stepper abort\r";
+	uint8_t menu4[] = "stepper abort\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu4, sizeof(menu4), BLOCKING);
 	command::reset();
-	uint8_t menu5[] = "command reset\r";
+	uint8_t menu5[] = "command reset\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu5, sizeof(menu5), BLOCKING);
 	eeprom::init();
 //	__disable_irq ();
 	board.reset();
-	__enable_irq ();
+//	__enable_irq ();
 	// If we've just come from a hard reset, wait for 2.5 seconds before
 	// trying to ping an extruder.  This gives the extruder time to boot
 	// before we send it a packet.
 	if (hard_reset) {
-		uint8_t menu6[] = "before starting timeout\r";
+		uint8_t menu6[] = "before starting timeout\n";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu6, sizeof(menu6), BLOCKING);
 		Timeout t;
 		t.start(1000L); // wait for 2500 ms
-		uint8_t menu7[] = "1\r";
+/*		uint8_t menu7[] = "1\n";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu7, sizeof(menu7), BLOCKING);
 //		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, t.hasLeft());
-		uint8_t menu8[] = "2\r";
+		uint8_t menu8[] = "2\n";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu8, sizeof(menu8), BLOCKING);
 //		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, t.hasLeft());
-		uint8_t menu9[] = "3\r";
-		X_MIN_PIN.setDirection(true);
-		X_MIN_PIN.setValue(false);
-		_delay_ms(100);
-		X_MIN_PIN.setValue(true);
-		_delay_ms(100);
-		X_MIN_PIN.setValue(false);
-		_delay_ms(100);
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
 //		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, t.hasLeft());
-//		uint8_t menu10[] = "\r";
+//		uint8_t menu10[] = "\n";
 //		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu10, sizeof(menu10), BLOCKING);
 //		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, t.hasLeft());
 
@@ -109,6 +100,7 @@ void reset(bool hard_reset) {
 //		UART_8((LPC_UART_TypeDef *)LPC_UART2, TIM_GetIntStatus(LPC_TIM0, TIM_MR0_INT));
 //		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, (uint32_t)clkdlycnttt);
 //		test_led3(1);
+*/
 		while (!t.hasElapsed());
 	}
 	if (!tool::reset())
@@ -130,7 +122,28 @@ int main (void) {
 	NVIC_SetPriorityGrouping(0);					// Configure the NVIC Preemption Priority Bits
 	//----end of Initialization of LPC----//
 	test_u();
-	uint8_t menu1[] = "\rS\r";
+/*
+	uint8_t menu9[] = "\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
+	DEBUG_PIN.setDirection(true);
+	DEBUG_PIN.setValue(false);
+	_delay_ms(200);
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
+	DEBUG_PIN.setValue(true);
+	_delay_ms(200);
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
+	DEBUG_PIN.setValue(false);
+	_delay_ms(200);
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
+	DEBUG_PIN.setValue(true);
+	_delay_ms(200);
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
+	DEBUG_PIN.setValue(false);
+	_delay_ms(200);
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
+
+*/
+	uint8_t menu1[] = "\nS\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu1, sizeof(menu1), BLOCKING);
 //	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, SCB->VTOR);
 	Motherboard& board = Motherboard::getBoard();
@@ -141,20 +154,21 @@ int main (void) {
 		// Toolhead interaction thread.
 		tool::runToolSlice();
 		// Host interaction thread.
-//		uint8_t menu111[] = "tool slice run\r";
+//		uint8_t menu111[] = "tool slice run\n";
 //		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu111, sizeof(menu111), BLOCKING);
 		host::runHostSlice();
 		// Command handling thread.
-//		uint8_t menu112[] = "host slice run\r";
+//		uint8_t menu112[] = "host slice run\n";
 //		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu112, sizeof(menu112), BLOCKING);
 		command::runCommandSlice();
 		// Motherboard slice
-		uint8_t menu113[] = "c\r";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu113, sizeof(menu113), BLOCKING);
+//		uint8_t menu113[] = "c\n";
+//		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu113, sizeof(menu113), BLOCKING);
 		board.runMotherboardSlice();
 		// USB coms slice
 //		VCOM_Usb2Serial();
 //		test_led3(1);
+//		_delay_ms(50);
 	}
 	return 0;
 }

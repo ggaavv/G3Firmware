@@ -188,14 +188,15 @@ static GPIO_Byte_TypeDef *FIO_ByteGetPointer(uint8_t portNum)
  **********************************************************************/
 void GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir)
 {
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xff);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x55);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xaa);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xfe);
-	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, bitValue);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xfd);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, dir);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xff);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x55);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xaa);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, &portNum);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xfe);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, bitValue);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xfd);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, dir);
 
 	LPC_GPIO_TypeDef *pGPIO = GPIO_GetPointer(portNum);
 
@@ -209,6 +210,32 @@ void GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir)
 			pGPIO->FIODIR &= ~bitValue;
 		}
 	}
+}
+
+
+/*********************************************************************//**
+ * @brief		Get Direction for GPIO port.
+ * @param[in]	portNum		Port Number value, should be in range from 0 to 4
+ * @return		None
+ *
+ * Note: All remaining bits that are not activated in bitValue (value '0')
+ * will not be effected by this function.
+ **********************************************************************/
+uint32_t GPIO_GetDir(uint8_t portNum)
+{
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xff);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x66);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xaa);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
+
+	LPC_GPIO_TypeDef *pGPIO = GPIO_GetPointer(portNum);
+
+	if (pGPIO != NULL) {
+		// Return Direction
+			return pGPIO->FIODIR;
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, pGPIO->FIODIR);
+	}
+	return (0);
 }
 
 
@@ -228,12 +255,12 @@ void GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir)
  **********************************************************************/
 void GPIO_SetValue(uint8_t portNum, uint32_t bitValue)
 {
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xbb);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xcc);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xdd);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xfe);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, bitValue);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xbb);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xcc);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xdd);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xfe);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, bitValue);
 
 	LPC_GPIO_TypeDef *pGPIO = GPIO_GetPointer(portNum);
 
@@ -275,10 +302,10 @@ void GPIO_ClearValue(uint8_t portNum, uint32_t bitValue)
  **********************************************************************/
 uint32_t GPIO_ReadValue(uint8_t portNum)
 {
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x99);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x88);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x55);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x99);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x88);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, 0x55);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, portNum);
 
 	LPC_GPIO_TypeDef *pGPIO = GPIO_GetPointer(portNum);
 
@@ -440,13 +467,15 @@ void FIO_SetMask(uint8_t portNum, uint32_t bitValue, uint8_t maskValue)
 	LPC_GPIO_TypeDef *pFIO = GPIO_GetPointer(portNum);
 	if(pFIO != NULL) {
 		// Mask
-		if (maskValue){
-			pFIO->FIOMASK |= bitValue;
-		}
+//		if (maskValue){
+//			pFIO->FIOMASK |= bitValue;
+			pFIO->FIOMASK = bitValue;
+//		}
 		// Un-mask
-		else {
-			pFIO->FIOMASK &= ~bitValue;
-		}
+//		else {
+//			pFIO->FIOMASK &= ~bitValue;
+//			pFIO->FIOMASK = ~bitValue;
+//		}
 	}
 }
 

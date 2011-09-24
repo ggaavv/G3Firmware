@@ -41,28 +41,28 @@
 // Define as 1 if and SD card slot is present; 0 if not.
 #define HAS_SD          1
 // The pin that connects to the write protect line on the SD header.
-#define SD_WRITE_PIN    Pin(Port1,0)
+//#define SD_WRITE_PIN    Pin(Port1,0)
 // The pin that connects to the card detect line on the SD header.
-#define SD_DETECT_PIN   Pin(Port1,1)
+#define SD_DETECT_PIN   Pin(Port2,1)
 // The pin that connects to the chip select line on the SD header.
-#define SD_SELECT_PIN   Pin(Port1,0)
+#define SD_SELECT_PIN   Pin(Port2,0)
 
-#define MOSI_PIN   Pin(Port1,0)
-#define SCK_PIN   Pin(Port1,0)
-#define SS_PIN   Pin(Port1,0)
-#define MISO_PIN   Pin(Port1,0)
+//#define MOSI_PIN   Pin(Port1,0)
+//#define SCK_PIN   Pin(Port1,0)
+//#define SS_PIN   Pin(Port1,0)
+//#define MISO_PIN   Pin(Port1,0)
 
 //USB
-#define USB_DISC_PIN Pin(Port1,7)
+//#define USB_DISC_PIN Pin(Port1,7)
 
 // --- Slave UART configuration ---
 // The slave UART is presumed to be an RS485 connection through a sn75176 chip.
 // Define as 1 if the slave UART is present; 0 if not.
 #define HAS_SLAVE_UART  1
 // The pin that connects to the driver enable line on the RS485 chip.
-#define TX_ENABLE_PIN   Pin(Port1,5)
+#define TX_ENABLE_PIN   Pin(Port1,21)
 // The pin that connects to the active-low recieve enable line on the RS485 chip.
-#define RX_ENABLE_PIN   Pin(Port1,7)
+#define RX_ENABLE_PIN   Pin(Port2,8)
 
 // --- Host UART configuration ---
 // The host UART is presumed to always be present on the RX/TX lines.
@@ -71,13 +71,13 @@
 // Define as 1 if the piezo buzzer is present, 0 if not.
 #define HAS_BUZZER 1
 // The pin that drives the buzzer
-#define BUZZER_PIN Pin(Port1,5)
+#define BUZZER_PIN Pin(Port2,5)
 
 // --- Emergency Stop configuration ---
 // Define as 1 if the estop is present, 0 if not.
 #define HAS_ESTOP 1
 // The pin connected to the emergency stop
-#define ESTOP_PIN Pin(Port1,4)
+#define ESTOP_PIN Pin(Port2,10)
 
 // --- Axis configuration ---
 // Define the number of stepper axes supported by the board.  The axes are
@@ -94,55 +94,55 @@
 #define DEFAULT_INVERTED_ENDSTOPS 1
 
 // The X stepper step pin (active on rising edge)
-#define X_STEP_PIN      Pin(Port1,6)
+#define X_STEP_PIN      Pin(Port2,13)
 // The X direction pin (forward on logic high)
-#define X_DIR_PIN       Pin(Port1,5)
+#define X_DIR_PIN       Pin(Port2,12)
 // The X stepper enable pin (active low)
-#define X_ENABLE_PIN    Pin(Port1,4)
+#define X_ENABLE_PIN    Pin(Port2,11)
 // The X minimum endstop pin (active high)
-#define X_MIN_PIN       Pin(Port1,6)
+#define X_MIN_PIN       Pin(Port0,22)
 // The X maximum endstop pin (active high)
-#define X_MAX_PIN       Pin(Port1,5)
+#define X_MAX_PIN       Pin(Port0,11)
 
 // The Y stepper step pin (active on rising edge)
-#define Y_STEP_PIN      Pin(Port1,3)
+#define Y_STEP_PIN      Pin(Port1,28)
 // The Y direction pin (forward on logic high)
-#define Y_DIR_PIN       Pin(Port1,2)
+#define Y_DIR_PIN       Pin(Port1,29)
 // The Y stepper enable pin (active low)
-#define Y_ENABLE_PIN    Pin(Port1,1)
+#define Y_ENABLE_PIN    Pin(Port0,10)
 // The Y minimum endstop pin (active high)
-#define Y_MIN_PIN       Pin(Port1,4)
+#define Y_MIN_PIN       Pin(Port1,27)
 // The Y maximum endstop pin (active high)
-#define Y_MAX_PIN       Pin(Port1,6)
+#define Y_MAX_PIN       Pin(Port1,23)
 
 // The Z stepper step pin (active on rising edge)
-#define Z_STEP_PIN      Pin(Port1,0)
+#define Z_STEP_PIN      Pin(Port1,24)
 // The Z direction pin (forward on logic high)
-#define Z_DIR_PIN       Pin(Port1,0)
+#define Z_DIR_PIN       Pin(Port1,25)
 // The Z stepper enable pin (active low)
-#define Z_ENABLE_PIN    Pin(Port1,1)
+#define Z_ENABLE_PIN    Pin(Port1,26)
 // The Z minimum endstop pin (active high)
-#define Z_MIN_PIN       Pin(Port1,5)
+#define Z_MIN_PIN       Pin(Port1,27)
 // The Z maximum endstop pin (active high)
-#define Z_MAX_PIN       Pin(Port1,4)
+#define Z_MAX_PIN       Pin(Port3,25)
 
 // The A stepper step pin (active on rising edge)
-#define A_STEP_PIN      Pin(Port1,0)
+#define A_STEP_PIN      Pin(Port1,19)
 // The A direction pin (forward on logic high)
-#define A_DIR_PIN       Pin(Port1,1)
+#define A_DIR_PIN       Pin(Port1,20)
 // The A stepper enable pin (active low)
-#define A_ENABLE_PIN    Pin(Port1,5)
+#define A_ENABLE_PIN    Pin(Port1,21)
 
 // The B stepper step pin (active on rising edge)
-#define B_STEP_PIN      Pin(Port1,5)
+#define B_STEP_PIN      Pin(Port0,27)
 // The B direction pin (forward on logic high)
-#define B_DIR_PIN       Pin(Port1,3)
+#define B_DIR_PIN       Pin(Port0,28)
 // The B stepper enable pin (active low)
-#define B_ENABLE_PIN    Pin(Port1,3)
+#define B_ENABLE_PIN    Pin(Port3,26)
 
 // --- Debugging configuration ---
 // The pin which controls the debug LED (active high)
-#define DEBUG_PIN       Pin(Port1,7)
+#define DEBUG_PIN       Pin(Port0,22)
 // By default, debugging packets should be honored; this is made
 // configurable if we're short on cycles or EEPROM.
 // Define as 1 if debugging packets are honored; 0 if not.

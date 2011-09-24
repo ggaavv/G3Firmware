@@ -131,6 +131,7 @@ void GPIO_ClearInt(uint8_t portNum, uint32_t bitValue);
 
 /* FIO (word-accessible) style ------------------------------- */
 void FIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir);
+uint32_t GPIO_GetDir(uint8_t portNum);
 void FIO_SetValue(uint8_t portNum, uint32_t bitValue);
 void FIO_ClearValue(uint8_t portNum, uint32_t bitValue);
 uint32_t FIO_ReadValue(uint8_t portNum);

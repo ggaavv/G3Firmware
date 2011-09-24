@@ -110,7 +110,7 @@ void VCOM_Start(void) {
   USB_Init();                               // USB Initialization
   USB_Connect(TRUE);                        // USB Connect
 
-//  while (!USB_Configuration) ;              // wait until USB is configured
+  while (!USB_Configuration) ;              // wait until USB is configured
 
 /*  while (1) {                               // Loop forever
     VCOM_Serial2Usb();                      // read serial port and initiate USB event

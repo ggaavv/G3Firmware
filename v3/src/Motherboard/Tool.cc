@@ -25,7 +25,7 @@
 #include "test_led.hh"  // testing
 #include "test_u.hh"
 #include "Uart32.c"
-//#include "Delay.hh"
+#include "Delay.hh"
 //	#include "lpc17xx_nvic.h"
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
@@ -89,19 +89,19 @@ bool getToolVersion() {
     Timeout acquire_lock_timeout;
     acquire_lock_timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
 
-    uint8_t menu231[] = "in getlockV\r";
+    uint8_t menu231[] = "in getlockV\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu231, sizeof(menu231), BLOCKING);
 
 	while (!tool::getLock()) {
-		uint8_t menu232[] = "not locked\r";
+		uint8_t menu232[] = "not locked\n";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu232, sizeof(menu232), BLOCKING);
 		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, acquire_lock_timeout.hasLeft());
-
+		_delay_ms(200);
 			if (acquire_lock_timeout.hasElapsed()) {
                     locked = true; // grant ourselves the lock
                     transaction_active = false; // abort transaction!
 
-                    uint8_t menu233[] = "aquire lock timeout\r";
+                    uint8_t menu233[] = "aquire lock timeout\n";
                 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu233, sizeof(menu233), BLOCKING);
 
                 	Motherboard::getBoard().indicateError(ERR_SLAVE_LOCK_TIMEOUT);
@@ -109,14 +109,14 @@ bool getToolVersion() {
             }
     }
 
-	uint8_t menu23[] = "get tool version after getlock\r";
+	uint8_t menu23[] = "get tool version after getlock\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu23, sizeof(menu23), BLOCKING);
 
 	OutPacket& out = getOutPacket();
     InPacket& in = getInPacket();
 
 
-	uint8_t menu24[] = "2get tool version after packet in.out\r";
+	uint8_t menu24[] = "2get tool version after packet in.out\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu24, sizeof(menu24), BLOCKING);
 
 
@@ -126,7 +126,7 @@ bool getToolVersion() {
     out.append8(0);  // Technically, we should report our version here, however
     out.append8(0);  // it doesn't actually matter.
 
-	uint8_t menu25[] = "2end of tool reset\r";
+	uint8_t menu25[] = "2end of tool reset\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu25, sizeof(menu25), BLOCKING);
 
 

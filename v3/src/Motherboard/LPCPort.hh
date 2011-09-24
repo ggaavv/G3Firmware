@@ -38,7 +38,16 @@ uint32_t GPIO_ReadValue(uint8_t portNum);
 void GPIO_IntCmd(uint8_t portNum, uint32_t bitValue, uint8_t edgeState);
 FunctionalState GPIO_GetIntStatus(uint8_t portNum, uint32_t pinNum, uint8_t edgeState);
 void GPIO_ClearInt(uint8_t portNum, uint32_t bitValue);
+FIO_SetMask(uint8_t portNum, uint32_t bitValue, uint8_t maskValue)
 */
+
+enum portname {
+	Port0 = 0x00,
+	Port1 = 0x01,
+	Port2 = 0x02,
+	Port3 = 0x03,
+	Port4 = 0x04
+};
 
 //#if defined Eight_Sixteen_bit
 //typedef uint16_t port_base_t;
@@ -48,46 +57,54 @@ typedef uint8_t port_base_t;
 #define NULL_PORT 0xff
 //#endif
 
-class Port {
+class Port_Class {
 private:
 	port_base_t port_base;
 public:
-	Port() : port_base(NULL_PORT) {}
-	Port(port_base_t port_base_in) : port_base(port_base_in) {}
+	Port_Class() : port_base(NULL_PORT) {}
+	Port_Class(portname port_base_in) : port_base(port_base_in) {}
 	bool isNull() { return port_base == NULL_PORT; }
 	void setPinDirection(uint8_t pin_index, bool out) {
-		GPIO_SetDir(port_base, 1 << pin_index, out);
+		uint32_t getpindirin = GPIO_GetDir(port_base);
+		if (out){
+			GPIO_SetDir(port_base, (getpindirin | (1 << pin_index)), out);
+		}else {
+			GPIO_SetDir(port_base, (getpindirin & ~(1 << pin_index)), out);
+		}
 	}
 	bool getPin(uint8_t pin_index) {
-		return (((uint32_t)GPIO_ReadValue(port_base) & (1 << pin_index)) != 0);
+		FIO_SetMask(port_base, ~(1 << pin_index), 1);
+		return (GPIO_ReadValue(port_base) >= 0);
 	}
 	void setPin(uint8_t pin_index, bool on) {
-		GPIO_SetValue(port_base, ((GPIO_ReadValue(port_base)&(1 << pin_index)) & (1 << pin_index)) | (on?(1 << pin_index):0));
+		FIO_SetMask(port_base, ~(1 << pin_index), 1);
+		if (on){
+			GPIO_ClearValue(port_base, 0xffffffff);
+		}else{
+			GPIO_SetValue(port_base, 0xffffffff);
+		}
 	}
 };
 
-Port Port0 = 0x00;
-Port Port1 = 0x01;
-Port Port2 = 0x02;
-Port Port3 = 0x03;
-Port Port4 = 0x04;
-
 //extern Port Port0, Port1, Port2, Port3, Port4;
 /*
-port_base_t Port0 = 0x00;
-port_base_t Port1 = 0x01;
-port_base_t Port2 = 0x02;
-port_base_t Port3 = 0x03;
-port_base_t Port4 = 0x04;
+Port Port0(0x00);
+Port Port1(0x01);
+Port Port2(0x02);
+Port Port3(0x03);
+Port Port4(0x04);
 */
+
+Port_Class port;
 
 class Pin {
 private:
-	Port port;
-	uint8_t pin_index : 8; // Bit Field
+	Port_Class port;
+	portname Port;
+	uint8_t pin_index;
 public:
-	Pin() : port(Port(0)), pin_index(0) {}
-	Pin(Port port_in, uint8_t pin_index_in) : port(port_in), pin_index(pin_index_in) {}
+	Pin() : port(Port), pin_index(0) {}
+	Pin(portname port_in, uint8_t pin_index_in) : port(port_in), pin_index(pin_index_in) {}
 	bool isNull() { return port.isNull(); }
 	void setDirection(bool out) { port.setPinDirection(pin_index,out); }
 	bool getValue() { return port.getPin(pin_index); }
