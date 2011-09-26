@@ -55,11 +55,11 @@ uint32_t packet_retry_count;
 uint32_t noise_byte_count;
 
 InPacket& getInPacket() {
-	return UART::getSlaveUART().in;
+	return UART::uart[1].in;
 }
 
 OutPacket& getOutPacket() {
-	return UART::getSlaveUART().out;
+	return UART::uart[1].out;
 }
 
 // Get the total number of packets that were attempted to be sent to a tool
@@ -129,7 +129,6 @@ bool getToolVersion() {
 	uint8_t menu25[] = "2end of tool reset\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu25, sizeof(menu25), BLOCKING);
 
-
     startTransaction();
     // override standard timeout
     timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
@@ -168,7 +167,7 @@ void setToolIndicatorLED() {
             }
     }
     OutPacket& out = getOutPacket();
-    InPacket& in = getInPacket();
+//    InPacket& in = getInPacket();
     out.reset();
     out.append8(0);
     out.append8(SLAVE_CMD_LIGHT_INDICATOR_LED);
@@ -227,7 +226,7 @@ bool reset() {
     if (packet_retry_count <= 0) {
         setToolIndicatorLED();
     }
-	return UART::getSlaveUART().in.isFinished();
+	return UART::uart[1].in.isFinished();
 }
 
 /// The tool is considered locked if a transaction is in progress or
@@ -255,8 +254,16 @@ void startTransaction() {
 	transaction_active = true;
 	timeout.start(TOOL_PACKET_TIMEOUT_MICROS); // 50 ms timeout
 	retries = RETRIES;
-	UART::getSlaveUART().in.reset();
-	UART::getSlaveUART().beginSend();
+
+//	Packet packetinandout;
+//	InPacket packet_in = InPacket();
+//	OutPacket packet_out = OutPacket();
+
+//	packet_in.reset();
+//	packet_out.reset();
+
+	UART::uart[1].in.reset();
+	UART::uart[1].beginSend();
 }
 
 bool isTransactionDone() {
@@ -264,7 +271,7 @@ bool isTransactionDone() {
 }
 
 void runToolSlice() {
-		UART& uart = UART::getSlaveUART();
+		UART& uart = UART::uart[1];
 	if (transaction_active) {
 		if (uart.in.isFinished())
 		{

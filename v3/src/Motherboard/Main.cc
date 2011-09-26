@@ -40,6 +40,7 @@ extern "C" {
 #include "Main.hh"
 #include "Delay.hh"
 /********************************/
+#include "UART.hh"
 #include "test.hh"  // testing
 #include "test_led.hh"  // testing
 #include "test_u.hh"
@@ -51,6 +52,18 @@ extern "C" {
 //test_led(1);
 /********************************/
 
+/*----------------------------------------------------------------------------
+  Construct classes
+ *----------------------------------------------------------------------------*/
+/*
+void construct_classes(){
+UART::uart[0] = UART(0);
+UART::uart[1] = UART(1);
+
+UART::getHostUART();
+UART::getSlaveUART();
+}
+*/
 /*----------------------------------------------------------------------------
   reset
  *----------------------------------------------------------------------------*/
@@ -121,8 +134,9 @@ int main (void) {
 	SystemInit();									// Initialize clocks
 	NVIC_SetPriorityGrouping(0);					// Configure the NVIC Preemption Priority Bits
 	//----end of Initialization of LPC----//
+//	construct_classes();
 	test_u();
-/*
+	/*
 	uint8_t menu9[] = "\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
 	DEBUG_PIN.setDirection(true);

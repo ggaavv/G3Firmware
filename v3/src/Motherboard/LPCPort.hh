@@ -46,7 +46,8 @@ enum portname {
 	Port1 = 0x01,
 	Port2 = 0x02,
 	Port3 = 0x03,
-	Port4 = 0x04
+	Port4 = 0x04,
+	NULL_PORT = 0xff
 };
 
 //#if defined Eight_Sixteen_bit
@@ -54,12 +55,11 @@ enum portname {
 //#define NULL_PORT 0xffff
 //#else
 typedef uint8_t port_base_t;
-#define NULL_PORT 0xff
 //#endif
 
 class Port_Class {
 private:
-	port_base_t port_base;
+	portname port_base;
 public:
 	Port_Class() : port_base(NULL_PORT) {}
 	Port_Class(portname port_base_in) : port_base(port_base_in) {}
@@ -74,7 +74,7 @@ public:
 	}
 	bool getPin(uint8_t pin_index) {
 		FIO_SetMask(port_base, ~(1 << pin_index), 1);
-		return (GPIO_ReadValue(port_base) >= 0);
+		return (GPIO_ReadValue(port_base));
 	}
 	void setPin(uint8_t pin_index, bool on) {
 		FIO_SetMask(port_base, ~(1 << pin_index), 1);
@@ -109,7 +109,7 @@ public:
 	void setDirection(bool out) { port.setPinDirection(pin_index,out); }
 	bool getValue() { return port.getPin(pin_index); }
 	void setValue(bool on) { port.setPin(pin_index,on); }
-	const uint8_t getPinIndex() const { return pin_index; }
+	uint8_t getPinIndex() { return pin_index; }
 };
 
 #endif // SHARED_AVR_PORT_HH_

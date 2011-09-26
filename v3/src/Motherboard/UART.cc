@@ -64,22 +64,6 @@ extern "C" {
 // them from our receive buffer later.This is only used for RS485 mode.
 volatile uint8_t loopback_bytes = 0;
 
-/*
-NOTE: you will need to call SystemCoreClockUpdate() as the very
-first line in your main function. This will update the various
-registers and constants to allow accurate timing.
-If you include the following files in you compilation and include
-the call SerialInit(UART0,9600); in your main function, you
-*should* be able to use uart_putchar(char,NULL) to output
-individual characters to the USB UART, and use putst(const char * s);
-to output a whole string.
-*/
-
-UART UART::uart[2] = {
-		UART(0),
-		UART(1)
-};
-
 // Transition to a non-transmitting state. This is only used for RS485 mode.
 inline void listen() {
 	TX_ENABLE_PIN.setValue(false);
@@ -91,6 +75,10 @@ inline void speak() {
 }
 
 UART::UART(uint8_t index) : index_(index), enabled_(false) {
+//	index_ = index;
+	uint8_t menu55322[] = "Uart init\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu55322, sizeof(menu55322), BLOCKING);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
 	if (index_ == 0) {
 		// Init USB for UART
 //		usbSerialInit();
@@ -105,6 +93,8 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 			uint8_t menu332[] = "after USB config\n";
 			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu332, sizeof(menu332), BLOCKING);
 	} else if (index_ == 1) {
+		uint8_t menu3722[] = "rs485\n";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu3722, sizeof(menu3722), BLOCKING);
 		// UART Configuration Structure
 		UART_CFG_Type u_cfg;
 		u_cfg.Baud_rate = 38400;
@@ -134,45 +124,80 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 	}
 }
 
+void UART::change_index(uint8_t index) {
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, index);
+	index_ = index;
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
+}
+
+uint8_t UART::read_index() {
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
+	return index_;
+}
+
 /// UART bytes will be triggered by the tx complete interrupt.
 /// USB bytes sent as whole packets
 void UART::beginSend() {
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
+	uint8_t menu55722[] = "Uart begin send\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu55722, sizeof(menu55722), BLOCKING);
+
+
 	if (!enabled_) { return; }
 	if (index_ == 0) {		//uart0 eg usb
-		char serBuf[USB_CDC_BUFSIZE];
+		uint8_t menu95722[] = "sending from uart0 send\n";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu95722, sizeof(menu95722), BLOCKING);
+		unsigned char sendBuffer[USB_CDC_BUFSIZE];
 		while (UART::uart[0].out.isSending()) {
 			uint32_t i;
 			for (i = 0; i > USB_CDC_BUFSIZE; i++){
-				serBuf[i] = out.getNextByteToSend();
+				sendBuffer[i] = UART::uart[0].out.getNextByteToSend();
+
+				UART_8((LPC_UART_TypeDef *)LPC_UART2, sendBuffer[i]);
+
 				if (!(UART::uart[0].out.isSending()))
 				break;
 			}
-			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&serBuf[0], i);
+			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&sendBuffer[0], i);
 		}
 	} else if (index_ == 1) {
+		uint8_t menu99722[] = "sending from uart1 send\n";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu99722, sizeof(menu99722), BLOCKING);
 		speak();
 		_delay_us(10);
 		loopback_bytes = 1;
-		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, out.getNextByteToSend());
+		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::uart[1].out.getNextByteToSend());
 	}
 }
 
 void UART::enable(bool enabled) {
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
 	enabled_ = enabled;
 	if (index_ == 0) {
 		if (enabled) {
-			USB_Connect(TRUE);      // USB Connect
+			uint8_t menu910[] = "\nUart0 Enabled ";
+			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
+			UART_8((LPC_UART_TypeDef *)LPC_UART2, enabled);
+//			USB_Connect(TRUE);      // USB Connect
 //			USBHwConnect(TRUE);			// USB Connect
 		}
 		else {
-			USB_Connect(FALSE);      // USB Disconnect
+			uint8_t menu9910[] = "\nUart0 Disabled ";
+			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9910, sizeof(menu9910), BLOCKING);
+			UART_8((LPC_UART_TypeDef *)LPC_UART2, enabled);
+//			USB_Connect(FALSE);      // USB Disconnect
 //			USBHwConnect(FALSE);			// USB Disconnect
 		}
 	} else if (index_ == 1) {
 		if (enabled){
+			uint8_t menu5910[] = "\nUart1 Enabled ";
+			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu5910, sizeof(menu5910), BLOCKING);
 			UART_TxCmd((LPC_UART_TypeDef *)LPC_UART1, ENABLE);
 		}
 		else {
+			uint8_t menu9105[] = "\nUart1 Disabled ";
+			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9105, sizeof(menu9105), BLOCKING);
 			UART_TxCmd((LPC_UART_TypeDef *)LPC_UART1, DISABLE);
 		}
 	}
@@ -190,7 +215,7 @@ void UART::reset() {
 volatile uint8_t byte_in;
 
 extern "C" void UART1_IRQHandler(void){
-	uint8_t menu910[] = "\n UIRQ1 ";
+	uint8_t menu910[] = "\n UartQ1 ";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
 
 	uint32_t intsrc, tmp, tmp1;
@@ -210,20 +235,20 @@ extern "C" void UART1_IRQHandler(void){
 	}
 	// Receive Data Available or Character time-out
 	if ((tmp == UART_IIR_INTID_RDA) || (tmp == UART_IIR_INTID_CTI)) {
-		static uint8_t byte_in;
-		byte_in = UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART1);
+//		static uint8_t byte_in;
+//		byte_in = UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART1);
 		if (loopback_bytes > 0) {
 			loopback_bytes--;
 		} else {
-			UART::getSlaveUART().in.processByte( byte_in );
+			UART::uart[1].in.processByte( UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART1) );
 		}
 	}
 
 	// Transmit Holding Empty
 	if (tmp == UART_IIR_INTID_THRE){
-		if (UART::getSlaveUART().out.isSending()) {
+		if (UART::uart[1].out.isSending()) {
 			loopback_bytes++;
-			UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::getSlaveUART().out.getNextByteToSend());  // NEED to choose which UART
+			UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::uart[1].out.getNextByteToSend());  // NEED to choose which UART
 		} else {
 			_delay_us(10);
 			listen();
@@ -231,12 +256,13 @@ extern "C" void UART1_IRQHandler(void){
 	}
 }
 
-unsigned char BulkBufOut  [USB_CDC_BUFSIZE];
+uint8_t BulkBufOut  [USB_CDC_BUFSIZE];
 
 extern "C" void CANActivity_IRQHandler(void){
 	uint8_t menu910[] = "\nCQ";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
 	int numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
+	UART_8((LPC_UART_TypeDef *)LPC_UART2, numBytesRead);
 	for (int i = 0; i < numBytesRead; i++){
 		UART_8((LPC_UART_TypeDef *)LPC_UART2, BulkBufOut[i]);
 		UART::uart[0].in.processByte( BulkBufOut[i] );

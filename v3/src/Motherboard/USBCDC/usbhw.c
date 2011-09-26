@@ -685,8 +685,8 @@ uint32_t USB_GetFrame (void) {
  */
 
 extern void USB_IRQHandler (void) {
-	uint8_t menu710[] = "\nUQ ";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu710, sizeof(menu710), BLOCKING);
+//	uint8_t menu710[] = "\nUQ ";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu710, sizeof(menu710), BLOCKING);
 
   uint32_t disr, val, n, m;
   uint32_t episr, episrCur;

@@ -59,7 +59,7 @@ public:
 	void runMotherboardSlice();
 
 	/// Count the number of steppers available on this board.
-	const int getStepperCount() const { return STEPPERS; }
+	int getStepperCount() { return STEPPERS; }
 	/// Get the stepper interface for the nth stepper.
 	StepperInterface& getStepperInterface(int n)
 	{

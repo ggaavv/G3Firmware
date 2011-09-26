@@ -59,8 +59,8 @@ HostState currentState;
 bool do_host_reset = true;
 
 void runHostSlice() {
-	InPacket& in = UART::getHostUART().in;
-	OutPacket& out = UART::getHostUART().out;
+	InPacket& in = UART::uart[0].in;
+	OutPacket& out = UART::uart[0].out;
 	if (out.isSending()) {
 		// still sending; wait until send is complete before reading new host packets.
 		return;
@@ -113,7 +113,7 @@ void runHostSlice() {
 			out.append8(RC_CMD_UNSUPPORTED);
 		}
 		in.reset();
-		UART::getHostUART().beginSend();
+		UART::uart[0].beginSend();
 	}
 }
 

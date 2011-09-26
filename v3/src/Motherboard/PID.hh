@@ -55,7 +55,7 @@ public:
     void setDGain(const float d_gain_in) { d_gain = d_gain_in; }
 
     void setTarget(const int target);
-    const int getTarget() const { return sp; }
+	int getTarget() { return sp; }
 
     /// Reset the PID to board-on values
     void reset();

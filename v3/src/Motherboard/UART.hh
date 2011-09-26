@@ -29,23 +29,41 @@
  * packets.
  *
  */
+/*
+enum uart_no {
+	Host_Uart = 0x00,
+	Slave_Uart = 0x01
+};
+*/
+//uint8_t Host_Uart = 0;
+//uint8_t Slave_Uart = 1;
 
 class UART {
 private:
-	const uint8_t index_;
+	uint8_t index_;
 	volatile bool enabled_;
 public:
+//	UART(uart_no index_) : index_(0), enabled_(false) {}
+	UART();
 	UART(uint8_t index);
+//	UART(uint8_t index) {}// : index_(index), enabled_(false) {}
+	void change_index(uint8_t index_);
+	uint8_t read_index();
 	InPacket in;
 	OutPacket out;
 	void beginSend();
 	void enable(bool enabled);
-	static UART& getHostUART() { return uart[0]; }
-	static UART& getSlaveUART() { return uart[1]; }
+	static UART uart[2];
+	static UART& getHostUART() { return UART::uart[0]; }
+	static UART& getSlaveUART() { return UART::uart[1]; }
 	// Reset the UART to a listening state.  This is important for
 	// RS485-based comms.
 	void reset();	// Not meant to be public, but otherwise we'd have to friend interrupt protos.  :/
-	static UART uart[2];
+};
+
+UART UART::uart[2] = {
+	UART(0),
+	UART(1),
 };
 
 #endif // UART_HH_

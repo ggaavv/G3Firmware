@@ -104,7 +104,7 @@ extern "C" void TIMER1_IRQHandler (void){
 				blinked_so_far++;
 				blink_state = BLINK_OFF;
 				blink_ovfs_remaining = OVFS_OFF;
-				DEBUG_PIN.setValue(false);
+//				DEBUG_PIN.setValue(false);
 			} else if (blink_state == BLINK_OFF) {
 				if (blinked_so_far >= blink_count) {
 					blink_state = BLINK_PAUSE;
@@ -112,13 +112,13 @@ extern "C" void TIMER1_IRQHandler (void){
 				} else {
 					blink_state = BLINK_ON;
 					blink_ovfs_remaining = OVFS_ON;
-					DEBUG_PIN.setValue(true);
+//					DEBUG_PIN.setValue(true);
 				}
 			} else if (blink_state == BLINK_PAUSE) {
 				blinked_so_far = 0;
 				blink_state = BLINK_ON;
 				blink_ovfs_remaining = OVFS_ON;
-				DEBUG_PIN.setValue(true);
+//				DEBUG_PIN.setValue(true);
 			}
 		}
 //	}
@@ -131,6 +131,8 @@ Motherboard Motherboard::motherboard;
 /// Create motherboard object
 Motherboard::Motherboard()
 {
+	uint8_t menu1161[] = "\nCreate motherboard object";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu1161, sizeof(menu1161), BLOCKING);
 	/// Set up the stepper pins on board creation
 #if STEPPER_COUNT > 0
 	stepper[0] = StepperInterface(X_DIR_PIN,X_STEP_PIN,X_ENABLE_PIN,X_MAX_PIN,X_MIN_PIN);
@@ -172,18 +174,31 @@ void Motherboard::reset() {
 	uint8_t menu161[] = "\nb4 uarts up";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu161, sizeof(menu161), BLOCKING);
 
+//	Packet();
+//	InPacket();
+//	OutPacket();
+
+//	InPacket Inn;
+//	OutPacket Outt;
+
+//	Inn.reset();
+//	Outt.reset();
+
+	//Construct classes
+	UART::uart[0] = UART(0);
+	UART::uart[1] = UART(1);
+
 	UART::getHostUART().enable(true);
 	UART::getHostUART().in.reset();
 
 	uint8_t menu261[] = "\nbetween uarts";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu261, sizeof(menu261), BLOCKING);
 
-	UART::getSlaveUART().enable(true);
-	UART::getSlaveUART().in.reset();
+    UART::getSlaveUART().enable(true);
+    UART::getSlaveUART().in.reset();
 
 	uint8_t menu191[] = "\nafter uarts up";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu191, sizeof(menu191), BLOCKING);
-
 	// Reset and configure timer 1, the microsecond and stepper
 	// interrupt timer.
 	TIM_TIMERCFG_Type TMR0_Cfg;

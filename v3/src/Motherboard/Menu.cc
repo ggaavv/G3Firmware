@@ -35,8 +35,8 @@ bool queryExtruderParameter(uint8_t parameter, OutPacket& responsePacket) {
 			return false;
 		}
 	}
-	OutPacket& out = tool::getOutPacket();
-	InPacket& in = tool::getInPacket();
+	OutPacket out = tool::getOutPacket();
+	InPacket in = tool::getInPacket();
 	out.reset();
 	responsePacket.reset();
 
