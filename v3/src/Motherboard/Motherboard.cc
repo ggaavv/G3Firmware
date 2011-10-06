@@ -126,7 +126,7 @@ extern "C" void TIMER1_IRQHandler (void){
 }
 
 /// Instantiate static motherboard instance
-Motherboard Motherboard::motherboard;
+//Motherboard Motherboard::motherboard;
 
 /// Create motherboard object
 Motherboard::Motherboard()
@@ -174,19 +174,9 @@ void Motherboard::reset() {
 	uint8_t menu161[] = "\nb4 uarts up";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu161, sizeof(menu161), BLOCKING);
 
-//	Packet();
-//	InPacket();
-//	OutPacket();
-
-//	InPacket Inn;
-//	OutPacket Outt;
-
-//	Inn.reset();
-//	Outt.reset();
-
 	//Construct classes
-	UART::uart[0] = UART(0);
-	UART::uart[1] = UART(1);
+	UART::getHostUART() = UART(0);
+	UART::getSlaveUART() = UART(1);
 
 	UART::getHostUART().enable(true);
 	UART::getHostUART().in.reset();
@@ -259,8 +249,8 @@ void Motherboard::reset() {
 
 	// Check if the interface board is attached
 	hasInterfaceBoard = interfaceboard::isConnected();
-//	if (hasInterfaceBoard) {
-	if (0) {
+	if (hasInterfaceBoard) {
+//	if (0) {
 		// Make sure our interface board is initialized
 		interfaceboard::init();
 		interface_update_timeout.start(interfaceboard::getUpdateRate());
@@ -279,6 +269,11 @@ micros_t Motherboard::getCurrentMicros() {
 	return micros_snapshot;
 }
 
+
+//static Motherboard& Motherboard::getBoard() {
+//	static Motherboard motherboard;
+//	return motherboard;
+//}
 
 /// Run the motherboard interrupt
 void Motherboard::doInterrupt() {

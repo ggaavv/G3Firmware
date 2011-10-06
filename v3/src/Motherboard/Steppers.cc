@@ -18,6 +18,18 @@
 #define __STDC_LIMIT_MACROS
 #include "Steppers.hh"
 #include <stdint.h>
+/********************************/
+#include "UART.hh"
+#include "test.hh"  // testing
+#include "test_led.hh"  // testing
+#include "test_u.hh"
+//#include "Uart32.c"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//test_led(1);
+/********************************/
 
 namespace steppers {
 
@@ -152,6 +164,8 @@ void init(Motherboard& motherboard) {
 	is_running = false;
 	for (int i = 0; i < STEPPER_COUNT; i++) {
 		axes[i] = Axis(motherboard.getStepperInterface(i));
+		uint8_t menu4[] = "init steppers\n";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu4, sizeof(menu4), BLOCKING);
 	}
 }
 
@@ -180,6 +194,8 @@ bool holdZ = false;
 
 void setHoldZ(bool holdZ_in) {
 	holdZ = holdZ_in;
+	uint8_t menu4[] = "set hold TRUE\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu4, sizeof(menu4), BLOCKING);
 }
 
 void setTarget(const Point& target, int32_t dda_interval) {

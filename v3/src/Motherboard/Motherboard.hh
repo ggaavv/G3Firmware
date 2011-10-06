@@ -42,6 +42,11 @@ private:
 	volatile micros_t micros;
 	/// Private constructor; use the singleton
 	Motherboard();
+	Motherboard(Motherboard const&);
+	void operator=(Motherboard const&);
+//	Motherboard(const Motherboard&);
+//	Motherboard& operator=(const Motherboard&);
+//	~Motherboard();
 
 	static Motherboard motherboard;
 
@@ -80,7 +85,7 @@ public:
 	uint8_t getCurrentError();
 
 	/// Get the motherboard instance.
-	static Motherboard& getBoard() { return motherboard; }
+	static Motherboard& getBoard() {static Motherboard motherboard; return motherboard; }
 
 	/// Perform the timer interrupt routine.
 	void doInterrupt();

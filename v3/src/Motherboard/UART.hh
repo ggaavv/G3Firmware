@@ -54,8 +54,8 @@ public:
 	void beginSend();
 	void enable(bool enabled);
 	static UART uart[2];
-	static UART& getHostUART() { return UART::uart[0]; }
-	static UART& getSlaveUART() { return UART::uart[1]; }
+	static UART& getHostUART() { return uart[0]; }
+	static UART& getSlaveUART() { return uart[1]; }
 	// Reset the UART to a listening state.  This is important for
 	// RS485-based comms.
 	void reset();	// Not meant to be public, but otherwise we'd have to friend interrupt protos.  :/

@@ -55,7 +55,7 @@ void save_to_flash (void) {
 	__disable_irq ();
 	IAP in_ap_prog;
 	int error_code_ret = in_ap_prog.erase(USER_FLASH_AREA_START, USER_FLASH_AREA_START);
-	error_code_ret = in_ap_prog.write((char)0x10000000, (char)USER_FLASH_AREA_START, (int)USER_FLASH_AREA_SIZE );
+	error_code_ret = in_ap_prog.write((char)0x10007000, (char)USER_FLASH_AREA_START, (int)USER_FLASH_AREA_SIZE );
 	// read all variables back into Ram
 	__enable_irq ();
 };

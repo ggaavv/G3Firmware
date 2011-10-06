@@ -75,6 +75,9 @@ inline void speak() {
 }
 
 UART::UART(uint8_t index) : index_(index), enabled_(false) {
+//	InPacket in;
+//	OutPacket out;
+	in.reset();
 //	index_ = index;
 	uint8_t menu55322[] = "Uart init\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu55322, sizeof(menu55322), BLOCKING);
@@ -140,26 +143,39 @@ uint8_t UART::read_index() {
 /// USB bytes sent as whole packets
 void UART::beginSend() {
 	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
-	uint8_t menu55722[] = "Uart begin send\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu55722, sizeof(menu55722), BLOCKING);
+//	uint8_t menu55722[] = "Uart begin send\n";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu55722, sizeof(menu55722), BLOCKING);
 
 
 	if (!enabled_) { return; }
 	if (index_ == 0) {		//uart0 eg usb
-		uint8_t menu95722[] = "sending from uart0 send\n";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu95722, sizeof(menu95722), BLOCKING);
-		unsigned char sendBuffer[USB_CDC_BUFSIZE];
+//		uint8_t menu95722[] = "s_f_uart0ssss\n";
+//		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu95722, sizeof(menu95722), BLOCKING);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, !UART::uart[0].out.isSending());
+		static unsigned char sendBuffer[64];
+		sendBuffer[0] = UART::uart[0].out.getNextByteToSend();
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, sendBuffer[0]);
 		while (UART::uart[0].out.isSending()) {
+//			UART_8((LPC_UART_TypeDef *)LPC_UART2, UART::uart[0].out.isSending());
+//			sendBuffer[0] = UART::uart[0].out.getNextByteToSend();
+//			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&sendBuffer[0], 1);
 			uint32_t i;
-			for (i = 0; i > USB_CDC_BUFSIZE; i++){
+			for (i = 1; i < USB_CDC_BUFSIZE-1; i++){
 				sendBuffer[i] = UART::uart[0].out.getNextByteToSend();
 
+//				UART_8((LPC_UART_TypeDef *)LPC_UART2, 9);
 				UART_8((LPC_UART_TypeDef *)LPC_UART2, sendBuffer[i]);
+//				UART_8((LPC_UART_TypeDef *)LPC_UART2, 9);
 
-				if (!(UART::uart[0].out.isSending()))
-				break;
+//				UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu95722, sizeof(menu95722), BLOCKING);
+//				UART_8((LPC_UART_TypeDef *)LPC_UART2, sendBuffer[i]);
+
+				if (!UART::uart[0].out.isSending()) goto skip;
 			}
-			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&sendBuffer[0], i);
+			skip:
+//			sendBuffer[i] = UART::uart[0].out.getNextByteToSend();
+			UART_8((LPC_UART_TypeDef *)LPC_UART2, sendBuffer[i]);
+			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&sendBuffer[0], i+1);
 		}
 	} else if (index_ == 1) {
 		uint8_t menu99722[] = "sending from uart1 send\n";
@@ -167,7 +183,11 @@ void UART::beginSend() {
 		speak();
 		_delay_us(10);
 		loopback_bytes = 1;
-		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::uart[1].out.getNextByteToSend());
+		uint8_t bytestosend = UART::uart[1].out.getNextByteToSend();
+//		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, bytestosend);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, bytestosend);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
 	}
 }
 
@@ -259,12 +279,12 @@ extern "C" void UART1_IRQHandler(void){
 uint8_t BulkBufOut  [USB_CDC_BUFSIZE];
 
 extern "C" void CANActivity_IRQHandler(void){
-	uint8_t menu910[] = "\nCQ";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
+//	uint8_t menu910[] = "\nCQ";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
 	int numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, numBytesRead);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, numBytesRead);
 	for (int i = 0; i < numBytesRead; i++){
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, BulkBufOut[i]);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, BulkBufOut[i]);
 		UART::uart[0].in.processByte( BulkBufOut[i] );
 	}
 }

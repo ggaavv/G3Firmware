@@ -134,9 +134,16 @@ bool getToolVersion() {
     timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
     releaseLock();
     // WHILE: bounded by tool timeout
-    while (!isTransactionDone()) {
+
+	uint8_t menu225[] = "timeout start after release lock\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu225, sizeof(menu225), BLOCKING);
+
+	while (!isTransactionDone()) {
             runToolSlice(); // This will most likely time out if there's multiple toolheads.
     }
+
+	uint8_t menu275[] = "one run of tool slice\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu275, sizeof(menu275), BLOCKING);
 
     if (in.getErrorCode() == PacketError::PACKET_TIMEOUT) {
             return false;
@@ -144,6 +151,9 @@ bool getToolVersion() {
             // TODO: Should we actually read the tool version?
 //            in.read8(1-2);
     }
+
+	uint8_t menu285[] = "in.getErrorCode\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu285, sizeof(menu285), BLOCKING);
 
     // Check that the extruder was able to process the request
     if (in.read8(0) != 1) {
@@ -262,8 +272,8 @@ void startTransaction() {
 //	packet_in.reset();
 //	packet_out.reset();
 
-	UART::uart[1].in.reset();
-	UART::uart[1].beginSend();
+    UART::getSlaveUART().in.reset();
+    UART::getSlaveUART().beginSend();
 }
 
 bool isTransactionDone() {
