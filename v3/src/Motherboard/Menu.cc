@@ -2,7 +2,7 @@
 #include "Configuration.hh"
 
 // TODO: Kill this, should be hanlded by build system.
-#if defined HAS_INTERFACE_BOARD
+#if defined  HAS_INTERFACE_BOARD
 
 #include "Steppers.hh"
 #include "Commands.hh"
@@ -428,7 +428,6 @@ void MonitorMode::notifyButtonPressed(ButtonArray::ButtonName button) {
 		}
 	}
 }
-
 
 void Menu::update(LiquidCrystal& lcd, bool forceRedraw) {
 	static PROGMEM char blankLine[] =  "                ";
