@@ -70,8 +70,8 @@ HostState currentState;
 bool do_host_reset = true;
 
 void runHostSlice() {
-	InPacket& in = UART::uart[0].in;
-	OutPacket& out = UART::uart[0].out;
+	InPacket& in = UART::getHostUART().in;
+	OutPacket& out = UART::getHostUART().out;
 	if (out.isSending()) {
 		// still sending; wait until send is complete before reading new host packets.
 		return;
@@ -124,7 +124,7 @@ void runHostSlice() {
 			out.append8(RC_CMD_UNSUPPORTED);
 		}
 		in.reset();
-		UART::uart[0].beginSend();
+		UART::getHostUART().beginSend();
 	}
 }
 
@@ -164,10 +164,34 @@ bool processCommandPacket(const InPacket& from_host, OutPacket& to_host) {
 	}
 	return false;
 }
+/*
+//checks version numbers to make sure we (mobo firmware) can work with the
+// host driver.
+bool void handleVersion2(uint16 host_driver_version) {
 
+    //new firmware cannot work with host software version 25 or older
+    // lie about our version number so we can get an good error
+    if(host_driver_version <= 25) {
+       // to_host.append8(RC_GENERIC_ERROR);
+        //to_host.append16(0000);
+    }
+}*/
+
+
+// Received driver version info, and request for fw version info.
+// puts fw version into a reply packet, and send it back
 inline void handleVersion(const InPacket& from_host, OutPacket& to_host) {
-	to_host.append8(RC_OK);
-	to_host.append16(firmware_version);
+
+    // Case to give an error on Replicator G versions older than 0025. See footnote 1
+    if(from_host.read16(1)  <=  25   ) {
+        to_host.append8(RC_OK);
+        to_host.append16(0x0000);
+    }
+    else  {
+        to_host.append8(RC_OK);
+        to_host.append16(firmware_version);
+    }
+
 }
 
 inline void handleGetBuildName(const InPacket& from_host, OutPacket& to_host) {
@@ -227,7 +251,7 @@ inline void handleGetPositionExt(const InPacket& from_host, OutPacket& to_host) 
 	for (int i = STEPPER_COUNT; i > 0; i--) {
 		StepperInterface& si = board.getStepperInterface(i-1);
 		endstop_status <<= 2;
-	endstop_status |= (si.isAtMaximum()?2:0) | (si.isAtMinimum()?1:0);
+		endstop_status |= (si.isAtMaximum()?2:0) | (si.isAtMinimum()?1:0);
 	}
 	to_host.append16(endstop_status);
 	__enable_irq ();
@@ -296,7 +320,7 @@ void doToolPause(OutPacket& to_host) {
 	OutPacket& out = tool::getOutPacket();
 	InPacket& in = tool::getInPacket();
 	out.reset();
-	out.append8(tool::tool_index);
+	out.append8(tool::getCurrentToolheadIndex());
 	out.append8(SLAVE_CMD_PAUSE_UNPAUSE);
 	// Timeouts are handled inside the toolslice code; there's no need
 	// to check for timeouts on this loop.
@@ -449,12 +473,12 @@ inline void handleExtendedStop(const InPacket& from_host, OutPacket& to_host) {
 
 
 inline void handleGetCommunicationStats(const InPacket& from_host, OutPacket& to_host) {
-to_host.append8(RC_OK);
-to_host.append32(0);
-to_host.append32(tool::getSentPacketCount());
-to_host.append32(tool::getPacketFailureCount());
-to_host.append32(tool::getRetryCount());
-to_host.append32(tool::getNoiseByteCount());
+	to_host.append8(RC_OK);
+	to_host.append32(0);
+	to_host.append32(tool::getSentPacketCount());
+	to_host.append32(tool::getPacketFailureCount());
+	to_host.append32(tool::getRetryCount());
+	to_host.append32(tool::getNoiseByteCount());
 }
 
 bool processQueryPacket(const InPacket& from_host, OutPacket& to_host) {
@@ -571,7 +595,6 @@ HostState getHostState() {
 	return currentState;
 }
 
-// Start a build from SD, if possible.
 sdcard::SdErrorCode startBuildFromSD() {
 	sdcard::SdErrorCode e;
 
@@ -593,3 +616,10 @@ void stopBuild() {
 }
 
 }
+
+/* footnote 1: due to a protocol change, replicatiorG 0026 and newer can ONLY work with
+ * firmware 3.00 and newer. Because replicatorG handles version mismatches poorly,
+ * if our firmware is 3.0 or newer, *AND* the connecting replicatorG is 25 or older, we
+ * lie, and reply with firmware 0.00 to case ReplicatorG to display a 'null version' error
+ * so users will know to upgrade.
+ */

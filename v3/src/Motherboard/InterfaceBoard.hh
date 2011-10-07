@@ -19,75 +19,81 @@
 #ifndef INTERFACE_BOARD_HH_
 #define INTERFACE_BOARD_HH_
 
+#include "Configuration.hh"
+#include "LPCPort.hh"
+#include "ButtonArray.hh"
 #include "Menu.hh"
 
-// Maximum number of
-#define SCREEN_STACK_DEPTH 5
+/// Maximum number of screens that can be active at once.
+#define SCREEN_STACK_DEPTH      5
+
+/// Character LCD screen geometry
+///
+/// Porting Note: Screens may need to be rewritten to support different sizes.
+#define LCD_SCREEN_WIDTH        16
+#define LCD_SCREEN_HEIGHT       4
 
 
-/**
- * This is the pin mapping for the interface board. Because of the relatively
- * high cost of using the pins in a direct manner, we will instead read the
- * buttons directly by scanning their ports. If any of these definitions are
- * modified, the scanButtons() function
- */
-#define INTERFACE_XP_PIN		Pin(Port1,7)
-#define INTERFACE_XN_PIN		Pin(Port1,6)
-#define INTERFACE_YP_PIN		Pin(Port1,5)
-#define INTERFACE_YN_PIN		Pin(Port1,4)
-#define INTERFACE_ZP_PIN		Pin(Port1,3)
-#define INTERFACE_ZN_PIN		Pin(Port1,2)
-#define INTERFACE_ZERO_PIN		Pin(Port1,1)
-
-#define INTERFACE_OK_PIN		Pin(Port1,2)
-#define INTERFACE_CANCEL_PIN	Pin(Port1,1)
-
-#define INTERFACE_FOO_PIN		Pin(Port1,0)
-#define INTERFACE_BAR_PIN		Pin(Port1,0)
-#define INTERFACE_DEBUG_PIN		Pin(Port1,7)
-
-class ButtonArray {
-private:
-	uint8_t previousL;
-	uint8_t previousC;
-
-	uint8_t buttonPress;
-	bool buttonPressWaiting;
-public:
-	void init();
-
-	// Returns true if any of the button states have changed.
-	void scanButtons();
-
-	bool getButton(InterfaceBoardDefinitions::ButtonName& button);
-};
-
-
+/// The InterfaceBoard module provides support for the MakerBot Industries
+/// Gen4 Interface Board. It could very likely be adopted to support other
+/// LCD/button setups as well.
+/// \ingroup HardwareLibraries
 class InterfaceBoard {
 public:
-	LiquidCrystal lcd;
+        LiquidCrystal& lcd;              ///< LCD to write to
 private:
-	ButtonArray buttons;
+        ButtonArray& buttons;            ///< Button array to read from
 
-	SplashScreen splashScreen;
-	MainMenu mainMenu;
-	MonitorMode monitorMode;
+        // TODO: Drop this?
+        Screen* buildScreen;            ///< Screen to display while building
 
-	Screen* screenStack[SCREEN_STACK_DEPTH];
-	uint8_t screenIndex;
+        // TODO: Drop this?
+        Screen* mainScreen;            ///< Root menu screen
 
-	bool building;
+        /// Stack of screens to display; the topmost one will actually
+        /// be drawn to the screen, while the other will remain resident
+        /// but not active.
+        Screen* screenStack[SCREEN_STACK_DEPTH];
+        int8_t screenIndex;             ///< Stack index of the current screen.
+
+        Pin foo_pin;                    ///< Pin connected to the 'foo' LED
+        Pin bar_pin;                    ///< Pin connected to the 'bar' LED
+
+        /// TODO: Delete this.
+        bool building;                  ///< True if the bot is building
 
 public:
-	InterfaceBoard();
+        /// Construct an interface board.
+        /// \param[in] button array to read from
+        /// \param[in] LCD to display on
+        /// \param[in] Pin connected to the foo LED
+        /// \param[in] Pin connected to the bar LED
+        /// \param[in] Main screen, shown as root display
+        /// \param[in] Screen to display while building
+        InterfaceBoard(ButtonArray& buttons_in,
+                       LiquidCrystal& lcd_in,
+                       const Pin& foo_pin_in,
+                       const Pin& bar_pin_in,
+                       Screen* mainScreen_in,
+                       Screen* buildScreen_in);
 
+        /// Initialze the interface board. This needs to be called once
+        /// at system startup (or reset).
 	void init();
 
-	// This should be run periodically to check the buttons
+        /// This should be called periodically by a high-speed interrupt to
+        /// service the button input pad.
 	void doInterrupt();
 
+        /// Add a new screen to the stack. This automatically calls reset()
+        /// and then update() on the screen, to ensure that it displays
+        /// properly. If there are more than SCREEN_STACK_DEPTH screens already
+        /// in the stack, than this function does nothing.
+        /// \param[in] newScreen Screen to display.
 	void pushScreen(Screen* newScreen);
 
+        /// Remove the current screen from the stack. If there is only one screen
+        /// being displayed, then this function does nothing.
 	void popScreen();
 
 	micros_t getUpdateRate();

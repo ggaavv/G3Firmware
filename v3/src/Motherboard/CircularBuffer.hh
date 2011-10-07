@@ -22,7 +22,6 @@
 #include <stdint.h>
 #include "lpc_types.h"
 
-
 typedef uint16_t BufSizeType;
 
 /// A simple, reliable circular buffer implementation.
@@ -89,17 +88,17 @@ public:
 	}
 
 	/// Get the length of the buffer
-	inline BufSizeType getLength() {
+	inline const BufSizeType getLength() const {
 		return length;
 	}
 
 	/// Get the remaining capacity of this buffer
-	inline BufSizeType getRemainingCapacity() {
+	inline const BufSizeType getRemainingCapacity() const {
 		return size - length;
 	}
 
 	/// Check if the buffer is empty
-	inline bool isEmpty() {
+	inline const bool isEmpty() const {
 		return length == 0;
 	}
 	/// Read the buffer directly
@@ -108,11 +107,11 @@ public:
 		return data[actual_index];
 	}
 	/// Check the overflow flag
-	inline bool hasOverflow() {
+	inline const bool hasOverflow() const {
 		return overflow;
 	}
 	/// Check the underflow flag
-	inline bool hasUnderflow() {
+	inline const bool hasUnderflow() const {
 		return underflow;
 	}
 };

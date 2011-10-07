@@ -41,6 +41,7 @@
 
 namespace tool {
 
+// TODO: Don't bother initializing these here.
 bool transaction_active = false;
 bool locked = false;
 uint8_t retries = RETRIES;
@@ -55,11 +56,11 @@ uint32_t packet_retry_count;
 uint32_t noise_byte_count;
 
 InPacket& getInPacket() {
-	return UART::uart[1].in;
+	return UART::getSlaveUART().in;
 }
 
 OutPacket& getOutPacket() {
-	return UART::uart[1].out;
+	return UART::getSlaveUART().out;
 }
 
 // Get the total number of packets that were attempted to be sent to a tool
@@ -93,58 +94,43 @@ bool getToolVersion() {
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu231, sizeof(menu231), BLOCKING);
 
 	while (!tool::getLock()) {
-		uint8_t menu232[] = "not locked\n";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu232, sizeof(menu232), BLOCKING);
-		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, acquire_lock_timeout.hasLeft());
-		_delay_ms(200);
-			if (acquire_lock_timeout.hasElapsed()) {
-                    locked = true; // grant ourselves the lock
-                    transaction_active = false; // abort transaction!
-
-                    uint8_t menu233[] = "aquire lock timeout\n";
-                	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu233, sizeof(menu233), BLOCKING);
-
-                	Motherboard::getBoard().indicateError(ERR_SLAVE_LOCK_TIMEOUT);
-                    break;
-            }
+//		uint8_t menu232[] = "not locked\n";
+//		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu232, sizeof(menu232), BLOCKING);
+//		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, acquire_lock_timeout.hasLeft());
+//		_delay_ms(200);
+		if (acquire_lock_timeout.hasElapsed()) {
+			locked = true; // grant ourselves the lock
+			transaction_active = false; // abort transaction!
+			Motherboard::getBoard().indicateError(ERR_SLAVE_LOCK_TIMEOUT);
+			break;
+		}
     }
-
-	uint8_t menu23[] = "get tool version after getlock\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu23, sizeof(menu23), BLOCKING);
-
+//	uint8_t menu23[] = "get tool version after getlock\n";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu23, sizeof(menu23), BLOCKING);
 	OutPacket& out = getOutPacket();
     InPacket& in = getInPacket();
 
-
-	uint8_t menu24[] = "2get tool version after packet in.out\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu24, sizeof(menu24), BLOCKING);
-
-
+//	uint8_t menu24[] = "2get tool version after packet in.out\n";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu24, sizeof(menu24), BLOCKING);
     out.reset();
     out.append8(0); // Index o
     out.append8(SLAVE_CMD_VERSION);
     out.append8(0);  // Technically, we should report our version here, however
     out.append8(0);  // it doesn't actually matter.
-
-	uint8_t menu25[] = "2end of tool reset\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu25, sizeof(menu25), BLOCKING);
-
+//	uint8_t menu25[] = "2end of tool reset\n";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu25, sizeof(menu25), BLOCKING);
     startTransaction();
     // override standard timeout
     timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
     releaseLock();
     // WHILE: bounded by tool timeout
-
-	uint8_t menu225[] = "timeout start after release lock\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu225, sizeof(menu225), BLOCKING);
-
+//	uint8_t menu225[] = "timeout start after release lock\n";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu225, sizeof(menu225), BLOCKING);
 	while (!isTransactionDone()) {
             runToolSlice(); // This will most likely time out if there's multiple toolheads.
     }
-
-	uint8_t menu275[] = "one run of tool slice\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu275, sizeof(menu275), BLOCKING);
-
+//	uint8_t menu275[] = "one run of tool slice\n";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu275, sizeof(menu275), BLOCKING);
     if (in.getErrorCode() == PacketError::PACKET_TIMEOUT) {
             return false;
     } else {
@@ -168,7 +154,7 @@ void setToolIndicatorLED() {
     // We don't give up if we fail to get a lock; we force it instead.
     Timeout acquire_lock_timeout;
     acquire_lock_timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
-    while (!getLock()) {
+    while (!tool::getLock()) {
             if (acquire_lock_timeout.hasElapsed()) {
                     locked = true; // grant ourselves the lock
                     transaction_active = false; // abort transaction!
@@ -177,7 +163,7 @@ void setToolIndicatorLED() {
             }
     }
     OutPacket& out = getOutPacket();
-//    InPacket& in = getInPacket();
+    InPacket& in = getInPacket();
     out.reset();
     out.append8(0);
     out.append8(SLAVE_CMD_LIGHT_INDICATOR_LED);
@@ -192,32 +178,36 @@ void setToolIndicatorLED() {
 }
 
 bool reset() {
-//	// This code is very lightly modified from handleToolQuery in Host.cc.
-//	// We don't give up if we fail to get a lock; we force it instead.
-//	Timeout acquire_lock_timeout;
-//	acquire_lock_timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
-//	while (!tool::getLock()) {
-//		if (acquire_lock_timeout.hasElapsed()) {
-//			locked = true; // grant ourselves the lock
-//			transaction_active = false; // abort transaction!
-//			Motherboard::getBoard().indicateError(ERR_SLAVE_LOCK_TIMEOUT);
-//			break;
-//		}
-//	}
-//	OutPacket& out = getOutPacket();
-//	InPacket& in = getInPacket();
-//	out.reset();
-//	out.append8(255); // Reset all tools
-//	out.append8(SLAVE_CMD_INIT);
-//	startTransaction();
-//	// override standard timeout
-//	timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
-//	releaseLock();
-//	// WHILE: bounded by tool timeout
-//	while (!isTransactionDone()) {
-//		runToolSlice(); // This will most likely time out if there's multiple toolheads.
-//	}
+	// This code is very lightly modified from handleToolQuery in Host.cc.
+	// We don't give up if we fail to get a lock; we force it instead.
+	Timeout acquire_lock_timeout;
+	acquire_lock_timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
+	while (!tool::getLock()) {
+		if (acquire_lock_timeout.hasElapsed()) {
+			locked = true; // grant ourselves the lock
+			transaction_active = false; // abort transaction!
+			Motherboard::getBoard().indicateError(ERR_SLAVE_LOCK_TIMEOUT);
+			break;
+		}
+	}
+	OutPacket& out = getOutPacket();
+	InPacket& in = getInPacket();
+	out.reset();
+	out.append8(255); // Reset all tools
+	out.append8(SLAVE_CMD_INIT);
+	startTransaction();
+	// override standard timeout
+	timeout.start(TOOL_PACKET_TIMEOUT_MICROS*2);
+	releaseLock();
+	// WHILE: bounded by tool timeout
+	while (!isTransactionDone()) {
+		runToolSlice(); // This will most likely time out if there's multiple toolheads.
+	}
+	return UART::getSlaveUART().in.isFinished();
+}
 
+
+bool test() {
     // Reset packet statistics
     sent_packet_count = 0;
     packet_failure_count = 0;
@@ -233,10 +223,11 @@ bool reset() {
         result = getToolVersion();
         i++;
     }
-    if (packet_retry_count <= 0) {
+    bool rv = (packet_retry_count <= 0);
+    if (rv) {
         setToolIndicatorLED();
     }
-	return UART::uart[1].in.isFinished();
+    return rv;
 }
 
 /// The tool is considered locked if a transaction is in progress or
@@ -265,13 +256,6 @@ void startTransaction() {
 	timeout.start(TOOL_PACKET_TIMEOUT_MICROS); // 50 ms timeout
 	retries = RETRIES;
 
-//	Packet packetinandout;
-//	InPacket packet_in = InPacket();
-//	OutPacket packet_out = OutPacket();
-
-//	packet_in.reset();
-//	packet_out.reset();
-
     UART::getSlaveUART().in.reset();
     UART::getSlaveUART().beginSend();
 }
@@ -281,7 +265,7 @@ bool isTransactionDone() {
 }
 
 void runToolSlice() {
-		UART& uart = UART::uart[1];
+	UART& uart = UART::getSlaveUART();
 	if (transaction_active) {
 		if (uart.in.isFinished())
 		{
@@ -324,4 +308,13 @@ void runToolSlice() {
 	}
 }
 
+void setCurrentToolheadIndex(uint8_t tool_index_in) {
+    tool_index = tool_index_in;
 }
+
+uint8_t getCurrentToolheadIndex() {
+    return tool_index;
+}
+
+}
+

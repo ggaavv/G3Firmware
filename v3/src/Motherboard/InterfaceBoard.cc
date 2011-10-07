@@ -1,113 +1,42 @@
-#include "LPCPort.hh"
-//#include <util/atomic.h>
 #include "InterfaceBoard.hh"
 #include "Configuration.hh"
-#include "SDCard.hh"
-#include "InterfaceBoardDefinitions.hh"
 #include "LiquidCrystal.hh"
 #include "Host.hh"
 
-void ButtonArray::init() {
-	previousL = 0;
-	previousC = 0;
+#if defined HAS_INTERFACE_BOARD
 
-	// Set all of the known buttons to inputs (see above note)
-//	DDRL = DDRL & 0x1;
-//	DDRC = DDRC & 0xF9;				//NEED doing
-//	PORTL = PORTL & 0x1;
-//	PORTC = PORTC & 0xF9;
-}
-
-void ButtonArray::scanButtons() {
-	// Don't bother scanning if we already have a button.
-	if (buttonPressWaiting) {
-		return;
-	}
-
-//	uint8_t newL = PINL;// & 0xFE;				//NEED doing
-//	uint8_t newC = PINC;// & 0x06;
-	uint8_t newL;
-	uint8_t newC;
-
-	if (newL != previousL) {
-		uint8_t diff = newL ^ previousL;
-
-		for(uint8_t i = 1; i < 8; i++) {
-			if (diff&(1<<i)) {
-				if (!(newL&(1<<i))) {
-					if (!buttonPressWaiting) {
-						buttonPress = i;
-						buttonPressWaiting = true;
-					}
-				}
-			}
-		}
-	}
-
-	if (newC != previousC) {
-		uint8_t diff = newC ^ previousC;
-
-		for(uint8_t i = 1; i < 3; i++) {
-			if (diff&(1<<i)) {
-				if (!(newC&(1<<i))) {
-					if (!buttonPressWaiting) {
-						buttonPress = i+10;
-						buttonPressWaiting = true;
-					}
-				}
-			}
-		}
-	}
-
-	previousL = newL;
-	previousC = newC;
-}
-
-bool ButtonArray::getButton(InterfaceBoardDefinitions::ButtonName& button) {
-	bool buttonValid;
-	uint8_t buttonNumber;
-
-//	ATOMIC_BLOCK(ATOMIC_FORCEON)
-//	{
-	__disable_irq ();
-	buttonValid =  buttonPressWaiting;
-	buttonNumber = buttonPress;
-	buttonPressWaiting = false;
-	__enable_irq ();
-//	}
-
-	if (buttonValid) {
-		button = (InterfaceBoardDefinitions::ButtonName)(buttonNumber);
-	}
-
-	return buttonValid;
-}
-
-
-InterfaceBoard::InterfaceBoard() :
-	lcd(LCD_RS_PIN, LCD_ENABLE_PIN, LCD_D0_PIN, LCD_D1_PIN, LCD_D2_PIN, LCD_D3_PIN)
+InterfaceBoard::InterfaceBoard(ButtonArray& buttons_in,
+                               LiquidCrystal& lcd_in,
+                               const Pin& foo_pin_in,
+                               const Pin& bar_pin_in,
+                               Screen* mainScreen_in,
+                               Screen* buildScreen_in) :
+        lcd(lcd_in),
+        buttons(buttons_in),
+        foo_pin(foo_pin_in),
+        bar_pin(bar_pin_in)
 {
-	buttons.init();
-
-	lcd.begin(LCD_SCREEN_WIDTH, LCD_SCREEN_HEIGHT);
-	lcd.clear();
-	lcd.home();
-
-	INTERFACE_FOO_PIN.setValue(false);
-	INTERFACE_FOO_PIN.setDirection(true);
-	INTERFACE_BAR_PIN.setValue(false);
-	INTERFACE_BAR_PIN.setDirection(true);
-
-	building = false;
-
-	screenIndex = 0;
-	screenStack[screenIndex] = &mainMenu;
-	screenStack[screenIndex]->reset();
-
-	pushScreen(&splashScreen);
+        buildScreen = buildScreen_in;
+        mainScreen = mainScreen_in;
 }
 
 void InterfaceBoard::init() {
+        buttons.init();
+
+        lcd.begin(LCD_SCREEN_WIDTH, LCD_SCREEN_HEIGHT);
+        lcd.clear();
+        lcd.home();
+
+        foo_pin.setValue(false);
+        foo_pin.setDirection(true);
+        bar_pin.setValue(false);
+        bar_pin.setDirection(true);
+
+        building = false;
+
+        screenIndex = -1;
+
+        pushScreen(mainScreen);
 }
 
 void InterfaceBoard::doInterrupt() {
@@ -122,12 +51,11 @@ void InterfaceBoard::doUpdate() {
 
 	// If we are building, make sure we show a build menu; otherwise,
 	// turn it off.
-
 	switch(host::getHostState()) {
 	case host::HOST_STATE_BUILDING:
 	case host::HOST_STATE_BUILDING_FROM_SD:
 		if (!building) {
-			pushScreen(&monitorMode);
+                        pushScreen(buildScreen);
 			building = true;
 		}
 		break;
@@ -139,7 +67,8 @@ void InterfaceBoard::doUpdate() {
 		break;
 	}
 
-	static InterfaceBoardDefinitions::ButtonName button;
+
+        static ButtonArray::ButtonName button;
 
 
 	if (buttons.getButton(button)) {
@@ -167,3 +96,4 @@ void InterfaceBoard::popScreen() {
 	screenStack[screenIndex]->update(lcd, true);
 }
 
+#endif

@@ -115,6 +115,7 @@ void reset(bool hard_reset) {
 //		test_led3(1);
 */
 		while (!t.hasElapsed());
+		tool::test(); // Run test
 	}
 	if (!tool::reset())
 	{

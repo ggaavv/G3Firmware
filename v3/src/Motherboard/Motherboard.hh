@@ -18,42 +18,53 @@
 #ifndef MOTHERBOARD_HH_
 #define MOTHERBOARD_HH_
 
-//
-// This file describes the Motherboard object, which provides interfaces for
-// all facilities provided by the motherboard.  The Motherboard is a singleton;
-// call Motherboard::getBoard() to get a reference to the board.
-//
-// The board should be initialized before use or on reset by calling the init()
-// method.
-//
-
 #include "UART.hh"
 #include "StepperInterface.hh"
 #include "Types.hh"
 #include "Configuration.hh"
 #include "Timeout.hh"
+#include "Menu.hh"
+#include "InterfaceBoard.hh"
+#include "LiquidCrystal.hh"
+#include "ButtonArray.hh"
 
+
+/// Main class for Motherboard version 2.4+ (Gen4 electronics)
+/// \ingroup HardwareLibraries
+/// \ingroup MBv24
 class Motherboard {
 private:
-	const static int STEPPERS = STEPPER_COUNT;
+        // TODO: Declare this in main, drop the singleton.
+        /// Static instance of the motherboard
+        static Motherboard motherboard;
 
-	StepperInterface stepper[STEPPERS];
+public:
+        /// Get the motherboard instance.
+        static Motherboard& getBoard() { return motherboard; }
+
+private:
+        /// Collection of stepper controllers that are on this board
+        StepperInterface stepper[STEPPER_COUNT];
+
 	/// Microseconds since board initialization
 	volatile micros_t micros;
+
 	/// Private constructor; use the singleton
 	Motherboard();
-	Motherboard(Motherboard const&);
-	void operator=(Motherboard const&);
-//	Motherboard(const Motherboard&);
-//	Motherboard& operator=(const Motherboard&);
-//	~Motherboard();
 
-	static Motherboard motherboard;
-
+        // TODO: Move this to an interface board slice.
 	Timeout interface_update_timeout;
 
-	// True if we have an interface board attached
+        /// True if we have an interface board attached
 	bool hasInterfaceBoard;
+
+        ButtonArray buttonArray;
+        LiquidCrystal lcd;
+        InterfaceBoard interfaceBoard;
+
+        MainMenu mainMenu;              ///< Main system menu
+        SplashScreen splashScreen;      ///< Displayed at startup
+        MonitorMode monitorMode;        ///< Displayed during build
 
 public:
 	/// Reset the motherboard to its initial state.
@@ -64,7 +75,7 @@ public:
 	void runMotherboardSlice();
 
 	/// Count the number of steppers available on this board.
-	int getStepperCount() { return STEPPERS; }
+        const int getStepperCount() const { return STEPPER_COUNT; }
 	/// Get the stepper interface for the nth stepper.
 	StepperInterface& getStepperInterface(int n)
 	{
@@ -76,16 +87,10 @@ public:
 	/// 2**32 microseconds (ca. 70 minutes); callers should compensate for this.
 	micros_t getCurrentMicros();
 
-	/// Get the power supply unit interface.
-	// PSU& getPSU() { return psu; }
-
 	/// Write an error code to the debug pin.
 	void indicateError(int errorCode);
 	/// Get the current error being displayed.
 	uint8_t getCurrentError();
-
-	/// Get the motherboard instance.
-	static Motherboard& getBoard() {static Motherboard motherboard; return motherboard; }
 
 	/// Perform the timer interrupt routine.
 	void doInterrupt();

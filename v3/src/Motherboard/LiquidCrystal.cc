@@ -1,12 +1,8 @@
 #include "LiquidCrystal.hh"
-#include "main.hh"
+
 #include <stdio.h>
 #include <string.h>
-extern "C" {
-	#include "lpc_types.h"
-}
 #include "Delay.hh"
-
 
 // When the display powers up, it is configured as follows:
 //
@@ -163,14 +159,12 @@ void LiquidCrystal::clear()
 {
   command(LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
   _delay_us(2000);  // this command takes a long time!
-
 }
 
 void LiquidCrystal::home()
 {
   command(LCD_RETURNHOME);  // set cursor position to zero
   _delay_us(2000);  // this command takes a long time!
-
 }
 
 void LiquidCrystal::setCursor(uint8_t col, uint8_t row)
@@ -297,7 +291,7 @@ void LiquidCrystal::writeString(char message[]) {
 
 void LiquidCrystal::writeFromPgmspace(const char message[]) {
 	char letter;
-	while ((letter = pgm_read_byte(message++))) {
+	while (letter = pgm_read_byte(message++)) {
 		write(letter);
 	}
 }

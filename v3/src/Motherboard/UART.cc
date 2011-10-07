@@ -15,31 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-//#include "usbhw.hh"
-//#include "usbcfg.hh"
-//#include "cdcuser.hh"
-//#include "usbcore.hh"
+
 #include "UART.hh"
 #include <stdint.h>
-
 extern "C" {
 	#include "lpc17xx_uart.h"
 	#include "lpc17xx_pinsel.h"
 	#include "LPC17xx.h"
-//	#include "usbSerial.h"
-//	#include "usb.h"
-//	#include "serial.h"
-
 	#include "usbhw.h"
 	#include "usbcfg.h"
 	#include "cdcuser.h"
 	#include "usbcore.h"
 }
-//#include <avr/sfr_defs.h>
-//#include <avr/interrupt.h>
-//#include <avr/io.h>
-//#include <util/delay.h>
 #include "Delay.hh"
+#include "Configuration.hh"
 
 /********************************/
 #include "test.hh"  // testing
@@ -53,7 +42,7 @@ extern "C" {
 //test_led(1);
 /********************************/
 
-//#define FIFO_Enabled 1
+
 
 // TODO: There should be a better way to enable this flag?
 #if ASSERT_LINE_FIX
@@ -64,6 +53,14 @@ extern "C" {
 // them from our receive buffer later.This is only used for RS485 mode.
 volatile uint8_t loopback_bytes = 0;
 
+// TODO: Move these definitions to the board files, where they belong.
+
+	UART UART::hostUART(0);
+
+
+#if HAS_SLAVE_UART
+	UART UART::slaveUART(1);
+#endif
 // Transition to a non-transmitting state. This is only used for RS485 mode.
 inline void listen() {
 	TX_ENABLE_PIN.setValue(false);
@@ -75,10 +72,7 @@ inline void speak() {
 }
 
 UART::UART(uint8_t index) : index_(index), enabled_(false) {
-//	InPacket in;
-//	OutPacket out;
 	in.reset();
-//	index_ = index;
 	uint8_t menu55322[] = "Uart init\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu55322, sizeof(menu55322), BLOCKING);
 	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
@@ -135,12 +129,12 @@ void UART::beginSend() {
 //		uint8_t menu95722[] = "s_f_uart0ssss\n";
 //		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu95722, sizeof(menu95722), BLOCKING);
 		static unsigned char sendBuffer[64];
-		sendBuffer[0] = UART::uart[0].out.getNextByteToSend();
-		while (UART::uart[0].out.isSending()) {
+		sendBuffer[0] = UART::getHostUART().out.getNextByteToSend();
+		while (UART::getHostUART().out.isSending()) {
 			uint32_t i;
 			for (i = 1; i < USB_CDC_BUFSIZE-1; i++){
-				sendBuffer[i] = UART::uart[0].out.getNextByteToSend();
-				if (!UART::uart[0].out.isSending()) goto skip;
+				sendBuffer[i] = UART::getHostUART().out.getNextByteToSend();
+				if (!UART::getHostUART().out.isSending()) goto skip;
 			}
 			skip:
 			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&sendBuffer[0], i+1);
@@ -149,7 +143,7 @@ void UART::beginSend() {
 		speak();
 		_delay_us(10);
 		loopback_bytes = 1;
-		uint8_t bytestosend = UART::uart[1].out.getNextByteToSend();
+		uint8_t bytestosend = UART::getSlaveUART().out.getNextByteToSend();
 	}
 }
 
@@ -222,15 +216,15 @@ extern "C" void UART1_IRQHandler(void){
 		if (loopback_bytes > 0) {
 			loopback_bytes--;
 		} else {
-			UART::uart[1].in.processByte( UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART1) );
+			UART::getHostUART().in.processByte( UART_ReceiveByte((LPC_UART_TypeDef *)LPC_UART1) );
 		}
 	}
 
 	// Transmit Holding Empty
 	if (tmp == UART_IIR_INTID_THRE){
-		if (UART::uart[1].out.isSending()) {
+		if (UART::getHostUART().out.isSending()) {
 			loopback_bytes++;
-			UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::uart[1].out.getNextByteToSend());  // NEED to choose which UART
+			UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::getHostUART().out.getNextByteToSend());  // NEED to choose which UART
 		} else {
 			_delay_us(10);
 			listen();
@@ -247,9 +241,11 @@ extern "C" void CANActivity_IRQHandler(void){
 //	UART_8((LPC_UART_TypeDef *)LPC_UART2, numBytesRead);
 	for (int i = 0; i < numBytesRead; i++){
 //		UART_8((LPC_UART_TypeDef *)LPC_UART2, BulkBufOut[i]);
-		UART::uart[0].in.processByte( BulkBufOut[i] );
+		UART::getHostUART().in.processByte( BulkBufOut[i] );
 	}
 }
+
+
 
 
 //  int numBytesRead;
@@ -261,3 +257,5 @@ extern "C" void CANActivity_IRQHandler(void){
 
   // store data in a buffer to transmit it over serial interface
 //  CDC_WrOutBuf ((char *)&BulkBufOut[0], &numBytesRead);
+
+

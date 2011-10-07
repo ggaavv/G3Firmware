@@ -15,53 +15,66 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BOARDS_RRMBV12_STEPPERINTERFACE_HH_
-#define BOARDS_RRMBV12_STEPPERINTERFACE_HH_
+#ifndef STEPPERINTERFACE_HH_
+#define STEPPERINTERFACE_HH_
 
-#include <LPCPort.hh>
+#include "LPCPort.hh"
 
-/// StepperInterface instances encapsulate the low-level communication
-/// with a stepper board.
+/// The StepperInterface module represents a connection to a single stepper controller.
+/// \ingroup SoftwareLibraries
 class StepperInterface {
-public:
-	/// Set the direction for the stepper to move
-	void setDirection(bool forward);
-	/// Set the value of the step line
-	void step(bool value);
-	/// Enable or disable this axis
-	void setEnabled(bool enabled);
-	/// True if the axis has triggered its maximum endstop
-	bool isAtMaximum();
-	/// True if the axis has triggered its minimum endstop
-	bool isAtMinimum();
+private:
+    /// Default constructor
+    StepperInterface() {}
+    StepperInterface(const Pin& dir,
+                    const Pin& step,
+                    const Pin& enable,
+                    const Pin& max,
+                    const Pin& min,
+                    uint16_t eeprom_base_in);
+
+        friend class Motherboard;
 
 private:
-	/// Initialize the pins for the interface
-	void init(uint8_t idx);
+        /// Initialize the pins for the interface
+        /// \param[in] idx Stepper index that this interface refers to (used to look up
+        ///                it's settings in the EEPROM)
+        void init(uint8_t idx);
 
-	friend class Motherboard;
-	Pin dir_pin;
-	Pin step_pin;
-	Pin enable_pin;
-	Pin max_pin;
-	Pin min_pin;
-	bool invert_endstops;
-	bool invert_axis;
-	/// Default constructor
-	StepperInterface() {}
-	StepperInterface(const Pin& dir,
-			const Pin& step,
-			const Pin& enable,
-			const Pin& max,
-			const Pin& min) :
-				dir_pin(dir),
-				step_pin(step),
-				enable_pin(enable),
-				max_pin(max),
-				min_pin(min),
-				invert_endstops(true),
-				invert_axis(false)
-	{}
+
+
+        Pin dir_pin;                ///< Pin (output) that the direction line is connected to
+        Pin step_pin;               ///< Pin (output) that the step line is connected to
+        Pin enable_pin;             ///< Pin (output) that the enable line is connected to
+        Pin max_pin;                ///< Pin (input) that the maximum endstop is connected to.
+        Pin min_pin;                ///< Pin (input) that the minimum endstop is connected to.
+        bool invert_endstops;       ///< True if endstops input polarity is inverted for
+                                    ///< this axis.
+        bool invert_axis;           ///< True if motions for this axis should be inverted
+
+        uint16_t eeprom_base;       ///< Base address to read EEPROM configuration from
+
+public:
+	/// Set the direction for the stepper to move
+        /// \param[in] forward True to move the stepper forward, false otherwise.
+	void setDirection(bool forward);
+
+	/// Set the value of the step line
+        /// \param[in] value True to enable, false to disable. This should be toggled
+        ///                  back and fourth to effect stepping.
+	void step(bool value);
+
+        /// Enable or disable the stepper motor on this axis
+        /// \param[in] True to enable the motor
+	void setEnabled(bool enabled);
+
+        /// Check if the maximum endstop has been triggered for this axis.
+        /// \return True if the axis has triggered its maximum endstop
+	bool isAtMaximum();
+
+        /// Check if the minimum endstop has been triggered for this axis.
+        /// \return True if the axis has triggered its minimum endstop
+	bool isAtMinimum();
 };
 
-#endif // BOARDS_RRMBV12_STEPPERINTERFACE_HH_
+#endif // STEPPERINTERFACE_HH_

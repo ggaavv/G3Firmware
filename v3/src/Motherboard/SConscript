@@ -23,7 +23,6 @@
 #
 # To build for another platform, pass an explicit platform parameter.  For example,
 # $ scons platform=rrmbv12
-# $ scons platform=mcv10
 # $ scons platform=mb24
 # $ scons platform=mb24-2560
 #
