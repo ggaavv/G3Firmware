@@ -92,7 +92,7 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 //		USB_Connect(TRUE);
 			uint8_t menu322[] = "b4 USB config\n";
 			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu322, sizeof(menu322), BLOCKING);
-		while (!USB_Configuration);		// wait until USB is configured
+//		while (!USB_Configuration);		// wait until USB is configured
 			uint8_t menu332[] = "after USB config\n";
 			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu332, sizeof(menu332), BLOCKING);
 	} else if (index_ == 1) {
@@ -127,85 +127,47 @@ UART::UART(uint8_t index) : index_(index), enabled_(false) {
 	}
 }
 
-void UART::change_index(uint8_t index) {
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, index);
-	index_ = index;
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
-}
-
-uint8_t UART::read_index() {
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
-	return index_;
-}
-
 /// UART bytes will be triggered by the tx complete interrupt.
 /// USB bytes sent as whole packets
 void UART::beginSend() {
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
-//	uint8_t menu55722[] = "Uart begin send\n";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu55722, sizeof(menu55722), BLOCKING);
-
-
 	if (!enabled_) { return; }
 	if (index_ == 0) {		//uart0 eg usb
 //		uint8_t menu95722[] = "s_f_uart0ssss\n";
 //		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu95722, sizeof(menu95722), BLOCKING);
-//		UART_8((LPC_UART_TypeDef *)LPC_UART2, !UART::uart[0].out.isSending());
 		static unsigned char sendBuffer[64];
 		sendBuffer[0] = UART::uart[0].out.getNextByteToSend();
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, sendBuffer[0]);
 		while (UART::uart[0].out.isSending()) {
-//			UART_8((LPC_UART_TypeDef *)LPC_UART2, UART::uart[0].out.isSending());
-//			sendBuffer[0] = UART::uart[0].out.getNextByteToSend();
-//			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&sendBuffer[0], 1);
 			uint32_t i;
 			for (i = 1; i < USB_CDC_BUFSIZE-1; i++){
 				sendBuffer[i] = UART::uart[0].out.getNextByteToSend();
-
-//				UART_8((LPC_UART_TypeDef *)LPC_UART2, 9);
-				UART_8((LPC_UART_TypeDef *)LPC_UART2, sendBuffer[i]);
-//				UART_8((LPC_UART_TypeDef *)LPC_UART2, 9);
-
-//				UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu95722, sizeof(menu95722), BLOCKING);
-//				UART_8((LPC_UART_TypeDef *)LPC_UART2, sendBuffer[i]);
-
 				if (!UART::uart[0].out.isSending()) goto skip;
 			}
 			skip:
-//			sendBuffer[i] = UART::uart[0].out.getNextByteToSend();
-			UART_8((LPC_UART_TypeDef *)LPC_UART2, sendBuffer[i]);
 			USB_WriteEP (CDC_DEP_IN, (unsigned char *)&sendBuffer[0], i+1);
 		}
 	} else if (index_ == 1) {
-		uint8_t menu99722[] = "sending from uart1 send\n";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu99722, sizeof(menu99722), BLOCKING);
 		speak();
 		_delay_us(10);
 		loopback_bytes = 1;
 		uint8_t bytestosend = UART::uart[1].out.getNextByteToSend();
-//		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, bytestosend);
-//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
-//		UART_8((LPC_UART_TypeDef *)LPC_UART2, bytestosend);
-//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
 	}
 }
 
 void UART::enable(bool enabled) {
-	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
+//	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
 	enabled_ = enabled;
 	if (index_ == 0) {
 		if (enabled) {
 			uint8_t menu910[] = "\nUart0 Enabled ";
 			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
-			UART_8((LPC_UART_TypeDef *)LPC_UART2, enabled);
+//			UART_8((LPC_UART_TypeDef *)LPC_UART2, enabled);
 //			USB_Connect(TRUE);      // USB Connect
 //			USBHwConnect(TRUE);			// USB Connect
 		}
 		else {
 			uint8_t menu9910[] = "\nUart0 Disabled ";
 			UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9910, sizeof(menu9910), BLOCKING);
-			UART_8((LPC_UART_TypeDef *)LPC_UART2, enabled);
+//			UART_8((LPC_UART_TypeDef *)LPC_UART2, enabled);
 //			USB_Connect(FALSE);      // USB Disconnect
 //			USBHwConnect(FALSE);			// USB Disconnect
 		}

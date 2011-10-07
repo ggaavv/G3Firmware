@@ -29,6 +29,17 @@
 #include "Main.hh"
 #include "Errors.hh"
 #include "EepromMap.hh"
+/********************************/
+//#include "test.hh"  // testing
+//#include "test_led.hh"  // testing
+//#include "test_u.hh"
+#include "Uart32.c"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//test_led(1);
+/********************************/
 
 namespace host {
 
@@ -371,6 +382,10 @@ inline void handleReadEeprom(const InPacket& from_host, OutPacket& to_host) {
 	for (int i = 0; i < length; i++) {
 //		to_host.append8(data[i]);
 		to_host.append8(eeprom_address(EEPROM_START_ADDRESS + offset + i));
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, (eeprom_address(EEPROM_START_ADDRESS + offset + i)));
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xa);
 	}
 }
 
@@ -382,11 +397,22 @@ inline void handleWriteEeprom(const InPacket& from_host, OutPacket& to_host) {
 	for (int i = 0; i < length; i++) {
 //		data[i] = from_host.read8(i + 4);
 		eeprom_address(EEPROM_START_ADDRESS + offset + i) = from_host.read8(i + 4);
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, 8);
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, (eeprom_address(EEPROM_START_ADDRESS + offset + i)));
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, 8);
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xa);
 	}
 //	eeprom_write_block(data, (void*) offset, length);		//NEED doing
 	save_to_flash();
 	to_host.append8(RC_OK);
 	to_host.append8(length);
+
+//	static uint8_t data[16];
+//	eeprom_read_block(data, (const void*) offset, length);
+//	to_host.append8(RC_OK);
+//	for (int i = 0; i < length; i++) {
+//		to_host.append8(data[i]);
+//	}
 }
 
 enum { // bit assignments

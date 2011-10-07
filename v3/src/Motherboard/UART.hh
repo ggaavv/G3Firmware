@@ -29,26 +29,14 @@
  * packets.
  *
  */
-/*
-enum uart_no {
-	Host_Uart = 0x00,
-	Slave_Uart = 0x01
-};
-*/
-//uint8_t Host_Uart = 0;
-//uint8_t Slave_Uart = 1;
 
 class UART {
 private:
 	uint8_t index_;
 	volatile bool enabled_;
 public:
-//	UART(uart_no index_) : index_(0), enabled_(false) {}
 	UART();
 	UART(uint8_t index);
-//	UART(uint8_t index) {}// : index_(index), enabled_(false) {}
-	void change_index(uint8_t index_);
-	uint8_t read_index();
 	InPacket in;
 	OutPacket out;
 	void beginSend();

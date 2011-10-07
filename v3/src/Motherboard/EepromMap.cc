@@ -38,17 +38,25 @@ void read_all_from_flash (void){
 	uint32_t i;
 	for (i = 0x00000000; i < EEPROM_SIZE; i++,i++,i++,i++) {
 		eeprom_address(EEPROM_START_ADDRESS+i) = eeprom_address(EEPROM_FLASH_AREA_START + i);
-	}
-		uint8_t menu22[] = "\ni value : ";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu22, sizeof(menu22), BLOCKING);
-		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, i);
-		uint8_t menu222[] = " from flash address : ";
+//	}
+//		uint8_t menu22[] = "i value : ";
+//		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu22, sizeof(menu22), BLOCKING);
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, i);
+/*		uint8_t menu222[] = "\nfrom flash address : ";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu222, sizeof(menu222), BLOCKING);
 		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, EEPROM_FLASH_AREA_START + i);
 		uint8_t menu223[] = " eeprom address : ";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu223, sizeof(menu223), BLOCKING);
 		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, EEPROM_START_ADDRESS + i);
-	__enable_irq ();
+
+		uint8_t menu2722[] = "\ndata flash address : ";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu2722, sizeof(menu2722), BLOCKING);
+		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, eeprom_address(USER_FLASH_AREA_START + i));
+		uint8_t menu2723[] = "data eeprom address : ";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu2723, sizeof(menu2723), BLOCKING);
+		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, eeprom_address(EEPROM_START_ADDRESS + i));
+*/	__enable_irq ();
+	}
 };
 
 void save_to_flash (void) {
@@ -93,13 +101,15 @@ void init() {
 		eeprom_address(MICROSTEPS_P1) = microstep_pinout(1);
 		eeprom_address(AXIS_INVERSION) = axis_invert;
 		eeprom_address(ENDSTOP_INVERSION) = endstop_invert;
-		for (uint32_t i = MACHINE_NAME; i < (MACHINE_NAME + (32*4)); i++, i++, i++, i++) {
+		for (uint32_t i = MACHINE_NAME; i < (MACHINE_NAME + 40); i++, i++, i++, i++) {
 			eeprom_address(MACHINE_NAME+i) = 0x00000000; // name is null
 		}
 	}
 	// Write version
 	version[0] = firmware_version % 100;
 	version[1] = firmware_version / 100;
+	eeprom_address(VERSION_LOW) = version[0];
+	eeprom_address(VERSION_HIGH) = version[1];
 	save_to_flash();
 }
 
