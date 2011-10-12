@@ -122,9 +122,9 @@ int CDC_OutBufAvailChar (int *availChar) {
   Parameters:   None
   Return Value: None
  *---------------------------------------------------------------------------*/
-void CDC_Init (char portNum ) {
+/*void CDC_Init (char portNum ) {
 
-/*
+
   if ( portNum == 0 )
   {
 	ser_OpenPort (0);
@@ -143,10 +143,10 @@ void CDC_Init (char portNum ) {
   }
   CDC_DepInEmpty  = 1;
   CDC_SerialState = CDC_GetSerialState();
-*/
+
 
   CDC_BUF_RESET(CDC_OutBuf);
-}
+}*/
 
 
 /*----------------------------------------------------------------------------

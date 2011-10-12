@@ -40,4 +40,4 @@ void few_ticks();
 }
 #endif
 
-#endif
+#endif /* _DELAY_H_ */

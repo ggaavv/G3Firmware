@@ -24,6 +24,7 @@
 #include "Timeout.hh"
 #include "Version.hh"
 //#include <util/atomic.h>
+#include "Atomic.hh"
 //#include <avr/eeprom.h>
 #include "pgmspace.h"
 #include "Main.hh"
@@ -33,12 +34,14 @@
 //#include "test.hh"  // testing
 //#include "test_led.hh"  // testing
 //#include "test_u.hh"
-#include "Uart32.c"
 //#include "Delay.hh"
 //	#include "lpc17xx_nvic.h"
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
 //test_led(1);
+extern "C" {
+	#include "Uart32.h"
+}
 /********************************/
 
 namespace host {
@@ -146,7 +149,8 @@ bool processCommandPacket(const InPacket& from_host, OutPacket& to_host) {
 			// Queue command, if there's room.
 			// Turn off interrupts while querying or manipulating the queue!
 //			ATOMIC_BLOCK(ATOMIC_FORCEON) {
-			__disable_irq ();
+//			__disable_irq ();
+			Atomic(BEGIN_INT);
 			const uint8_t command_length = from_host.getLength();
 			if (command::getRemainingCapacity() >= command_length) {
 				// Append command to buffer
@@ -157,7 +161,8 @@ bool processCommandPacket(const InPacket& from_host, OutPacket& to_host) {
 			} else {
 				to_host.append8(RC_BUFFER_OVERFLOW);
 			}
-			__enable_irq ();
+//			__enable_irq ();
+			Atomic(RESTORE_INT);
 //			}
 			return true;
 		}
@@ -189,7 +194,8 @@ inline void handleVersion(const InPacket& from_host, OutPacket& to_host) {
     }
     else  {
         to_host.append8(RC_OK);
-        to_host.append16(firmware_version);
+//        UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, firmware_version);
+        to_host.append16(firmware_version);  //  0x0140 = 3.20
     }
 
 }
@@ -209,7 +215,8 @@ inline void handleGetBufferSize(const InPacket& from_host, OutPacket& to_host) {
 
 inline void handleGetPosition(const InPacket& from_host, OutPacket& to_host) {
 //	ATOMIC_BLOCK(ATOMIC_FORCEON) {
-	__disable_irq ();
+//	__disable_irq ();
+	Atomic(BEGIN_INT);
 	const Point p = steppers::getPosition();
 	to_host.append8(RC_OK);
 	to_host.append32(p[0]);
@@ -225,13 +232,15 @@ inline void handleGetPosition(const InPacket& from_host, OutPacket& to_host) {
 		endstop_status |= (si.isAtMaximum()?2:0) | (si.isAtMinimum()?1:0);
 	}
 	to_host.append8(endstop_status);
-	__enable_irq ();
+//	__enable_irq ();
+	Atomic(RESTORE_INT);
 //	}
 }
 
 inline void handleGetPositionExt(const InPacket& from_host, OutPacket& to_host) {
 //	ATOMIC_BLOCK(ATOMIC_FORCEON) {
-	__disable_irq ();
+//	__disable_irq ();
+//	Atomic(BEGIN_INT);
 	const Point p = steppers::getPosition();
 	to_host.append8(RC_OK);
 	to_host.append32(p[0]);
@@ -254,7 +263,8 @@ inline void handleGetPositionExt(const InPacket& from_host, OutPacket& to_host) 
 		endstop_status |= (si.isAtMaximum()?2:0) | (si.isAtMinimum()?1:0);
 	}
 	to_host.append16(endstop_status);
-	__enable_irq ();
+//	__enable_irq ();
+//	Atomic(RESTORE_INT);
 //	}
 }
 
@@ -390,53 +400,41 @@ inline void handlePause(const InPacket& from_host, OutPacket& to_host) {
 inline void handleIsFinished(const InPacket& from_host, OutPacket& to_host) {
 	to_host.append8(RC_OK);
 //	ATOMIC_BLOCK(ATOMIC_FORCEON) {
-	__disable_irq ();
+//	__disable_irq ();
+	Atomic(BEGIN_INT);
 	bool done = !steppers::isRunning() && command::isEmpty();
 	to_host.append8(done?1:0);
-	__enable_irq ();
+//	__enable_irq ();
+	Atomic(RESTORE_INT);
 //	}
 }
 
 inline void handleReadEeprom(const InPacket& from_host, OutPacket& to_host) {
 	uint16_t offset = from_host.read16(1);
 	uint8_t length = from_host.read8(3);
-//	uint8_t data[16];
-//	eeprom_read_block(data, (const void*) offset, length);		    //NEED doing
 	to_host.append8(RC_OK);
 	for (int i = 0; i < length; i++) {
-//		to_host.append8(data[i]);
 		to_host.append8(eeprom_address(EEPROM_START_ADDRESS + offset + i));
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, (eeprom_address(EEPROM_START_ADDRESS + offset + i)));
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xa);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, (eeprom_address(EEPROM_START_ADDRESS + offset + i)));
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xa);
 	}
 }
 
 inline void handleWriteEeprom(const InPacket& from_host, OutPacket& to_host) {
 	uint16_t offset = from_host.read16(1);
 	uint8_t length = from_host.read8(3);
-//	uint8_t data[16];
-//	eeprom_read_block(data, (const void*) offset, length);    //NEED doing
 	for (int i = 0; i < length; i++) {
-//		data[i] = from_host.read8(i + 4);
 		eeprom_address(EEPROM_START_ADDRESS + offset + i) = from_host.read8(i + 4);
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, 8);
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, (eeprom_address(EEPROM_START_ADDRESS + offset + i)));
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, 8);
-		UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xa);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 8);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, (eeprom_address(EEPROM_START_ADDRESS + offset + i)));
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 8);
+//		UART_8((LPC_UART_TypeDef *)LPC_UART2, 0xa);
 	}
-//	eeprom_write_block(data, (void*) offset, length);		//NEED doing
 	save_to_flash();
 	to_host.append8(RC_OK);
 	to_host.append8(length);
-
-//	static uint8_t data[16];
-//	eeprom_read_block(data, (const void*) offset, length);
-//	to_host.append8(RC_OK);
-//	for (int i = 0; i < length; i++) {
-//		to_host.append8(data[i]);
-//	}
 }
 
 enum { // bit assignments
@@ -571,7 +569,7 @@ char* getMachineName() {
 	// If the machine name hasn't been loaded, load it
 	if (machineName[0] == 0) {
 		for(uint8_t i = 0; i < MAX_MACHINE_NAME_LEN; i++) {
-			machineName[i] = eeprom::getEeprom8(MACHINE_NAME+i, 0);
+			machineName[i] = eeprom_address(MACHINE_NAME + i) & 0xff;
 		}
 	}
 
@@ -583,7 +581,7 @@ char* getMachineName() {
 			machineName[i] = defaultMachineName[i];
 		}
 	}
-
+	save_to_flash ();
 	return machineName;
 }
 

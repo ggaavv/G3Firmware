@@ -21,88 +21,92 @@
 #include "Version.hh"
 #include "IAP.hh"
 #include "LPC17xx.h"
+#include "Atomic.hh"
 /********************************/
 #include "test.hh"  // testing
 #include "test_led.hh"  // testing
 #include "test_u.hh"
-#include "Uart32.c"
 #include "Delay.hh"
-	#include "lpc17xx_timer.h"
-	#include "LPC17xx.h"
-	#include "lpc17xx_clkpwr.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//	#include "lpc17xx_clkpwr.h"
 //test_led(1);
+#include "Uart32.h"
 /********************************/
 
-void read_all_from_flash (void){
-	__disable_irq ();
-	uint32_t i;
-	for (i = 0x00000000; i < EEPROM_SIZE; i++,i++,i++,i++) {
-		eeprom_address(EEPROM_START_ADDRESS+i) = eeprom_address(EEPROM_FLASH_AREA_START + i);
-//	}
-//		uint8_t menu22[] = "i value : ";
-//		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu22, sizeof(menu22), BLOCKING);
-//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, i);
-/*		uint8_t menu222[] = "\nfrom flash address : ";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu222, sizeof(menu222), BLOCKING);
+void print_eeprom (void){
+	for (uint32_t i = 0; i < 0x150; i += 4) {
+		uint8_t eemenu222[] = "\na:";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, eemenu222, sizeof(eemenu222), BLOCKING);
 		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, EEPROM_FLASH_AREA_START + i);
-		uint8_t menu223[] = " eeprom address : ";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu223, sizeof(menu223), BLOCKING);
-		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, EEPROM_START_ADDRESS + i);
 
-		uint8_t menu2722[] = "\ndata flash address : ";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu2722, sizeof(menu2722), BLOCKING);
-		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, eeprom_address(USER_FLASH_AREA_START + i));
-		uint8_t menu2723[] = "data eeprom address : ";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu2723, sizeof(menu2723), BLOCKING);
-		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, eeprom_address(EEPROM_START_ADDRESS + i));
-*/	__enable_irq ();
+		uint8_t eemenu2722[] = " fd:";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, eemenu2722, sizeof(eemenu2722), BLOCKING);
+		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, eeprom_address(EEPROM_FLASH_AREA_START + i));
 	}
+}
+
+void read_all_from_flash (void){
+	Atomic(BEGIN_INT);
+	uint32_t i;
+	for (i = 0; i < EEPROM_SIZE; i=i+4) {
+		eeprom_address(EEPROM_START_ADDRESS+i) = eeprom_address(EEPROM_FLASH_AREA_START + i);
+	}
+	Atomic(RESTORE_INT);
 };
 
 void save_to_flash (void) {
-	__disable_irq ();
+	Atomic(BEGIN_INT);
 	IAP in_ap_prog;
-	int error_code_ret = in_ap_prog.erase(USER_FLASH_AREA_START, USER_FLASH_AREA_START);
-	error_code_ret = in_ap_prog.write((char)0x10007000, (char)USER_FLASH_AREA_START, (int)USER_FLASH_AREA_SIZE );
+#define	TARGET_SECTOR	2 // Flash Sector Number 2 = 0x0002000
+	in_ap_prog.prepare( TARGET_SECTOR, TARGET_SECTOR );
+	int error_code_erase = in_ap_prog.erase(TARGET_SECTOR, TARGET_SECTOR);
+	in_ap_prog.prepare( TARGET_SECTOR, TARGET_SECTOR );
+	int error_code_write = in_ap_prog.write((char*)EEPROM_START_ADDRESS, (char*)USER_FLASH_AREA_START, 4096 );
 	// read all variables back into Ram
-	__enable_irq ();
+	Atomic(RESTORE_INT);
 };
 
+//	[STEPPER_COUNT][MSx][port, no, MSx]
 uint8_t microstep_pinout(uint8_t port_no) {
 	uint8_t microsteping_port;
 	for (uint8_t ii = 0; ii < 5; ii++){   //Counts through STEPPER_COUNT
-		for (uint8_t iii = 0; ii < 3; iii++){
-			uint8_t port_bit = 0x1 << microstep_port_array [ii][iii][1];
-			if (microstep_port_array [ii][iii][0] == port_no) {
-				microsteping_port += (microstep_port_array [ii][iii][2] << port_bit);
+		for (uint8_t iii = 0; iii < 3; iii++){
+			uint8_t port_bit = 1 << microstep_port_array[ii][iii][1];
+			if (microstep_port_array[ii][iii][0] == port_no) {
+				microsteping_port = microsteping_port | (microstep_port_array[ii][iii][2] << port_bit);
 			}
 		}
 	}
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, microsteping_port);
 	return microsteping_port;
 }
 
 namespace eeprom {
 
 void init() {
+	Atomic(DISABLE_INT);
+//	print_eeprom();
 	read_all_from_flash();
 	uint8_t version[2];
 	version[0] = eeprom_address(VERSION_LOW);
 	version[1] = eeprom_address(VERSION_HIGH);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x1234);
 	if ((version[1]*100+version[0]) == firmware_version) return;
 	if (version[1] == 0xff || version[1] < 2) {
-		// Initialize eeprom map
+		// Initialise eeprom map
 		// Default: enstops inverted, Y axis inverted
-							//		  bazyx
-		uint8_t axis_invert = 	 0b00000011; // 1<<1; // Y axis = 1
-							//		  bazyx
-		uint8_t endstop_invert = 0b00010111; // all endstops inverted
-							//		  bazyx
+								//		 bazyx
+		eeprom_address(AXIS_INVERSION) = 	0b00000011; // 1<<1; // Y axis = 1
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, axis_inversion[0]);
+									//		 bazyx
+		eeprom_address(ENDSTOP_INVERSION) = 0b00010111; // all endstops inverted
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, endstop_inversion[0]);
+
 		eeprom_address(MICROSTEPS_P0) = microstep_pinout(0);
 		eeprom_address(MICROSTEPS_P1) = microstep_pinout(1);
-		eeprom_address(AXIS_INVERSION) = axis_invert;
-		eeprom_address(ENDSTOP_INVERSION) = endstop_invert;
-		for (uint32_t i = MACHINE_NAME; i < (MACHINE_NAME + 40); i++, i++, i++, i++) {
-			eeprom_address(MACHINE_NAME+i) = 0x00000000; // name is null
+		for (uint8_t i = 0; i < 100; i++) {
+			eeprom_address(MACHINE_NAME+i) = 0x00; // name is null
 		}
 	}
 	// Write version
@@ -111,10 +115,13 @@ void init() {
 	eeprom_address(VERSION_LOW) = version[0];
 	eeprom_address(VERSION_HIGH) = version[1];
 	save_to_flash();
+//	print_eeprom();
+	Atomic(ENABLE_INT);
 }
 
 uint8_t getEeprom8(uint32_t location, const uint8_t default_value) {
 	uint8_t data;
+	location = location*4;
 	data = *(uint32_t*)location;
 	if (data == 0xff) data = default_value;
 	return data;
@@ -122,6 +129,7 @@ uint8_t getEeprom8(uint32_t location, const uint8_t default_value) {
 
 uint16_t getEeprom16(uint32_t location, const uint16_t default_value) {
 	uint16_t data;
+	location = location*4;
 	data = *(uint32_t*)location;
 	if (data == 0xffff) data = default_value;
 	return data;

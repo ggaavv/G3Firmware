@@ -36,12 +36,14 @@
 //#include "test.hh"  // testing
 //#include "test_led.hh"  // testing
 //#include "test_u.hh"
-#include "Uart32.c"
 //#include "Delay.hh"
 //	#include "lpc17xx_nvic.h"
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
 //test_led(1);
+//extern "C" {
+//	#include "Uart32.h"
+//}
 /********************************/
 
 /* If this source file built with example, the LPC17xx FW library configuration

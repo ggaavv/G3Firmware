@@ -31,12 +31,14 @@
 //#include "test.hh"  // testing
 //#include "test_led.hh"  // testing
 //#include "test_u.hh"
-#include "Uart32.c"
 //#include "Delay.hh"
 //	#include "lpc17xx_nvic.h"
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
 //test_led(1);
+//extern "C" {
+	#include "Uart32.h"
+//}
 /********************************/
 
 #if defined (  __CC_ARM__  )
@@ -685,8 +687,8 @@ uint32_t USB_GetFrame (void) {
  */
 
 extern void USB_IRQHandler (void) {
-//	uint8_t menu710[] = "\nUQ ";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu710, sizeof(menu710), BLOCKING);
+//	uint8_t usmenu710[] = "\nUQ ";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, usmenu710, sizeof(usmenu710), BLOCKING);
 
   uint32_t disr, val, n, m;
   uint32_t episr, episrCur;

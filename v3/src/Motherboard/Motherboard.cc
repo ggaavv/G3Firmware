@@ -34,12 +34,14 @@ extern "C" {
 #include "test.hh"  // testing
 #include "test_led.hh"  // testing
 #include "test_u.hh"
-#include "Uart32.c"
 //#include "Delay.hh"
 //	#include "lpc17xx_nvic.h"
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
 //test_led(1);
+extern "C" {
+	#include "Uart32.h"
+}
 /********************************/
 
 
@@ -60,8 +62,8 @@ Motherboard::Motherboard() :
             INTERFACE_BAR_PIN,
             &mainMenu,
             &monitorMode)
-//	uint8_t menu1161[] = "\nCreate motherboard object";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu1161, sizeof(menu1161), BLOCKING);
+//	uint8_t momenu1161[] = "\nCreate motherboard object";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu1161, sizeof(momenu1161), BLOCKING);
 
 {
 		/// Set up the stepper pins on board creation
@@ -111,11 +113,12 @@ Motherboard::Motherboard() :
 /// This only resets the board, and does not send a reset
 /// to any attached toolheads.
 void Motherboard::reset() {
+	hasInterfaceBoard = 0; // needed for do_int
 	indicateError(0); // turn off blinker
 //	micros = 0;	/// Microseconds since board initialization set to 0
 
 	// Init steppers
-	uint8_t axis_invert = eeprom::getEeprom8(AXIS_INVERSION, 0);
+	uint8_t axis_invert = eeprom_address(AXIS_INVERSION);
 	// Z holding indicates that when the Z axis is not in
 	// motion, the machine should continue to power the stepper
 	// coil to ensure that the Z stage does not shift.
@@ -125,29 +128,33 @@ void Motherboard::reset() {
 	// 1 means turn it off.)
 	bool hold_z = (axis_invert & (1<<7)) == 0;
 	steppers::setHoldZ(hold_z);
-//	uint8_t menu1161[] = "\nsetHoldZ true";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu1161, sizeof(menu1161), BLOCKING);
+//	uint8_t momenu1161[] = "setHoldZ true\n";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu1161, sizeof(momenu1161), BLOCKING);
 	for (int i = 0; i < STEPPER_COUNT; i++) {
 		stepper[i].init(i);
 	}
 	// Initialize the host and slave UARTs
-//	uint8_t menu161[] = "\nb4 uarts up";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu161, sizeof(menu161), BLOCKING);
+	uint8_t momenu161[] = "b4 uarts up\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu161, sizeof(momenu161), BLOCKING);
 	//Construct classes
 //	UART::getHostUART() = UART(0);
 //	UART::getSlaveUART() = UART(1);
 
-//	UART::getHostUART().enable(true);
-//	UART::getHostUART().in.reset();
+//	UART hostUART(0);
+//	UART slaveUART(1);
 
-    UART::getHostUART().enable(true);
-    UART::getHostUART().in.reset();
-//	uint8_t menu261[] = "\nbetween uarts";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu261, sizeof(menu261), BLOCKING);
-    UART::getSlaveUART().enable(true);
-    UART::getSlaveUART().in.reset();
-//	uint8_t menu191[] = "\nafter uarts up";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu191, sizeof(menu191), BLOCKING);
+	//Construct classes
+	UART::getHostUART() = UART(0);
+	UART::getSlaveUART() = UART(1);
+
+	UART::getHostUART().enable(true);
+	UART::getHostUART().in.reset();
+	uint8_t momenu261[] = "between uarts\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu261, sizeof(momenu261), BLOCKING);
+	UART::getSlaveUART().enable(true);
+	UART::getSlaveUART().in.reset();
+	uint8_t momenu191[] = "after uarts up\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu191, sizeof(momenu191), BLOCKING);
 	// Reset and configure timer 1, the microsecond and stepper
 	// interrupt timer.
 	TIM_TIMERCFG_Type TMR0_Cfg;
@@ -202,14 +209,16 @@ void Motherboard::reset() {
 	NVIC_SetPriority(TIMER1_IRQn, 17);
 	NVIC_EnableIRQ(TIMER1_IRQn);
 	TIM_Cmd(LPC_TIM1,ENABLE);
-//	uint8_t menu171[] = "\ntimers configured";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu171, sizeof(menu171), BLOCKING);
-	// Configure the debug pin.
-	DEBUG_PIN.setDirection(true);
+	uint8_t momenu171[] = "timers configured\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu171, sizeof(momenu171), BLOCKING);
 
 	// Check if the interface board is attached
 	hasInterfaceBoard = interface::isConnected();
+	uint8_t momenu9171[] = "b4 has hasInterfaceBoard\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu9171, sizeof(momenu9171), BLOCKING);
 	if (hasInterfaceBoard) {
+		uint8_t momenu1871[] = "has_interface_board\n";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu1871, sizeof(momenu1871), BLOCKING);
 		// Make sure our interface board is initialized
 		interfaceBoard.init();
 
@@ -231,6 +240,7 @@ void Motherboard::reset() {
 micros_t Motherboard::getCurrentMicros() {
 	micros_t micros_snapshot;
 //	ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+//	Only 32bit number so Atomic not needed
 		micros_snapshot = micros;
 //	}
 	return micros_snapshot;
@@ -239,11 +249,15 @@ micros_t Motherboard::getCurrentMicros() {
 
 /// Run the motherboard interrupt
 void Motherboard::doInterrupt() {
+//	uint8_t momenu110[] = "do_int";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu110, sizeof(momenu110), BLOCKING);
 	if (hasInterfaceBoard) {
 		interfaceBoard.doInterrupt();
 	}
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu110, sizeof(momenu110), BLOCKING);
 	micros += INTERVAL_IN_MICROSECONDS;
 	// Do not move steppers if the board is in a paused state
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu110, sizeof(momenu110), BLOCKING);
 	if (command::isPaused()) return;
 	steppers::doInterrupt();
 }
@@ -260,8 +274,9 @@ void Motherboard::runMotherboardSlice() {
 
 /// Timer one comparator match interrupt
 extern "C" void TIMER0_IRQHandler (void){
-//	uint8_t menu110[] = "\nQ0";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu110, sizeof(menu110), BLOCKING);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x1);
+//	uint8_t momenu110[] = "Q0\n";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu110, sizeof(momenu110), BLOCKING);
 //	if((LPC_TIM0->IR & 0x01) == 0x01) {// if MR0 interrupt
 	Motherboard::getBoard().doInterrupt();
 //	}
@@ -313,8 +328,9 @@ int blinked_so_far = 0;
 
 /// Timer 2 overflow interrupt
 extern "C" void TIMER1_IRQHandler (void){
-//	uint8_t menu10[] = "\nQ1";
-//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu10, sizeof(menu10), BLOCKING);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x2);
+//	uint8_t momenu10[] = "\nQ1";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu10, sizeof(momenu10), BLOCKING);
 //	if((LPC_TIM1->IR & 0x01) == 0x01) {// if MR0 interrupt
 	if (blink_ovfs_remaining > 0) {
 		blink_ovfs_remaining--;

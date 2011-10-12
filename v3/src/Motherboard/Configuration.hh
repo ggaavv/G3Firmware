@@ -27,7 +27,7 @@
 /// possible time between steps; in practical terms, your time between steps should
 /// be at least eight times this large.  Reducing the interval can cause resource
 /// starvation; leave this at 64uS or greater unless you know what you're doing.
-#define INTERVAL_IN_MICROSECONDS 128
+#define INTERVAL_IN_MICROSECONDS 64
 
 // --- Secure Digital Card configuration ---
 // NOTE: If SD support is enabled, it is implicitly assumed that the
@@ -54,15 +54,16 @@
 
 //USB
 //#define USB_DISC_PIN	Pin(Port1,7)
+#define SOFTCONNECT 	Pin(Port2,9)
 
 // --- Slave UART configuration ---
 // The slave UART is presumed to be an RS485 connection through a sn75176 chip.
 // Define as 1 if the slave UART is present; 0 if not.
 #define HAS_SLAVE_UART		1
 // The pin that connects to the driver enable line on the RS485 chip.
-#define TX_ENABLE_PIN		Pin(Port1,21)
+#define TX_ENABLE_PIN		Pin(Port0,0)
 // The pin that connects to the active-low recieve enable line on the RS485 chip.
-#define RX_ENABLE_PIN		Pin(Port2,8)
+#define RX_ENABLE_PIN		Pin(Port0,21)
 
 // --- Host UART configuration ---
 // The host UART is presumed to always be present on the RX/TX lines.
@@ -111,7 +112,7 @@
 // The Y stepper enable pin (active low)
 #define Y_ENABLE_PIN		Pin(Port0,10)
 // The Y minimum endstop pin (active high)
-#define Y_MIN_PIN			Pin(Port1,27)
+#define Y_MIN_PIN			Pin(Port1,23)  //Pin(Port1,27)
 // The Y maximum endstop pin (active high)
 #define Y_MAX_PIN			Pin(Port1,23)
 
@@ -122,7 +123,7 @@
 // The Z stepper enable pin (active low)
 #define Z_ENABLE_PIN		Pin(Port1,26)
 // The Z minimum endstop pin (active high)
-#define Z_MIN_PIN			Pin(Port1,27)
+#define Z_MIN_PIN			Pin(Port1,22)
 // The Z maximum endstop pin (active high)
 #define Z_MAX_PIN			Pin(Port3,25)
 
@@ -142,7 +143,7 @@
 
 // --- Debugging configuration ---
 // The pin which controls the debug LED (active high)
-#define DEBUG_PIN			Pin(Port0,22)
+#define DEBUG_PIN			Pin(Port1,27) //y_min for now
 // By default, debugging packets should be honored; this is made
 // configurable if we're short on cycles or EEPROM.
 // Define as 1 if debugging packets are honored; 0 if not.

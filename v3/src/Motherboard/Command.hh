@@ -18,7 +18,9 @@
 #ifndef COMMAND_HH_
 #define COMMAND_HH_
 
-#include <stdint.h>
+extern "C" {
+	#include "lpc_types.h"
+}
 
 /// The command namespace contains functions that handle the incoming command
 /// queue, for both SD and serial jobs.

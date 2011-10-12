@@ -22,6 +22,18 @@
     #include <stdlib.h>
 #endif
 
+/********************************/
+//#include "test.hh"  // testing
+//#include "test_led.hh"  // testing
+//#include "test_u.hh"
+#include "Uart32.c"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//test_led(1);
+/********************************/
+
 /**
  * \addtogroup fat FAT support
  *
@@ -1428,6 +1440,7 @@ struct fat_dir_struct* fat_open_dir(struct fat_fs_struct* fs, const struct fat_d
  */
 void fat_close_dir(struct fat_dir_struct* dd)
 {
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0xccc);
     if(dd)
 #if USE_DYNAMIC_MEMORY
         free(dd);

@@ -19,8 +19,9 @@
 #ifndef SHARED_CIRCULAR_BUFFER_HH_
 #define SHARED_CIRCULAR_BUFFER_HH_
 
-#include <stdint.h>
-#include "lpc_types.h"
+extern "C" {
+	#include "lpc_types.h"
+}
 
 typedef uint16_t BufSizeType;
 

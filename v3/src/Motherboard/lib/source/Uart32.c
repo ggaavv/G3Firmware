@@ -26,7 +26,7 @@
 // U0Rx (VCP receive) connected to PA0
 // U0Tx (VCP transmit) connected to PA1
 
-#include "lpc17xx_uart.h"
+#include "Uart32.h"
 
 /*
 #include "UART.h"

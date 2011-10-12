@@ -17,6 +17,17 @@
 
 #include "Packet.hh"
 #include <util/crc16.h>
+/********************************/
+//#include "test.hh"  // testing
+//#include "test_led.hh"  // testing
+//#include "test_u.hh"
+#include "Uart32.c"
+//#include "Delay.hh"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//	#include "lpc17xx_clkpwr.h"
+//test_led(1);
+/********************************/
 
 /// Append a byte and update the CRC
 void Packet::appendByte(uint8_t data) {
@@ -65,6 +76,8 @@ void InPacket::processByte(uint8_t b) {
 		}
 	} else if (state == PS_PAYLOAD) {
 		appendByte(b);
+		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x888);
+		UART_8((LPC_UART_TypeDef *)LPC_UART2, b);
 		if (length >= expected_length) {
 			state = PS_CRC;
 		}

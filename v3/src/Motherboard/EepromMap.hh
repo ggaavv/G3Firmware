@@ -21,36 +21,24 @@
 
 #include <stdint.h>
 
-
 void read_all_from_flash (void);
 void save_to_flash (void);
 uint8_t microstep_pinout(uint8_t port_no);
 
 #define eeprom_address(x)   (*(volatile unsigned long *)(x))
 
-//uint32_t EEPROM_START_ADDRESS		= (uint32_t*)0x10001000;
-//uint32_t EEPROM_START_ADDRESS		= 0x10001000;
-
-#define EEPROM_FLASH_AREA_START		USER_FLASH_AREA_START
+#define EEPROM_FLASH_AREA_START		(0x00002000)
 
 #define EEPROM_START_ADDRESS		(0x10007000)
 
-//uint32_t EEPROM_SIZE				= 0x00001000;
-//uint32_t EEPROM_SIZE				= 0x00001000;
 #define EEPROM_SIZE         		(0x00001000)
 /// Version, low byte: 1 byte
-//uint32_t *VERSION_LOW				= (uint32_t*)0x10000000;
-//uint32_t VERSION_LOW				= EEPROM_START_ADDRESS + 0x0000;
 #define VERSION_LOW					(EEPROM_START_ADDRESS + 0x0000)
 /// Version, high byte: 1 byte
-//uint32_t *VERSION_HIGH			= (uint32_t*)0x10000004;
-//uint32_t VERSION_HIGH				= EEPROM_START_ADDRESS + 0x0004;
 #define VERSION_HIGH				(EEPROM_START_ADDRESS + 0x0001)
 
 // Axis inversion flags: 1 byte.
 // Axis N (where X=0, Y=1, etc.) is inverted if the Nth bit is set.
-//uint32_t *AXIS_INVERSION			= (uint32_t*)0x10000008;
-//uint32_t AXIS_INVERSION				= EEPROM_START_ADDRESS + 0x0008;
 #define AXIS_INVERSION				(EEPROM_START_ADDRESS + 0x0002)
 
 // Endstop inversion flags: 1 byte.
@@ -59,26 +47,15 @@ uint8_t microstep_pinout(uint8_t port_no);
 // Bit 7 is set to indicate endstops are present; it is zero to indicate
 // that endstops are not present.
 // Ordinary endstops (H21LOB et. al.) are inverted.
-//uint32_t *ENDSTOP_INVERSION		= (uint32_t*)0x1000000c;
-//uint32_t ENDSTOP_INVERSION			= EEPROM_START_ADDRESS + 0x000c;
 #define ENDSTOP_INVERSION			(EEPROM_START_ADDRESS + 0x0003)
 
 // Name of this machine: 32 bytes.
-//uint32_t *MACHINE_NAME			= (uint32_t*)0x10000040;
-//uint32_t MACHINE_NAME				= EEPROM_START_ADDRESS + 0x0040;
 #define MACHINE_NAME				(EEPROM_START_ADDRESS + 0x0020)
 
 // Default locations for the axis: 5 x 32 bit = 20 bytes
-//uint32_t *AXIS_HOME_POSITIONS		= (uint32_t*)0x10000800;
-//uint32_t AXIS_HOME_POSITIONS		= EEPROM_START_ADDRESS + 0x0800;
 #define AXIS_HOME_POSITIONS			(EEPROM_START_ADDRESS + 0x0060)
-
-//uint32_t *MICROSTEPS_P0			= (uint32_t*)0x10000010;
-//uint32_t MICROSTEPS_P0				= EEPROM_START_ADDRESS + 0x0010;
+;
 #define MICROSTEPS_P0				(EEPROM_START_ADDRESS + 0x0100)
-
-//uint32_t *MICROSTEPS_P1			= (uint32_t*)0x10000014;
-//uint32_t MICROSTEPS_P1				= EEPROM_START_ADDRESS + 0x0014;
 #define MICROSTEPS_P1				(EEPROM_START_ADDRESS + 0x0110)
 
 enum step_dev {
@@ -97,21 +74,21 @@ enum step_dev {
 		High 	High 	Low 	Eighth step
 		High 	High 	High 	Sixteenth step	*/
 
-bool X_MS1 = 1;
-bool X_MS2 = 1;
-bool X_MS3 = 1;
-bool Y_MS1 = 1;
-bool Y_MS2 = 1;
-bool Y_MS3 = 1;
-bool Z_MS1 = 1;
-bool Z_MS2 = 1;
-bool Z_MS3 = 1;
-bool A_MS1 = 1;
-bool A_MS2 = 1;
-bool A_MS3 = 1;
-bool B_MS1 = 1;
-bool B_MS2 = 1;
-bool B_MS3 = 1;
+static bool X_MS1 = 1;
+static bool X_MS2 = 1;
+static bool X_MS3 = 1;
+static bool Y_MS1 = 1;
+static bool Y_MS2 = 1;
+static bool Y_MS3 = 1;
+static bool Z_MS1 = 1;
+static bool Z_MS2 = 1;
+static bool Z_MS3 = 1;
+static bool A_MS1 = 1;
+static bool A_MS2 = 1;
+static bool A_MS3 = 1;
+static bool B_MS1 = 1;
+static bool B_MS2 = 1;
+static bool B_MS3 = 1;
 
 			//				[STEPPER_COUNT][MSx][port, no, MSx]
 uint8_t microstep_port_array [5][3][3] = {

@@ -18,7 +18,6 @@
 #ifndef TIMEOUT_HH_
 #define TIMEOUT_HH_
 
-#include <stdint.h>
 #include "Types.hh"
 
 /**

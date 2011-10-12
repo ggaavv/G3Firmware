@@ -18,13 +18,26 @@
 #include "SDCard.hh"
 
 //#include <avr/io.h>
-#include <string.h>
+#include <cstring>
 extern "C" {
-	#include "lib_sd/sd-reader_config.h"
-	#include "lib_sd/fat.h"
-	#include "lib_sd/sd_raw.h"
-	#include "lib_sd/partition.h"
+	#include "sd-reader_config.h"
+	#include "fat.h"
+	#include "sd_raw.h"
+	#include "partition.h"
 }
+/********************************/
+//#include "test.hh"  // testing
+//#include "test_led.hh"  // testing
+//#include "test_u.hh"
+#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//test_led(1);
+extern "C" {
+	#include "Uart32.h"
+}
+/********************************/
 
 #ifndef USE_DYNAMIC_MEMORY
 #error Dynamic memory should be explicitly disabled in the G3 mobo.
@@ -302,25 +315,42 @@ void finishPlayback() {
 
 
 void reset() {
-	capturing = false;
-	playing = false;
-	capturedBytes = 0L;
+/*	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, playing);
+	_delay_ms(1000);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x555);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, capturing);
+	_delay_ms(1000);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x666);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, (uint32_t)dd);
+	_delay_ms(1000);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x777);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, (uint32_t)fs);
+	_delay_ms(1000);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x888);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, (uint32_t)partition);
+	_delay_ms(1000);
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x999);
+*/
+
 	if (playing) {
-//		finishPlayback();
+		finishPlayback();
 	}
 	if (capturing){
-//		finishCapture();
+		finishCapture();
 	}
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x444);
 	if (dd != 0) {
-//		fat_close_dir(dd);
+		fat_close_dir(dd);
 		dd = 0;
 	}
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x555);
 	if (fs != 0) {
-//		fat_close(fs);
+		fat_close(fs);
 		fs = 0;
 	}
+	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x666);
 	if (partition != 0) {
-//		partition_close(partition);
+		partition_close(partition);
 		partition = 0;
 	}
 }

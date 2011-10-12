@@ -24,14 +24,13 @@
 
 extern "C" {
 	#include "LPC17xx.h"
-	#include "vcomdemo.c"
+	#include "vcomdemo.h"
 }
 #include "DebugPacketProcessor.hh"
 #include "Host.hh"
 #include "Tool.hh"
 #include "Command.hh"
-//#include <avr/interrupt.h>    //NEED remove
-//#include <util/atomic.h>		//NEED remove
+#include "Atomic.hh"
 #include "Timeout.hh"
 #include "Steppers.hh"
 #include "Motherboard.hh"
@@ -44,54 +43,44 @@ extern "C" {
 #include "test.hh"  // testing
 #include "test_led.hh"  // testing
 #include "test_u.hh"
-//#include "Uart32.c"
 //#include "Delay.hh"
-//	#include "lpc17xx_nvic.h"
-//	#include "lpc17xx_timer.h"
-//	#include "LPC17xx.h"
+//#include "lpc17xx_nvic.h"
+//#include "lpc17xx_timer.h"
+//#include "LPC17xx.h"
 //test_led(1);
+#include "Uart32.h"
 /********************************/
 
-/*----------------------------------------------------------------------------
-  Construct classes
- *----------------------------------------------------------------------------*/
-/*
-void construct_classes(){
-UART::uart[0] = UART(0);
-UART::uart[1] = UART(1);
-
-UART::getHostUART();
-UART::getSlaveUART();
-}
-*/
 /*----------------------------------------------------------------------------
   reset
  *----------------------------------------------------------------------------*/
 
 void reset(bool hard_reset) {
 //	__disable_irq ();
+	Atomic(BEGIN_INT);
 	Motherboard& board = Motherboard::getBoard();
-	uint8_t menu2[] = "get board\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu2, sizeof(menu2), BLOCKING);
+	uint8_t menum2[] = "get board\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum2, sizeof(menum2), BLOCKING);
 	sdcard::reset();
-	uint8_t menu3[] = "sdcard reset\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu3, sizeof(menu3), BLOCKING);
+	uint8_t menum3[] = "sdcard reset\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum3, sizeof(menum3), BLOCKING);
 	steppers::abort();
-	uint8_t menu4[] = "stepper abort\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu4, sizeof(menu4), BLOCKING);
+	uint8_t menum4[] = "stepper abort\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum4, sizeof(menum4), BLOCKING);
 	command::reset();
-	uint8_t menu5[] = "command reset\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu5, sizeof(menu5), BLOCKING);
+	uint8_t menum5[] = "command reset\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum5, sizeof(menum5), BLOCKING);
 	eeprom::init();
 //	__disable_irq ();
 	board.reset();
 //	__enable_irq ();
+	Atomic(ENABLE_INT);
 	// If we've just come from a hard reset, wait for 2.5 seconds before
 	// trying to ping an extruder.  This gives the extruder time to boot
 	// before we send it a packet.
 	if (hard_reset) {
-		uint8_t menu6[] = "before starting timeout\n";
-		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu6, sizeof(menu6), BLOCKING);
+//		uint8_t menu6[] = "before starting timeout\n";
+//		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu6, sizeof(menu6), BLOCKING);
 		Timeout t;
 		t.start(1000L); // wait for 2500 ms
 /*		uint8_t menu7[] = "1\n";
@@ -114,13 +103,21 @@ void reset(bool hard_reset) {
 //		UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, (uint32_t)clkdlycnttt);
 //		test_led3(1);
 */
+		uint8_t menum1866[] = "t.hasElapsed\n";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum1866, sizeof(menum1866), BLOCKING);
 		while (!t.hasElapsed());
+		uint8_t menum866[] = "b4 test\n";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum866, sizeof(menum866), BLOCKING);
 		tool::test(); // Run test
+		uint8_t menum66[] = "after test\n";
+		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum66, sizeof(menum66), BLOCKING);
 	}
 	if (!tool::reset())
 	{
 		// Fail, but let it go; toggling the PSU is dangerous.
 	}
+	uint8_t menum76[] = "tool reset done\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum76, sizeof(menum76), BLOCKING);
 }
 
 /*----------------------------------------------------------------------------
@@ -134,37 +131,20 @@ int main (void) {
 	SystemCoreClockUpdate();
 	SystemInit();									// Initialize clocks
 	NVIC_SetPriorityGrouping(0);					// Configure the NVIC Preemption Priority Bits
+	DEBUG_PIN.setDirection(true);	//creates Port Class
+//	DEBUG_PIN.setValue(false);
 	//----end of Initialization of LPC----//
-//	construct_classes();
 	test_u();
-	/*
-	uint8_t menu9[] = "\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
-	DEBUG_PIN.setDirection(true);
-	DEBUG_PIN.setValue(false);
-	_delay_ms(200);
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
-	DEBUG_PIN.setValue(true);
-	_delay_ms(200);
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
-	DEBUG_PIN.setValue(false);
-	_delay_ms(200);
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
-	DEBUG_PIN.setValue(true);
-	_delay_ms(200);
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
-	DEBUG_PIN.setValue(false);
-	_delay_ms(200);
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu9, sizeof(menu9), BLOCKING);
-
-*/
-	uint8_t menu1[] = "\nS\n";
-	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu1, sizeof(menu1), BLOCKING);
+	uint8_t menum1[] = "\nS\n";
+	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum1, sizeof(menum1), BLOCKING);
 //	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, SCB->VTOR);
+	_delay_ms(500);
+	DEBUG_PIN.setValue(false);
 	Motherboard& board = Motherboard::getBoard();
 	steppers::init(Motherboard::getBoard());
 	reset(true);
 	VCOM_Start();
+	Atomic(ENABLE_INT);
 	while (1) {
 		// Toolhead interaction thread.
 		tool::runToolSlice();
@@ -177,13 +157,12 @@ int main (void) {
 //		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu112, sizeof(menu112), BLOCKING);
 		command::runCommandSlice();
 		// Motherboard slice
-//		uint8_t menu113[] = "c\n";
+		uint8_t menu113[] = "c\n";
 //		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu113, sizeof(menu113), BLOCKING);
 		board.runMotherboardSlice();
 		// USB coms slice
 //		VCOM_Usb2Serial();
 //		test_led3(1);
-//		_delay_ms(50);
 	}
 	return 0;
 }

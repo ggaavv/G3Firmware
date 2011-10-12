@@ -1,11 +1,12 @@
 #include "ButtonArray.hh"
+#include "Atomic.hh"
 
-static uint8_t previousL;
-static uint8_t previousC;
+// static uint8_t previousL;
+// static uint8_t previousC;
 
 void ButtonArray::init() {
-        previousL = 0;
-        previousC = 0;
+//        previousL = 0;
+//        previousC = 0;
 
         //LPC17xx all imputs by default
         // Set all of the known buttons to inputs (see above note)
@@ -13,6 +14,7 @@ void ButtonArray::init() {
 //        DDRC = DDRC & 0xF9;
 //        PORTL = PORTL & 0x1;
 //        PORTC = PORTC & 0xF9;
+
 }
 
 void ButtonArray::scanButtons() {
@@ -65,9 +67,11 @@ bool ButtonArray::getButton(ButtonName& button) {
 
 //        ATOMIC_BLOCK(ATOMIC_FORCEON)
 //       {
-                buttonValid =  buttonPressWaiting;
-                buttonNumber = buttonPress;
-                buttonPressWaiting = false;
+        	Atomic(BEGIN_INT);
+        		buttonValid =  buttonPressWaiting;
+        		buttonNumber = buttonPress;
+        		buttonPressWaiting = false;
+        	Atomic(RESTORE_INT);
 //        }
 
         if (buttonValid) {

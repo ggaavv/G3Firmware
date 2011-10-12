@@ -18,7 +18,9 @@
 #define        MBED_IAP
 
 //#include    "mbed.h"
-#include    "system_LPC17xx.h"
+extern "C" {
+	#include    "system_LPC17xx.h"
+}
 
 #define     USER_FLASH_AREA_START   FLASH_SECTOR_2
 //#define     USER_FLASH_AREA_START   FLASH_SECTOR_29

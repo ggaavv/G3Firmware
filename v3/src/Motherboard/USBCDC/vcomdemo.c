@@ -25,6 +25,18 @@
 #include "cdcuser.h"
 #include "serial.h"
 //#include "vcomdemo.h"
+/********************************/
+//#include "UART.hh"
+//#include "test.hh"  // testing
+//#include "test_led.hh"  // testing
+//#include "test_u.hh"
+//#include "Delay.hh"
+//	#include "lpc17xx_nvic.h"
+//	#include "lpc17xx_timer.h"
+//	#include "LPC17xx.h"
+//test_led(1);
+#include "Uart32.h"
+/********************************/
 
 /* Example group ----------------------------------------------------------- */
 /** @defgroup USBDEV_USBCDC	USBCDC
@@ -36,13 +48,13 @@
  Initialises the VCOM port.
  Call this function before using VCOM_putchar or VCOM_getchar
  *---------------------------------------------------------------------------*/
- void VCOM_Init(void) {
+/* void VCOM_Init(void) {
 #if PORT_NUM
   CDC_Init (1);
 #else
   CDC_Init (0);
 #endif
-}
+}*/
 
 /*----------------------------------------------------------------------------
   Reads character from serial port buffer and writes to USB buffer
@@ -68,7 +80,7 @@
 /*----------------------------------------------------------------------------
   Reads character from USB buffer and writes to serial port buffer
  *---------------------------------------------------------------------------*/
-void VCOM_Usb2Serial(void) {
+/*void VCOM_Usb2Serial(void) {
   static char serBuf [32];
          int  numBytesToRead, numBytesRead, numAvailByte;
 
@@ -84,12 +96,12 @@ void VCOM_Usb2Serial(void) {
   }
 
 }
-
+*/
 
 /*----------------------------------------------------------------------------
   checks the serial state and initiates notification
  *---------------------------------------------------------------------------*/
-void VCOM_CheckSerialState (void) {
+/*void VCOM_CheckSerialState (void) {
          unsigned short temp;
   static unsigned short serialState;
 
@@ -99,18 +111,22 @@ void VCOM_CheckSerialState (void) {
      CDC_NotificationIn();                  // send SERIAL_STATE notification
   }
 }
-
+*/
 /*----------------------------------------------------------------------------
   Main Program
  *---------------------------------------------------------------------------*/
 void VCOM_Start(void) {
 
-  VCOM_Init();                              // VCOM Initialization
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x777);
+//	VCOM_Init();                              // VCOM Initialization
 
-  USB_Init();                               // USB Initialization
-  USB_Connect(TRUE);                        // USB Connect
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x888);
+	USB_Init();                               // USB Initialization
+	USB_Connect(TRUE);                        // USB Connect
 
-  while (!USB_Configuration) ;              // wait until USB is configured
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x999);
+	while (!USB_Configuration) ;              // wait until USB is configured
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0xbbb);
 
 /*  while (1) {                               // Loop forever
     VCOM_Serial2Usb();                      // read serial port and initiate USB event
