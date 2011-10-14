@@ -16,7 +16,7 @@
 // </h>
 */
 
-    .equ    Stack_Size, 0x00001000
+    .equ    Stack_Size, 0x00000100
     .section ".stack", "w"
     .align  3
     .globl  __cs3_stack_mem
@@ -54,11 +54,6 @@ __cs3_heap_end:
     .globl  __cs3_interrupt_vector_cortex_m
     .type   __cs3_interrupt_vector_cortex_m, %object
 
-.extern xPortPendSVHandler
-.extern xPortSysTickHandler
-.extern vPortSVCHandler
-.extern vEMAC_ISR;
-
 __cs3_interrupt_vector_cortex_m:
     .long   __cs3_stack                 /* Top of Stack                 */
     .long   __cs3_reset                 /* Reset Handler                */
@@ -67,7 +62,7 @@ __cs3_interrupt_vector_cortex_m:
     .long   MemManage_Handler           /* MPU Fault Handler            */
     .long   BusFault_Handler            /* Bus Fault Handler            */
     .long   UsageFault_Handler          /* Usage Fault Handler          */
-    .long   0xefff79be                  /* Checksum, see LPC1xxx manual */
+    .long   0                           /* Reserved                     */
     .long   0                           /* Reserved                     */
     .long   0                           /* Reserved                     */
     .long   0                           /* Reserved                     */
@@ -141,27 +136,12 @@ LoopZI:
 	STR   	R0, [R1]
 	ADD		R1, #4
 	BLO     LoopZI
-	
-/***********************************************/
-/* call __libc_init_array - needed for C++ support */
-/*    LDR     R0, =__libc_init_array */
-/*    BLX     R0 */
-/***********************************************/
-
-/* call system init in NXP's Device CMSIS code */
 BSSIsEmpty:
     LDR     R0, =SystemInit
     BLX     R0
     LDR     R0,=main
     BX      R0
 .else
-
-/***********************************************/
-/* call __libc_init_array - needed for C++ support */
-/*    LDR     R0, =__libc_init_array */
-/*    BLX     R0 */
-/***********************************************/
-
     LDR     R0, =SystemInit
     BLX     R0
     LDR     R0,=main

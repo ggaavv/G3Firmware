@@ -7,7 +7,7 @@ extern "C" {
 
 /************************** PRIVATE VARIABLES *************************/
 
-void test_u(void){
+void test_uart(void){
 // UART Configuration structure variable
 	UART_CFG_Type UARTConfigStruct;
 	// UART FIFO configuration Struct variable
