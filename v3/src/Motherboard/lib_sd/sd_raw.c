@@ -9,7 +9,7 @@
  */
 
 #include <string.h>
-//#include <avr/io.h>
+#include "lpc17xx_pinsel.h"
 #include "sd_raw.h"
 #include "lpc17xx_spi.h"
 
@@ -172,9 +172,39 @@ static uint8_t sd_raw_send_command(uint8_t command, uint32_t arg);
  */
 uint8_t sd_raw_init()
 {
-    /* enable inputs for reading card status */
-    configure_pin_available();
-    configure_pin_locked();
+	PINSEL_CFG_Type PinCfg;
+
+	//Initialize SPI pin connect
+	PinCfg.Funcnum = PINSEL_FUNC_3;		//function 3rd = SPI
+	PinCfg.OpenDrain = PINSEL_PINMODE_NORMAL;
+	PinCfg.Pinmode = PINSEL_PINMODE_PULLUP;
+	//Initialize SCK_SD pin P0.15
+	PinCfg.Portnum = SCK_PIN_Port;
+	PinCfg.Pinnum = SCK_PIN_Pin;
+	PINSEL_ConfigPin(&PinCfg);
+	//Initialize MOSO_SD pin P0.17
+	PinCfg.Portnum = MISO_PIN_Port;
+	PinCfg.Pinnum = MISO_PIN_Pin;
+	PINSEL_ConfigPin(&PinCfg);
+	//Initialize MOSI_SD pin P0.18
+	PinCfg.Portnum = MOSI_PIN_Port;
+	PinCfg.Pinnum = MOSI_PIN_Pin;
+	PINSEL_ConfigPin(&PinCfg);
+
+	//SD card select + card select
+	PinCfg.Funcnum = PINSEL_FUNC_0 ;	//function 0 = GPIO
+	//Initialize CS_SD pin P2.0
+	PinCfg.Portnum = SD_SELECT_PIN_Port;
+	PinCfg.Pinnum = SD_SELECT_PIN_Pin;
+	PINSEL_ConfigPin(&PinCfg);
+	//Initialize CD_SD pin P2.1
+	PinCfg.Pinnum = SD_DETECT_PIN_Port;
+	PinCfg.Funcnum = SD_DETECT_PIN_Pin;
+	PINSEL_ConfigPin(&PinCfg);
+
+	/* enable inputs for reading card status */
+	configure_pin_available();
+	configure_pin_locked();
 
     /* enable outputs for MOSI, SCK, SS, input for MISO */
     configure_pin_mosi();

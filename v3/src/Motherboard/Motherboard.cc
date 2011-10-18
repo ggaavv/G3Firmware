@@ -39,9 +39,7 @@ extern "C" {
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
 //test_led(1);
-extern "C" {
-	#include "Uart32.h"
-}
+#include "Uart32.h"
 /********************************/
 
 
@@ -113,7 +111,6 @@ Motherboard::Motherboard() :
 /// This only resets the board, and does not send a reset
 /// to any attached toolheads.
 void Motherboard::reset() {
-	hasInterfaceBoard = 0; // needed for do_int
 	indicateError(0); // turn off blinker
 //	micros = 0;	/// Microseconds since board initialization set to 0
 
@@ -136,16 +133,10 @@ void Motherboard::reset() {
 	// Initialize the host and slave UARTs
 	uint8_t momenu161[] = "b4 uarts up\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu161, sizeof(momenu161), BLOCKING);
-	//Construct classes
-//	UART::getHostUART() = UART(0);
-//	UART::getSlaveUART() = UART(1);
-
-//	UART hostUART(0);
-//	UART slaveUART(1);
 
 	//Construct classes
-	UART::getHostUART() = UART(0);
-	UART::getSlaveUART() = UART(1);
+	UART::getHostUART() = UART(0);	//TODO why are default constructors not being called??
+	UART::getSlaveUART() = UART(1);	//TODO why are default constructors not being called??
 
 	UART::getHostUART().enable(true);
 	UART::getHostUART().in.reset();
@@ -216,6 +207,7 @@ void Motherboard::reset() {
 	hasInterfaceBoard = interface::isConnected();
 	uint8_t momenu9171[] = "b4 has hasInterfaceBoard\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu9171, sizeof(momenu9171), BLOCKING);
+	hasInterfaceBoard = 0; // needed for do_int
 	if (hasInterfaceBoard) {
 		uint8_t momenu1871[] = "has_interface_board\n";
 		UART_Send((LPC_UART_TypeDef *)LPC_UART2, momenu1871, sizeof(momenu1871), BLOCKING);

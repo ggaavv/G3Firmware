@@ -31,19 +31,17 @@
 //#include "test.hh"  // testing
 //#include "test_led.hh"  // testing
 //#include "test_u.hh"
-//#include "Delay.hh"
+#include "Delay.hh"
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
 //	#include "lpc17xx_clkpwr.h"
 //test_led(1);
-extern "C" {
-	#include "Uart32.h"
-}
+#include "Uart32.h"
 /********************************/
 
 namespace command {
 
-#define COMMAND_BUFFER_SIZE 512	//512 1024 2048 4096 8192  (512 default)
+//#define COMMAND_BUFFER_SIZE 512	//512 1024 2048 4096 8192  (512 default)  //TODO hack to get circular buffer working
 uint8_t buffer_data[COMMAND_BUFFER_SIZE];
 CircularBuffer command_buffer(COMMAND_BUFFER_SIZE, buffer_data);
 
@@ -124,11 +122,16 @@ uint16_t getRemainingCapacity() {
 	void reset() {
 		command_buffer.reset();
 		mode = READY;
+		outstanding_tool_command = false;
+		paused = false;
 	}
 
 	// A fast slice for processing commands and refilling the stepper queue, etc.
 	void runCommandSlice() {
 //		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, paused);
+//		_delay_ms(10);
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x77);
+//		_delay_ms(10);
 		if (sdcard::isPlaying()) {
 			while (command_buffer.getRemainingCapacity() > 0 && sdcard::playbackHasNext()) {
 				command_buffer.push(sdcard::playbackNext());
@@ -199,12 +202,24 @@ uint16_t getRemainingCapacity() {
 		}
 //		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, mode);
 		if (mode == READY) {
-//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, mode);
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, lengthbuff);
+//			_delay_ms(10);
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x44);
+//			_delay_ms(10);
 			// process next command on the queue.
+
 			if (command_buffer.getLength() > 0) {
 				uint8_t command = command_buffer[0];
-				UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, command);
+//				UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, command);
+//				_delay_ms(10);
+//				UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x88);
+//				_delay_ms(10);
 				if (command == HOST_CMD_QUEUE_POINT_ABS) {
+					uint8_t command = command_buffer[0];
+//					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, command);
+//					_delay_ms(50);
+//					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x99);
+//					_delay_ms(50);
 					// check for completion
 					if (command_buffer.getLength() >= 17) {
 						command_buffer.pop(); // remove the command code
@@ -217,7 +232,7 @@ uint16_t getRemainingCapacity() {
 					}
 				} else if (command == HOST_CMD_QUEUE_POINT_EXT) {
 					// check for completion
-					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x55555);
+//					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x55555);
 					if (command_buffer.getLength() >= 25) {
 						command_buffer.pop(); // remove the command code
 						mode = MOVING;
@@ -231,7 +246,7 @@ uint16_t getRemainingCapacity() {
 					}
 				} else if (command == HOST_CMD_QUEUE_POINT_NEW) {
 					// check for completion
-					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x789);
+//					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x789);
 					if (command_buffer.getLength() >= 26) {
 						command_buffer.pop(); // remove the command code
 						mode = MOVING;
@@ -271,7 +286,7 @@ uint16_t getRemainingCapacity() {
 					}
 				} else if (command == HOST_CMD_SET_POSITION_EXT) {
 					// check for completion
-					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x33333);
+//					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x33333);
 					if (command_buffer.getLength() >= 21) {
 						command_buffer.pop(); // remove the command code
 						int32_t x = pop32();

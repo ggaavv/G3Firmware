@@ -331,6 +331,9 @@ void reset() {
 	_delay_ms(1000);
 	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x999);
 */
+	capturing = false;
+	playing = false;
+	capturedBytes = 0L;
 
 	if (playing) {
 		finishPlayback();
@@ -338,19 +341,19 @@ void reset() {
 	if (capturing){
 		finishCapture();
 	}
-	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x444);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x444);
 	if (dd != 0) {
-		fat_close_dir(dd);
+//		fat_close_dir(dd);
 		dd = 0;
 	}
-	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x555);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x555);
 	if (fs != 0) {
-		fat_close(fs);
+//		fat_close(fs);
 		fs = 0;
 	}
-	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x666);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x666);
 	if (partition != 0) {
-		partition_close(partition);
+//		partition_close(partition);
 		partition = 0;
 	}
 }

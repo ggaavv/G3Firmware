@@ -22,6 +22,8 @@
 extern "C" {
 	#include "lpc_types.h"
 }
+//#include "Delay.hh"
+#define COMMAND_BUFFER_SIZE 512  //TODO hack to get circular buffer working
 
 typedef uint16_t BufSizeType;
 
@@ -41,6 +43,7 @@ private:
 	BufDataType* const data; /// Pointer to buffer data
 	volatile bool overflow; /// Overflow indicator
 	volatile bool underflow; /// Underflow indicator
+	uint8_t buffer_data2[COMMAND_BUFFER_SIZE];  //TODO hack to get circular buffer working
 public:
 	CircularBufferTempl(BufSizeType size_in, BufDataType* data_in) :
 		size(size_in), length(0), start(0), data(data_in), overflow(false),
@@ -57,8 +60,14 @@ public:
 	}
 	/// Append a byte to the tail of the buffer
 	inline void push(BufDataType b) {
-		if (length < size) {
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x9111);
+//		_delay_ms(100);
+			if (length < size) {
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x9222);
+//			_delay_ms(100);
 			operator[](length) = b;
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x9333);
+//			_delay_ms(100);
 			length++;
 		} else {
 			overflow = true;
@@ -104,8 +113,15 @@ public:
 	}
 	/// Read the buffer directly
 	inline BufDataType& operator[](BufSizeType index) {
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x9666);
+//		_delay_ms(5);
 		const BufSizeType actual_index = (index + start) % size;
-		return data[actual_index];
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x9555);
+//		_delay_ms(5);
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, length);
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, buffer_data2[actual_index]);
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x9444);
+		return buffer_data2[actual_index];
 	}
 	/// Check the overflow flag
 	inline const bool hasOverflow() const {

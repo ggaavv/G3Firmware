@@ -100,7 +100,7 @@ LSCRIPT = '/src/Motherboard/system/ldscript_rom_gnu.ld'
 #LSCRIPT = 'D:/DOCUME~1/113007~1/git/G3Firmware/v3/src/Mother~1/system/ldscript_rom_gnu.ld'
 #LSCRIPT = '/src/Motherboard/system/LPC17xx_For_NXP_USB_Bootloader.ld'
 optimization='0'
-DEBUG = '-g0'
+DEBUG = '-g3'
 #LISTING = -ahls
 
 print Dir('.').abspath
@@ -123,7 +123,33 @@ env=Environment(tools=['mingw'],
 	LD=codesourcery_path+'/arm-none-eabi-ld',
 	OBJCOPY=codesourcery_path+'/arm-none-eabi-objcopy',
 	SIZE=codesourcery_path+'/arm-none-eabi-size',
-	#  Compiler Options
+	
+#########  Compiler Options using in make##############
+#	-O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -mlong-calls -ffunction-sections -fdata-sections
+#	-fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow
+#	-Wcast-qual - Wcast-align -fno-rtti -fno-exceptions 
+
+## use  ###
+#	-mthumb -mthumb-interwork -mlong-calls -fpromote-loop-indices -Wall -Wextra -Wcast-align -Wpointer-arith
+#	-Wredundant-decls -Wshadow -Wcast-qual 
+#
+#--keep *(.init)
+#--keep *(.fini)
+#--keep *(.init_array)
+#--keep *(.fini_array)
+
+
+#	CCFLAGS = '-mcpu='+mcu+' -gdwarf-2 -mthumb -mthumb-interwork -mlong-calls -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -Wnested-externs -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version) '-DBUILD_NAME=' + os.environ['BUILD_NAME'],
+#	CXXFLAGS = '-mcpu='+mcu+' -gdwarf-2 -mthumb -mthumb-interwork -mlong-calls -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-rtti -fno-exceptions -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version) '-DBUILD_NAME=' + os.environ['BUILD_NAME'],
+#	LDFLAGS = '-mcpu='+mcu+' -mthumb -O'+optimization+' -Wl,-Map='+target_name+'.map,--cref,--gc-sections -lc -lm -lgcc -lstdc++ -T '+LD_PATH+' -DBUILD_NAME=' + os.environ['BUILD_NAME'],
+#	ASFLAGS = '-mcpu='+mcu+' --defsym RAM_MODE=0',
+
+#	CCFLAGS = '-Wshadow -Wcast-qual -Wredundant-decls -Wpointer-arith -fpromote-loop-indices -mlong-calls -mthumb-interwork -Wcast-align -Wall -Wextra -mcpu='+mcu+' -mthumb -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
+#	CXXFLAGS = '-Wshadow -Wcast-qual -Wredundant-decls -Wpointer-arith -fpromote-loop-indices -mlong-calls -mthumb-interwork -Wcast-align -Wall -Wextra -mcpu='+mcu+' -mthumb -Wno-write-strings -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
+#	LDFLAGS = '-lc -lm -lgcc -lstdc++ -Wshadow -Wcast-qual -Wredundant-decls -Wpointer-arith -Wcast-align -Wextra -fpromote-loop-indices -mlong-calls -mthumb-interwork -mcpu='+mcu+' --gc-sections -mthumb -O'+optimization+' -Wl,-Map='+target_name+'.map,--cref -Wl,-T '+LD_PATH+' -Wl,--allow-multiple-definition',
+#	ASFLAGS = '-mcpu='+mcu+' --defsym RAM_MODE=0',
+
+### working ###
 	CCFLAGS = '-fno-inline -Wcast-align -Wunreachable-code -Wall -Wextra -fno-common -mcpu='+mcu+' -mthumb -Wno-write-strings -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
 	CXXFLAGS = '-fno-inline -Wcast-align -Wunreachable-code -Wall -Wextra -fno-common -mcpu='+mcu+' -mthumb -Wno-write-strings -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
 	LDFLAGS = '-mcpu='+mcu+' --gc-sections -mthumb -Wno-write-strings -O'+optimization+' -Wl,-Map='+target_name+'.map,--cref -Wl,-T '+LD_PATH+' -Wl,--allow-multiple-definition',

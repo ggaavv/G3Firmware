@@ -44,9 +44,9 @@ private:
 	volatile bool enabled_;
 public:
 //	UART(uart_no index_) : index_(0), enabled_(false) {}
-	UART();
+//	UART();
 	UART(uint8_t index);
-//	UART(uint8_t index) {}// : index_(index), enabled_(false) {}
+//	UART(uint8_t index) : index_(index), enabled_(false) {}
 	InPacket in;
 	OutPacket out;
 	void beginSend();
@@ -57,11 +57,6 @@ public:
 	// Reset the UART to a listening state.  This is important for
 	// RS485-based comms.
 	void reset();	// Not meant to be public, but otherwise we'd have to friend interrupt protos.  :/
-};
-
-UART UART::uart[2] = {
-	UART(0),
-	UART(1),
 };
 
 #endif // UART_HH_

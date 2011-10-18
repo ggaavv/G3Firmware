@@ -1,26 +1,19 @@
-/**************************************************************************//**
- * @file     main.c
- * @brief    CMSIS Cortex-M3 Blinky example
- *           Blink a LED using CM3 SysTick
- * @version  V1.03
- * @date     24. September 2009
+/*
+ * Copyright 2010 by Adam Mayer	 <adam@makerbot.com>
  *
- * @note
- * Copyright (C) 2009 ARM Limited. All rights reserved.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * @par
- * ARM Limited (ARM) is supplying this software for use with Cortex-M 
- * processor based microcontrollers.  This file can be freely distributed 
- * within development tools that are supporting such ARM based processors. 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @par
- * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
- * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
- * ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
- * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
- *
- ******************************************************************************/
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 
 extern "C" {
 	#include "LPC17xx.h"
@@ -132,20 +125,21 @@ int main (void) {
 	SystemInit();									// Initialize clocks
 	NVIC_SetPriorityGrouping(0);					// Configure the NVIC Preemption Priority Bits
 	DEBUG_PIN.setDirection(true);	//creates Port Class
-//	DEBUG_PIN.setValue(false);
+	DEBUG_PIN.setValue(false);
 	//----end of Initialization of LPC----//
 	test_u();
 	uint8_t menum1[] = "\nS\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menum1, sizeof(menum1), BLOCKING);
 //	UART_32_DEC((LPC_UART_TypeDef *)LPC_UART2, SCB->VTOR);
 	_delay_ms(500);
-	DEBUG_PIN.setValue(false);
+	DEBUG_PIN.setValue(true);
 	Motherboard& board = Motherboard::getBoard();
 	steppers::init(Motherboard::getBoard());
 	reset(true);
 	VCOM_Start();
 	Atomic(ENABLE_INT);
 	while (1) {
+//		command::push(0x77);
 		// Toolhead interaction thread.
 		tool::runToolSlice();
 		// Host interaction thread.
@@ -157,7 +151,7 @@ int main (void) {
 //		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu112, sizeof(menu112), BLOCKING);
 		command::runCommandSlice();
 		// Motherboard slice
-		uint8_t menu113[] = "c\n";
+//		uint8_t menu113[] = "c\n";
 //		UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu113, sizeof(menu113), BLOCKING);
 		board.runMotherboardSlice();
 		// USB coms slice
@@ -166,4 +160,3 @@ int main (void) {
 	}
 	return 0;
 }
-

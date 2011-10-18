@@ -19,21 +19,16 @@
 extern "C" {
 	#include "crc16.h"
 }
-
-
-
 /********************************/
 //#include "test.hh"  // testing
 //#include "test_led.hh"  // testing
 //#include "test_u.hh"
-//#include "Delay.hh"
+#include "Delay.hh"
 //	#include "lpc17xx_nvic.h"
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
 //test_led(1);
-extern "C" {
-	#include "Uart32.h"
-}
+#include "Uart32.h"
 /********************************/
 
 /// Append a byte and update the CRC
@@ -123,6 +118,10 @@ void InPacket::processByte(uint8_t b) {
 uint8_t Packet::read8(uint8_t index) const {
 //	uint8_t pamenu55322[] = "p_r8\n";
 //	UART_Send((LPC_UART_TypeDef *)LPC_UART2, pamenu55322, sizeof(pamenu55322), BLOCKING);
+//	uint8_t pamenu55323[] = "p_f8\n";
+//	UART_Send((LPC_UART_TypeDef *)LPC_UART2, pamenu55323, sizeof(pamenu55323), BLOCKING);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, payload[index]);
+//	_delay_ms(200);
 	return payload[index];
 }
 uint16_t Packet::read16(uint8_t index) const {

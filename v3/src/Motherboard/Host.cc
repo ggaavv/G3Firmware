@@ -34,14 +34,12 @@
 //#include "test.hh"  // testing
 //#include "test_led.hh"  // testing
 //#include "test_u.hh"
-//#include "Delay.hh"
+#include "Delay.hh"
 //	#include "lpc17xx_nvic.h"
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
 //test_led(1);
-extern "C" {
-	#include "Uart32.h"
-}
+#include "Uart32.h"
 /********************************/
 
 namespace host {
@@ -75,10 +73,12 @@ bool do_host_reset = true;
 void runHostSlice() {
 	InPacket& in = UART::getHostUART().in;
 	OutPacket& out = UART::getHostUART().out;
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x1111);
 	if (out.isSending()) {
 		// still sending; wait until send is complete before reading new host packets.
 		return;
 	}
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x2222);
 	if (do_host_reset) {
 		do_host_reset = false;
 		// Then, reset local board
@@ -92,6 +92,7 @@ void runHostSlice() {
 
 		return;
 	}
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x3333);
 	if (in.isStarted() && !in.isFinished()) {
 		if (!packet_in_timeout.isActive()) {
 			// initiate timeout
@@ -100,6 +101,7 @@ void runHostSlice() {
 			in.timeout();
 		}
 	}
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x4444);
 	if (in.hasError()) {
 		// Reset packet quickly and start handling the next packet.
 		// Report error code.
@@ -110,25 +112,34 @@ void runHostSlice() {
 		}
 		in.reset();
 	}
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x4444);
 	if (in.isFinished()) {
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x1111);
 		packet_in_timeout.abort();
 		out.reset();
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x2222);
 #if defined(HONOR_DEBUG_PACKETS) && (HONOR_DEBUG_PACKETS == 1)
 		if (processDebugPacket(in, out)) {
 			// okay, processed
 		} else
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x3333);
 #endif
 		if (processCommandPacket(in, out)) {
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x4444);
 			// okay, processed
 		} else if (processQueryPacket(in, out)) {
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x5555);
 			// okay, processed
 		} else {
 			// Unrecognized command
 			out.append8(RC_CMD_UNSUPPORTED);
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x6666);
 		}
 		in.reset();
 		UART::getHostUART().beginSend();
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x7777);
 	}
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x5555);
 }
 
 /// Identify a command packet, and process it.  If the packet is a command
@@ -136,16 +147,23 @@ void runHostSlice() {
 /// other processing needs to be done. Otherwise, processing of this packet
 /// should drop through to the next processing level.
 bool processCommandPacket(const InPacket& from_host, OutPacket& to_host) {
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x1111);
 	if (from_host.getLength() >= 1) {
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x2222);
 		uint8_t command = from_host.read8(0);
 		if ((command & 0x80) != 0) {
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x3333);
 			// If we're capturing a file to an SD card, we send it to the sdcard module
 			// for processing.
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x4444);
+//			_delay_ms(100);
 			if (sdcard::isCapturing()) {
 				sdcard::capturePacket(from_host);
 				to_host.append8(RC_OK);
 				return true;
 			}
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x5555);
+//			_delay_ms(100);
 			// Queue command, if there's room.
 			// Turn off interrupts while querying or manipulating the queue!
 //			ATOMIC_BLOCK(ATOMIC_FORCEON) {
@@ -153,16 +171,23 @@ bool processCommandPacket(const InPacket& from_host, OutPacket& to_host) {
 			Atomic(BEGIN_INT);
 			const uint8_t command_length = from_host.getLength();
 			if (command::getRemainingCapacity() >= command_length) {
+//				UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x6666);
 				// Append command to buffer
+//				UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x8888);
 				for (int i = 0; i < command_length; i++) {
+//					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x7777);
 					command::push(from_host.read8(i));
+//					UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x8888);
 				}
 				to_host.append8(RC_OK);
+//				UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x9999);
 			} else {
 				to_host.append8(RC_BUFFER_OVERFLOW);
+//				UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x1222);
 			}
 //			__enable_irq ();
 			Atomic(RESTORE_INT);
+//			UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x1333);
 //			}
 			return true;
 		}

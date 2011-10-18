@@ -33,9 +33,9 @@ extern "C" {
 	#include "usbcfg.h"
 	#include "cdcuser.h"
 	#include "usbcore.h"
+	#include "core_cm3.h"
 }
 //#include <avr/sfr_defs.h>
-//#include <avr/interrupt.h>
 //#include <avr/io.h>
 //#include <util/delay.h>
 #include "Delay.hh"
@@ -49,9 +49,7 @@ extern "C" {
 //	#include "lpc17xx_timer.h"
 //	#include "LPC17xx.h"
 //test_led(1);
-extern "C" {
-	#include "Uart32.h"
-}
+#include "Uart32.h"
 /********************************/
 
 //#define FIFO_Enabled 1
@@ -61,9 +59,14 @@ extern "C" {
 #include "ExtruderBoard.hh"
 #endif
 
+UART UART::uart[2] = {
+	UART(0),
+	UART(1),
+};
+
 // We have to track the number of bytes that have been sent, so that we can filter
 // them from our receive buffer later.This is only used for RS485 mode.
-static volatile uint8_t loopback_bytes = 0;
+volatile uint8_t loopback_bytes = 0;
 
 // Transition to a non-transmitting state. This is only used for RS485 mode.
 inline void listen() {
@@ -75,11 +78,12 @@ inline void speak() {
 	TX_ENABLE_PIN.setValue(true);
 }
 
-UART::UART(uint8_t index) : index_(index), enabled_(false) {
+UART::UART(uint8_t index){
 //	InPacket in;
 //	OutPacket out;
 //	in.reset();
-//	index_ = index;
+	enabled_ = false;
+	index_ = index;
 	uint8_t menu55322[] = "Uart init\n";
 	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu55322, sizeof(menu55322), BLOCKING);
 //	UART_8((LPC_UART_TypeDef *)LPC_UART2, index_);
@@ -170,8 +174,7 @@ void UART::beginSend() {
 		speak();
 		_delay_us(10);
 		loopback_bytes = 1;
-		uint8_t bytestosend = UART::getSlaveUART().out.getNextByteToSend();
-		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, bytestosend);
+		UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::getSlaveUART().out.getNextByteToSend());
 //		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
 //		UART_8((LPC_UART_TypeDef *)LPC_UART2, bytestosend);
 //		UART_8((LPC_UART_TypeDef *)LPC_UART2, 7);
@@ -219,10 +222,10 @@ void UART::reset() {
 	}
 }
 
-static volatile uint8_t byte_in;
+volatile uint8_t byte_in;
 
 extern "C" void UART1_IRQHandler(void){
-	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x1);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x1);
 //	uint8_t menu910[] = "\n UartQ1 ";
 //	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
 	uint32_t intsrc, tmp, tmp1;
@@ -255,7 +258,7 @@ extern "C" void UART1_IRQHandler(void){
 	if (tmp == UART_IIR_INTID_THRE){
 		if (UART::getSlaveUART().out.isSending()) {
 			loopback_bytes++;
-			UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::getSlaveUART().out.getNextByteToSend());  // NEED to choose which UART
+			UART_SendByte((LPC_UART_TypeDef *)LPC_UART1, UART::getSlaveUART().out.getNextByteToSend());
 		} else {
 			_delay_us(10);
 			listen();
@@ -265,14 +268,16 @@ extern "C" void UART1_IRQHandler(void){
 
 
 extern "C" void CANActivity_IRQHandler(void){
-	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x3);
+//	UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, 0x3);
+//	_delay_ms(10);
 //	uint8_t menu910[] = "\nCQ";
 //	UART_Send((LPC_UART_TypeDef *)LPC_UART2, menu910, sizeof(menu910), BLOCKING);
 	static uint8_t BulkBufOut  [USB_CDC_BUFSIZE];
 	int numBytesRead = USB_ReadEP(CDC_DEP_OUT, &BulkBufOut[0]);
 //	UART_8((LPC_UART_TypeDef *)LPC_UART2, numBytesRead);
 	for (int i = 0; i < numBytesRead; i++){
-		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, BulkBufOut[i]);
+//		UART_32_HEX((LPC_UART_TypeDef *)LPC_UART2, BulkBufOut[i]);
+		_delay_ms(10);
 		UART::getHostUART().in.processByte( BulkBufOut[i] );
 	}
 }

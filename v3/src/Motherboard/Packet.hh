@@ -69,9 +69,9 @@ protected:
 		PS_LAST
 	} PacketState;
 
-        volatile uint8_t length; /// The current length of the payload (data[0] if raw packets)
-        volatile uint8_t crc; /// The CRC of the current contents of the payload (data[-1] of raw packets)
-        volatile uint8_t payload[MAX_PACKET_PAYLOAD]; /// Data payload (starts at data[2] of raw packet)
+	volatile uint8_t length; /// The current length of the payload (data[0] if raw packets)
+	volatile uint8_t crc; /// The CRC of the current contents of the payload (data[1] of raw packets)
+	volatile uint8_t payload[MAX_PACKET_PAYLOAD]; /// Data payload (starts at data[2] of raw packet)
 	volatile uint8_t error_code; // Have any errors cropped up during processing?
 	volatile PacketState state;
 

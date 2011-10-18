@@ -75,50 +75,34 @@ extern "C"
 /* defines for customisation of sd/mmc port access */
 #if defined(__LPC17xx_H__)
 
-//GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir)
-//GPIO_SetValue(uint8_t portNum, uint32_t bitValue)
-//GPIO_ReadValue(uint8_t portNum)
-
-/* Define as 1 if and SD card slot is present; 0 if not.
-#define HAS_SD          1
-// The pin that connects to the write protect line on the SD header.
-#define SD_WRITE_PIN    Pin(Port1,0)
 // The pin that connects to the card detect line on the SD header.
-#define SD_DETECT_PIN   Pin(Port1,1)
-// The pin that connects to the chip select line on the SD header.
-#define SD_SELECT_PIN   Pin(Port1,0)
-*/
-
-// The pin that connects to the write protect line on the SD header.
-#define SD_WRITE_PIN_Port    1
-#define SD_WRITE_PIN_Pin    (0<<1)
-
-// The pin that connects to the card detect line on the SD header.
-#define SD_DETECT_PIN_Port   1
-#define SD_DETECT_PIN_Pin   (0<<1)
+#define SD_DETECT_PIN_Port	2
+#define SD_DETECT_PIN_Pin	1
 
 // The pin that connects to the chip select line on the SD header.
-#define SD_SELECT_PIN_Port   1
-#define SD_SELECT_PIN_Pin   (0<<1)
+#define SD_SELECT_PIN_Port	2
+#define SD_SELECT_PIN_Pin	0
 
-#define MOSI_PIN_Port	1
-#define MOSI_PIN_Pin	(0<<1)
-#define SCK_PIN_Port   1
-#define SCK_PIN_Pin   (0<<4)
-#define SS_PIN_Port   1
-#define SS_PIN_Pin   (0<<1)
-#define MISO_PIN_Port   1
-#define MISO_PIN_Pin   (0<<1)
+#define MOSI_PIN_Port	0
+#define MOSI_PIN_Pin	18
+
+#define SCK_PIN_Port   0
+#define SCK_PIN_Pin   15
+
+#define MISO_PIN_Port   0
+#define MISO_PIN_Pin   17
 
 #define configure_pin_mosi() GPIO_SetDir(MOSI_PIN_Port, MOSI_PIN_Pin, 1)
 #define configure_pin_sck() GPIO_SetDir(SCK_PIN_Port, SCK_PIN_Pin, 1)
-#define configure_pin_ss() GPIO_SetDir(SS_PIN_Port, SS_PIN_Pin, 1)
-#define configure_pin_miso() GPIO_SetDir(MISO_PIN_Port, MISO_PIN_Pin, 1)
+#define configure_pin_ss() 1
+#define configure_pin_miso() GPIO_SetDir(MISO_PIN_Port, MISO_PIN_Pin, 0)
 
 //#define select_card() (SD_SELECT_PIN.setDirection(true), SD_SELECT_PIN.setValue(true));
-#define select_card() (GPIO_SetDir(SD_SELECT_PIN_Port, SD_SELECT_PIN_Pin, 1), GPIO_SetValue(SD_SELECT_PIN_Port, ((GPIO_ReadValue(SD_SELECT_PIN_Port)&SD_SELECT_PIN_Port) & SD_SELECT_PIN_Pin) | (1?SD_SELECT_PIN_Pin:0)));
+//#define select_card() (GPIO_SetDir(SD_SELECT_PIN_Port, SD_SELECT_PIN_Pin, 1), GPIO_SetValue(SD_SELECT_PIN_Port, ((GPIO_ReadValue(SD_SELECT_PIN_Port)&SD_SELECT_PIN_Port) & SD_SELECT_PIN_Pin) | (1?SD_SELECT_PIN_Pin:0)));
+#define select_card() (FIO_SetMask(SD_SELECT_PIN_Port, ~(1 << SD_SELECT_PIN_Pin), 1), GPIO_SetValue(SD_SELECT_PIN_Port, 0xffffffff));
 //#define unselect_card() (SD_SELECT_PIN.setDirection(false), SD_SELECT_PIN.setValue(false));
-#define unselect_card() (GPIO_SetDir(SD_SELECT_PIN_Port, SD_SELECT_PIN_Pin, 1), GPIO_SetValue(SD_SELECT_PIN_Port, ((GPIO_ReadValue(SD_SELECT_PIN_Port)&SD_SELECT_PIN_Port) & SD_SELECT_PIN_Pin) | (0?SD_SELECT_PIN_Pin:0)));
+//#define unselect_card() (GPIO_SetDir(SD_SELECT_PIN_Port, SD_SELECT_PIN_Pin, 1), GPIO_SetValue(SD_SELECT_PIN_Port, ((GPIO_ReadValue(SD_SELECT_PIN_Port)&SD_SELECT_PIN_Port) & SD_SELECT_PIN_Pin) | (0?SD_SELECT_PIN_Pin:0)));
+#define unselect_card() (FIO_SetMask(SD_SELECT_PIN_Port, ~(1 << SD_SELECT_PIN_Pin), 1), GPIO_ClearValue(SD_SELECT_PIN_Port, 0xffffffff));
 
 
 #else
@@ -128,12 +112,13 @@ extern "C"
 //#define configure_pin_available() SD_DETECT_PIN.setDirection(false)
 #define configure_pin_available() GPIO_SetDir(SD_DETECT_PIN_Port, SD_DETECT_PIN_Pin, 0)
 //#define configure_pin_locked() SD_WRITE_PIN.setDirection(false)
-#define configure_pin_locked() GPIO_SetDir(SD_WRITE_PIN_Port, SD_WRITE_PIN_Pin, 0)
+#define configure_pin_locked() 1
 
 //#define get_pin_available() SD_DETECT_PIN.getValue()
-#define get_pin_available() ((GPIO_ReadValue(SD_DETECT_PIN_Port)&SD_DETECT_PIN_Pin) != 0)
+//#define get_pin_available() ((GPIO_ReadValue(SD_DETECT_PIN_Port)&SD_DETECT_PIN_Pin) != 0)
+#define get_pin_available() (FIO_SetMask(SD_DETECT_PIN_Port, ~(1 << SD_DETECT_PIN_Pin), 1), GPIO_ReadValue(SD_DETECT_PIN_Port) != 0)
 //#define get_pin_locked() !SD_WRITE_PIN.getValue()
-#define get_pin_locked() !((GPIO_ReadValue(SD_WRITE_PIN_Port)&SD_WRITE_PIN_Pin) != 0)
+#define get_pin_locked() 1
 
 #if SD_RAW_SDHC
     typedef uint64_t offset_t;
