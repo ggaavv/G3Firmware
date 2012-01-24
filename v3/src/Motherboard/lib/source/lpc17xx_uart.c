@@ -4,8 +4,8 @@
 * @file		lpc17xx_uart.c
 * @brief	Contains all functions support for UART firmware library
 * 			on LPC17xx
-* @version	3.1
-* @date		06. June. 2011
+* @version	3.2
+* @date		25. July. 2011
 * @author	NXP MCU SW Application Team
 *
 * Copyright(C) 2011, NXP Semiconductor
@@ -92,7 +92,6 @@ static Status uart_set_divisors(LPC_UART_TypeDef *UARTx, uint32_t baudrate)
 	}
 
 
-	// uClk = uClk >> 4; /* div by 16 */
 	/* In the Uart IP block, baud rate is calculated using FDR and DLL-DLM registers
 	* The formula is :
 	* BaudRate= uClk * (mulFracDiv/(mulFracDiv+dividerAddFracDiv) / (16 * (DLL)

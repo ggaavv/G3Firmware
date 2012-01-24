@@ -2,8 +2,8 @@
  * @file     LPC17xx.h
  * @brief    CMSIS Cortex-M3 Core Peripheral Access Layer Header File for
  *           NXP LPC17xx Device Series
- * @version: V1.08
- * @date:    21. December 2009
+ * @version: V1.09
+ * @date:    25. July. 2011
  *
  * @note
  * Copyright (C) 2009 ARM Limited. All rights reserved.
@@ -84,7 +84,7 @@ typedef enum IRQn
   QEI_IRQn                      = 31,       /*!< Quadrature Encoder Interface Interrupt           */
   PLL1_IRQn                     = 32,       /*!< PLL1 Lock (USB PLL) Interrupt                    */
   USBActivity_IRQn				= 33,		/*!< USB Activity Interrupt 						  */
-  CANActivity_IRQn				= 34,		/*!< CAN Activity Interrupt 						  */
+  CANActivity_IRQn				= 34		/*!< CAN Activity Interrupt 						  */
 } IRQn_Type;
 
 
@@ -1061,7 +1061,6 @@ typedef struct
 #define LPC_QEI               ((LPC_QEI_TypeDef       *) LPC_QEI_BASE      )
 #define LPC_EMAC              ((LPC_EMAC_TypeDef      *) LPC_EMAC_BASE     )
 #define LPC_GPDMA             ((LPC_GPDMA_TypeDef     *) LPC_GPDMA_BASE    )
-#define DMAREQSEL             (*(__IO uint32_t *)  ( 0x4000C1C4))
 #define LPC_GPDMACH0          ((LPC_GPDMACH_TypeDef   *) LPC_GPDMACH0_BASE )
 #define LPC_GPDMACH1          ((LPC_GPDMACH_TypeDef   *) LPC_GPDMACH1_BASE )
 #define LPC_GPDMACH2          ((LPC_GPDMACH_TypeDef   *) LPC_GPDMACH2_BASE )

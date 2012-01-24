@@ -152,7 +152,7 @@ env=Environment(tools=['mingw'],
 ### working ###
 	CCFLAGS = '-fno-inline -Wcast-align -Wunreachable-code -Wall -Wextra -fno-common -mcpu='+mcu+' -mthumb -Wno-write-strings -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
 	CXXFLAGS = '-fno-inline -Wcast-align -Wunreachable-code -Wall -Wextra -fno-common -mcpu='+mcu+' -mthumb -Wno-write-strings -O'+optimization+' '+DEBUG+' -D__RAM_MODE__=0 -DVERSION='+str(version),
-	LDFLAGS = '-mcpu='+mcu+' --gc-sections -mthumb -Wno-write-strings -O'+optimization+' -Wl,-Map='+target_name+'.map,--cref -Wl,-T '+LD_PATH+' -Wl,--allow-multiple-definition',
+	LDFLAGS = '-mcpu='+mcu+' -mthumb -Wno-write-strings -O'+optimization+' -Wl,-Map='+target_name+'.map,--cref -Wl,-T '+LD_PATH+' -Wl,--allow-multiple-definition -Wl,--gc-sections',
 	ASFLAGS = '-mcpu='+mcu+' --defsym RAM_MODE=0',
 	CPPPATH=include_paths)
 
