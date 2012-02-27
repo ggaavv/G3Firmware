@@ -217,8 +217,20 @@ uint32_t user_code_present(void)
 volatile unsigned long temp;
 void check_isp_entry_pin(void)
 {
+/***LPC_MICRO***/
+const uint32_t LED1 = (1 << 18);
+const uint32_t LED2 = (1 << 20);
+const uint32_t LED3 = (1 << 21);
+const uint32_t LED4 = (1 << 23);
+const uint32_t LEDALL = (LED1 + LED2 + LED3 + LED4);
+const uint32_t LEDARRAY[35] = {LED1,LED2,LED3,LED4,LED1,LED2,LED3,LED4,LED1,LED2,LED3,LED4,LED1,LED2,LED3,LED4,LED1,LED2,LED3,LED4,LED1,LED2,LED3,LED4,LED1,LED2,LED3,LED4,LED1,LED2,LED3,LED4,LED1,LED2,LED3};
+
 	unsigned long i,j;
-	LPC_GPIO1->FIODIR = 1 << 29;
+
+	/***LPC_MICRO***/
+	LPC_GPIO1->FIODIR = LEDALL;
+
+	LPC_GPIO1->FIODIR = 1 << 29;	   // 29 for 3d printer
 	LPC_GPIO1->FIOPIN = 1 << 29; // make LED ON to indicate that button may be pressed to enter bootloader
 	for(i=0; i < 35 ; i++)
 	{
@@ -229,6 +241,10 @@ void check_isp_entry_pin(void)
 			break;
 		}
 
+		/***LPC_MICRO***/
+		LPC_GPIO1->FIOPIN = 0;
+		LPC_GPIO1->FIOPIN = LEDARRAY[i];
+
 		LPC_GPIO1->FIOPIN ^= 1 << 29; //  LED flasher
 		for(j=0;j< (1<<15);j++)
 		{
@@ -236,6 +252,9 @@ void check_isp_entry_pin(void)
 		} 
 	}
 	
+	/***LPC_MICRO***/
+	LPC_GPIO1->FIOCLR = LEDALL;
+	LPC_GPIO1->FIODIR = 0;
 	LPC_GPIO1->FIOCLR = 1 << 29;
 	LPC_GPIO1->FIODIR = 0;
 	if( i == 35)

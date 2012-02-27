@@ -291,7 +291,7 @@
 #define USBCLKCFG_Val         0x00000000
 #define PCLKSEL0_Val          0x00000000
 #define PCLKSEL1_Val          0x00000000
-#define PCONP_Val             0x042887DE
+#define PCONP_Val             0x842887DE
 #define CLKOUTCFG_Val         0x00000000
 
 
@@ -321,7 +321,7 @@
 // </e>
 */
 #define FLASH_SETUP           1
-#define FLASHCFG_Val          0x00004000
+#define FLASHCFG_Val          0x0000403A
 
 /*
 //-------- <<< end of configuration section >>> ------------------------------

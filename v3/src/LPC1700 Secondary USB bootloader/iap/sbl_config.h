@@ -36,7 +36,7 @@
 // </h>
 */
 
-#define USER_START_SECTOR 3
+#define USER_START_SECTOR 3   //SECTOR_3_START    0x00003000
 #define MAX_USER_SECTOR 29
 #define CRP 0x11223344
 
