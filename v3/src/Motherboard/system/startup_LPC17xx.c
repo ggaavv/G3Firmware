@@ -223,12 +223,19 @@ void Reset_Handler(void)
     }
 	
 	//Initialize static constructors.
-	
+
+
 	 __libc_init_array();
     //
     // Call the application's entry point.
     //
 
+	LPC_GPIO1->FIODIR |= 1 << 23; // P1.29 connected to LED
+	while(1)
+	{
+		LPC_GPIO1->FIOPIN ^= 1 << 23; // Toggle P1.29
+		_delay_ms(400); // wait for approx 400 ms
+	}
 
     main();
     while(1);

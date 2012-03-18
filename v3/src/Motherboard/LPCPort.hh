@@ -73,15 +73,18 @@ public:
 		}
 	}
 	bool getPin(uint8_t pin_index) {
-		FIO_SetMask(port_base, ~(1 << pin_index), 1);
-		return (GPIO_ReadValue(port_base));
+//		FIO_SetMask(port_base, ~(1 << pin_index), 1);
+//		return (GPIO_ReadValue(port_base));
+		return ((1 << pin_index) & GPIO_ReadValue(port_base));
 	}
 	void setPin(uint8_t pin_index, bool on) {
-		FIO_SetMask(port_base, ~(1 << pin_index), 1);
+//		FIO_SetMask(port_base, ~(1 << pin_index), 1);
 		if (on){
-			GPIO_ClearValue(port_base, 0xffffffff);
+//			GPIO_ClearValue(port_base, 0xffffffff);
+			GPIO_ClearValue(port_base, (1 << pin_index));
 		}else{
-			GPIO_SetValue(port_base, 0xffffffff);
+//			GPIO_SetValue(port_base, 0xffffffff);
+			GPIO_SetValue(port_base, (1 << pin_index));
 		}
 	}
 };
